@@ -19,7 +19,7 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(800, 600, "EberzaoOpenGL", NULL, NULL);
 
 	glfwSetFramebufferSizeCallback(window, resize);
 
@@ -34,9 +34,19 @@ int main() {
 
 	glfwSetFramebufferSizeCallback(window, resize);
 
+	//loop de renderização
 	while (!glfwWindowShouldClose(window))
 	{
+		//inputs
+		processInput(window);
+
+		//aqui vai os processos de renderização
+		glClearColor(0.7f, 0.3f, 0.7f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		//checar por eventos e trocar os buffers
 		glfwPollEvents();
+		glfwSwapBuffers(window);
 	}
 
 	glfwDestroyWindow(window);
