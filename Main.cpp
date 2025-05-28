@@ -11,6 +11,20 @@ void resize(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void render(GLFWwindow* window);
 
+const char* vertexShaderSource = "#version 330 core\n"
+    "layout (location = 0) in vec3 aPos;\n"
+    "void main()\n"
+    "{\n"
+    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+	"}\0";
+
+const char* fragShaderSource = "#version 330 core\n"
+	"layout (location = 0) in vec3 aPos;\n"
+	"out vec4 FragColor;\n"
+	"void main(){\n"
+	"	FragColor = vec4(aPos.x, aPos.y, aPos.z, 1.0f);\n"
+	"}\0";
+
 
 int main() {
 	glfwInit();
@@ -33,6 +47,76 @@ int main() {
 	gladLoadGL();
 
 	glfwSetFramebufferSizeCallback(window, resize);
+
+	//coordenadas dos vértices do triângulo
+	//z = 0 para fazer uma imagem 2d
+	float vertices[] = {
+	-0.5f, -0.5f, 0.0f,
+	 0.5f, -0.5f, 0.0f,
+	 0.0f,  0.5f, 0.0f
+	};
+
+	//buffer para enviar os vértices para a GPU de uma vez
+	unsigned int VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	unsigned int vertexShader;
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+
+	//vertex shader, número de strings source, a origem e outro que eu não sei
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glCompileShader(vertexShader);
+
+	//checar se a compilação do shader deu certo
+	int  success;
+	char infoLog[512];
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+
+	//sucess, definido com glGetShaderiv, é checado aqui
+	if (!success)
+	{
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+
+	//mesma coisa do vertex shader só que com o fragmentShader
+	unsigned int fragShader;
+	fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragShader, 1, &fragShaderSource, NULL);
+	glCompileShader(fragShader);
+
+	if (!success)
+	{
+		glGetShaderInfoLog(fragShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::FRAG::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	//Um shaderprogram é a versão final de vários shaders combinados
+	unsigned int shaderProgram;
+	shaderProgram = glCreateProgram();
+
+	//para utilizá-lo, é preciso conectar ele com os shaders:
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragShader);
+	glLinkProgram(shaderProgram);
+
+	//deletar os shaders usados após o link
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragShader);
+
+	//checar por erro no shaderProgram
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success) {
+		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+
+	//tudo após isso utiliza o programa para renderização
+	glUseProgram(shaderProgram);
 
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
