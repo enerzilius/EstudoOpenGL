@@ -148,6 +148,7 @@
     <None Include="default.frag" />
     <None Include="default.vert" />
     <None Include="green.frag" />
+    <None Include="time.frag" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="purple.frag" />

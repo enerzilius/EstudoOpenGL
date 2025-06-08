@@ -70,7 +70,7 @@ int main() {
 		return -1;
 	}
 
-	Shader shaderProgram("default.vert", "default.frag");
+	Shader shaderProgram("default.vert", "time.frag");
 
 	VAO VAO1; 
 	VAO1.Bind();
@@ -95,6 +95,12 @@ int main() {
 
 		shaderProgram.Activate();
 		VAO1.Bind();
+
+		//lógica da mudança de cor
+		GLfloat timeValue = glfwGetTime();
+		GLfloat green = (sin(timeValue) / 2.0f) + 0.5f;
+		GLint vertexColorLocation = glGetUniformLocation(shaderProgram.ID, "cor");
+		glUniform4f(vertexColorLocation, 0.0f, green, 0.0f, 1.0f);
 
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 
