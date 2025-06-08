@@ -148,6 +148,8 @@
     <None Include="default.frag" />
     <None Include="default.vert" />
     <None Include="green.frag" />
+    <None Include="pointColoring.frag" />
+    <None Include="pointColoring.vert" />
     <None Include="time.frag" />
   </ItemGroup>
   <ItemGroup>

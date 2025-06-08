@@ -15,6 +15,7 @@ const unsigned int SCR_HEIGHT = 600;
 void resize(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void render(GLFWwindow* window);
+void colorLooping(GLuint program);
 
 //coordenadas dos vértices do triângulo
 	//z = 0 para fazer uma imagem 2d
@@ -41,9 +42,20 @@ GLuint indices[] = {
 	0, 7, 4
 };
 
+float triangle[] = {
+	// positions         // colors
+	 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+	-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+	 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+};
+
+GLuint triangleIndices[] = {
+	0, 1, 2
+};
+
 
 int main() {
-	int vertexCount = sizeof(indices) / sizeof(GLuint);
+	int vertexCount = sizeof(indices) / sizeof(GLuint)/2;
 	glfwInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -73,15 +85,16 @@ int main() {
 		return -1;
 	}
 
-	Shader shaderProgram("default.vert", "time.frag");
+	Shader shaderProgram("pointColoring.vert", "pointColoring.frag");
 
 	VAO VAO1; 
 	VAO1.Bind();
 
-	VBO VBO1(vertices, sizeof(vertices));
-	EBO EBO1(indices, sizeof(indices));
+	VBO VBO1(triangle, sizeof(triangle));
+	EBO EBO1(triangleIndices, sizeof(triangleIndices));
 
-	VAO1.LinkVBO(VBO1, 0);
+	VAO1.LinkVBO(VBO1, 0, 6, 0);
+	VAO1.LinkVBO(VBO1, 1, 6, 3);
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
@@ -98,14 +111,6 @@ int main() {
 
 		shaderProgram.Activate();
 		VAO1.Bind();
-
-		//lógica da mudança de cor
-		GLfloat timeValue = 0.3 *glfwGetTime();
-		GLfloat red = (sin(timeValue + 1) / 2.0f) + 0.5f;
-		GLfloat green = (sin(timeValue) / 2.0f) + 0.5f;
-		GLfloat blue = (sin(timeValue-1) / 2.0f) + 0.5f;
-		GLint vertexColorLocation = glGetUniformLocation(shaderProgram.ID, "cor") ;
-		glUniform4f(vertexColorLocation, red, green, blue, 1.0f);
 
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 
@@ -136,4 +141,13 @@ void render(GLFWwindow* window) {
 
 	// here we put our rendering code
 
+}
+
+void colorLooping(GLuint program) {
+	GLfloat timeValue = 0.3 * glfwGetTime();
+	GLfloat red = (sin(timeValue + 1) / 2.0f) + 0.5f;
+	GLfloat green = (sin(timeValue) / 2.0f) + 0.5f;
+	GLfloat blue = (sin(timeValue - 1) / 2.0f) + 0.5f;
+	GLint vertexColorLocation = glGetUniformLocation(program, "cor");
+	glUniform4f(vertexColorLocation, red, green, blue, 1.0f);
 }
