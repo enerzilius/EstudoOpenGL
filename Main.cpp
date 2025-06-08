@@ -28,6 +28,8 @@ float vertices[] = {
 	  // triangulos pra baixo
 	  0.0f, -0.5f, 0.0f,
 	  0.0f, -1.0f, 0.0f,
+	  //topo
+	  0.0f,  1.0f, 0.0f
 };
 
 GLuint indices[] = {
@@ -35,7 +37,8 @@ GLuint indices[] = {
 	2, 3, 4,
 	2, 1, 3,
 	2, 3, 6,
-	1, 5, 6
+	1, 5, 6,
+	0, 7, 4
 };
 
 
@@ -97,10 +100,12 @@ int main() {
 		VAO1.Bind();
 
 		//lógica da mudança de cor
-		GLfloat timeValue = glfwGetTime();
+		GLfloat timeValue = 0.3 *glfwGetTime();
+		GLfloat red = (sin(timeValue + 1) / 2.0f) + 0.5f;
 		GLfloat green = (sin(timeValue) / 2.0f) + 0.5f;
-		GLint vertexColorLocation = glGetUniformLocation(shaderProgram.ID, "cor");
-		glUniform4f(vertexColorLocation, 0.0f, green, 0.0f, 1.0f);
+		GLfloat blue = (sin(timeValue-1) / 2.0f) + 0.5f;
+		GLint vertexColorLocation = glGetUniformLocation(shaderProgram.ID, "cor") ;
+		glUniform4f(vertexColorLocation, red, green, blue, 1.0f);
 
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 
