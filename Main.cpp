@@ -19,15 +19,23 @@ void render(GLFWwindow* window);
 //coordenadas dos vértices do triângulo
 	//z = 0 para fazer uma imagem 2d
 float vertices[] = {
-	 -1.0f,  1.0f, 0.0f,
-	  1.0f,  1.0f, 0.0f,
-     -1.0f, -1.0f, 0.0f,
-	  1.0f, -1.0f, 0.0f,
+	 -1.0f,  0.5f, 0.0f, // esquerda cima
+	 -0.5f, -0.5f, 0.0f, // meio do negativo
+	  0.0f,  0.5f, 0.0f, // meio cima
+	  //segundo e terceiro
+	  0.5f, -0.5f, 0.0f,
+	  1.0f,  0.5f, 0.0f,
+	  // triangulos pra baixo
+	  0.0f, -0.5f, 0.0f,
+	  0.0f, -1.0f, 0.0f,
 };
 
 GLuint indices[] = {
 	0, 1, 2,
-	1, 2, 3,
+	2, 3, 4,
+	2, 1, 3,
+	2, 3, 6,
+	1, 5, 6
 };
 
 
