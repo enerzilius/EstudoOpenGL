@@ -1,5 +1,6 @@
 #include <iostream>
 #include "shaderClass.h"
+#include <string>
 
 using namespace std;
 
@@ -73,4 +74,18 @@ void Shader::Activate() {
 
 void Shader::Delete() {
 	glDeleteProgram(ID);
+}
+
+void Shader::setBool(const string& name, bool value)
+{
+	glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+}
+
+void Shader::setInt(const string& name, int value)
+{
+	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+}
+void Shader::setFloat(const string& name, float value)
+{
+	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }

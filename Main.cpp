@@ -46,11 +46,13 @@ float triangle[] = {
 	// positions         // colors
 	 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
 	-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-	 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+	 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   // top 
+	-1.0f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f, //canto superior esquerdo
+	 1.0f,  1.0f, 0.0f,  0.0f, 1.0f, 0.0f, //canto superior direito
 };
 
 GLuint triangleIndices[] = {
-	0, 1, 2
+	0, 1, 2,
 };
 
 
@@ -85,7 +87,7 @@ int main() {
 		return -1;
 	}
 
-	Shader shaderProgram("pointColoring.vert", "pointColoring.frag");
+	Shader shaderProgram("offset.vert", "default.frag");
 
 	VAO VAO1; 
 	VAO1.Bind();
@@ -111,6 +113,8 @@ int main() {
 
 		shaderProgram.Activate();
 		VAO1.Bind();
+		float offset = 0.5f;
+		shaderProgram.setFloat("xOffset", offset);
 
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 

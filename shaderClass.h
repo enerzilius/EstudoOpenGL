@@ -8,7 +8,8 @@
 #include <sstream>
 #include <cerrno>
 
-std::string get_file_contents(const char* filename);
+using namespace std;
+string get_file_contents(const char* filename);
 
 class Shader
 {
@@ -18,6 +19,9 @@ public:
 
 	void Activate();
 	void Delete();
+	void setBool(const string& name, bool value);
+	void setInt(const string& name, int value);
+	void setFloat(const string& name, float value);
 };
 
 #endif 

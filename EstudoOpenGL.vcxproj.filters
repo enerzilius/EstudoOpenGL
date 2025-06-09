@@ -56,6 +56,9 @@
     <None Include="pointColoring.vert">
       <Filter>Arquivos de Recurso\Shaders</Filter>
     </None>
+    <None Include="offset.vert">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="purple.frag">
