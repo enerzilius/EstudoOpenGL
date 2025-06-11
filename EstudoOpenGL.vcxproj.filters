@@ -16,6 +16,9 @@
     <Filter Include="Arquivos de Recurso\Shaders">
       <UniqueIdentifier>{3f1b59b2-5add-41aa-b04a-764babdd1bc4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Arquivos de Recurso\Assets">
+      <UniqueIdentifier>{b9fffe94-9085-4803-b8a9-31812983dc9b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -34,6 +37,12 @@
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="VAO.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="stb.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
   </ItemGroup>
@@ -78,5 +87,13 @@
     <ClInclude Include="VAO.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\OneDrive\Imagens\wall.jpg">
+      <Filter>Arquivos de Recurso\Assets</Filter>
+    </Image>
   </ItemGroup>
 </Project>

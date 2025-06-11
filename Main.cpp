@@ -1,6 +1,7 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <stb/stb_image.h>
 
 #include "shaderClass.h"
 #include "VBO.h"
@@ -44,17 +45,32 @@ GLuint indices[] = {
 
 float triangle[] = {
 	// positions         // colors
-	 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-	-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-	 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   // top 
-	-1.0f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f, //canto superior esquerdo
-	 1.0f,  1.0f, 0.0f,  0.0f, 1.0f, 0.0f, //canto superior direito
+	 0.5f, -0.5f, 0.0f,  0.3f, 0.0f, 0.3f,   // bottom right
+	-0.5f, -0.5f, 0.0f,  0.3f, 0.0f, 0.3f,   // bottom left
+	 0.0f,  0.5f, 0.0f,  0.9f, 0.0f, 0.9f,   // top 
 };
 
 GLuint triangleIndices[] = {
 	0, 1, 2,
 };
 
+float texCoords[] = {
+	0.0f, 0.0f,  // lower-left corner  
+	1.0f, 0.0f,  // lower-right corner
+	0.5f, 1.0f   // top-center corner
+};
+
+float sqr[] = {
+	 0.5f,  0.5f, 0.0f,
+	 0.5f, -0.5f, 0.0f,
+	-0.5f,  0.5f, 0.0f,
+	-0.5f, -0.5f, 0.0f
+};
+
+GLuint sqrIndices[] = {
+	0, 1, 2,
+	1, 2, 3
+};
 
 int main() {
 	int vertexCount = sizeof(indices) / sizeof(GLuint)/2;
@@ -87,7 +103,7 @@ int main() {
 		return -1;
 	}
 
-	Shader shaderProgram("offset.vert", "default.frag");
+	Shader shaderProgram("pointColoring.vert", "pointColoring.frag");
 
 	VAO VAO1; 
 	VAO1.Bind();
@@ -113,8 +129,6 @@ int main() {
 
 		shaderProgram.Activate();
 		VAO1.Bind();
-		float offset = 0.5f;
-		shaderProgram.setFloat("xOffset", offset);
 
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 
