@@ -7,6 +7,7 @@
 #include "VBO.h"
 #include "EBO.h"
 #include "VAO.h"
+#include "Texture.h"
 
 using namespace std;
 
@@ -45,7 +46,7 @@ GLuint indices[] = {
 
 float triangle[] = {
 	// positions         // colors
-	 0.5f, -0.5f, 0.0f,  0.3f, 0.0f, 0.3f,   // bottom right
+	 0.5f, -0.5f, 0.0f,  0.3f, 0.0f, 0.3f, 1.0f, 1.0f   // bottom right
 	-0.5f, -0.5f, 0.0f,  0.3f, 0.0f, 0.3f,   // bottom left
 	 0.0f,  0.5f, 0.0f,  0.9f, 0.0f, 0.9f,   // top 
 };
@@ -61,19 +62,20 @@ float texCoords[] = {
 };
 
 float sqr[] = {
-	 0.5f,  0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	-0.5f,  0.5f, 0.0f,
-	-0.5f, -0.5f, 0.0f
+	// positions          // colors           // texture coords
+	0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+	0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
 };
 
 GLuint sqrIndices[] = {
-	0, 1, 2,
-	1, 2, 3
+	0, 2, 1,
+	0, 3, 2
 };
 
 int main() {
-	int vertexCount = sizeof(indices) / sizeof(GLuint)/2;
+	int vertexCount = sizeof(sqrIndices) / sizeof(GLuint);
 	glfwInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -103,19 +105,51 @@ int main() {
 		return -1;
 	}
 
-	Shader shaderProgram("pointColoring.vert", "pointColoring.frag");
+	Shader shaderProgram("text.vert", "text.frag");
+	//Texture tex; 
+	//tex.LinkTex("wall.jpg");
+	//tex.ActiveTexture();
+	//tex.Bind();
+	//tex.SetTexParameters();
+
+	int width, height, ch;
+	unsigned char* data = stbi_load("wall.jpg", &width, &height, &ch, 0);
 
 	VAO VAO1; 
 	VAO1.Bind();
 
-	VBO VBO1(triangle, sizeof(triangle));
-	EBO EBO1(triangleIndices, sizeof(triangleIndices));
+	VBO VBO1(sqr, sizeof(sqr));
+	EBO EBO1(sqrIndices, sizeof(sqrIndices));
 
-	VAO1.LinkVBO(VBO1, 0, 6, 0);
-	VAO1.LinkVBO(VBO1, 1, 6, 3);
+	VAO1.LinkVBO(VBO1, 0, 3, 8, 0);
+	VAO1.LinkVBO(VBO1, 1, 3, 8, 3);
+	VAO1.LinkVBO(VBO1, 2, 2, 8, 6);
+	//tex.Unbind();
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
+
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	stbi_image_free(data);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	GLuint tex0 = glGetUniformLocation(shaderProgram.ID, "tex0");
+	shaderProgram.Activate();
+	glUniform1i(tex0, 0);
 
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
@@ -128,8 +162,9 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shaderProgram.Activate();
+		glBindTexture(GL_TEXTURE_2D, texture);
+		//tex.Bind();
 		VAO1.Bind();
-
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 
 		//checar por eventos e trocar os buffers
@@ -139,6 +174,7 @@ int main() {
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
+	//tex.Delete();
 	shaderProgram.Delete();
 
 	glfwDestroyWindow(window);

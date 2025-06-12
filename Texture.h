@@ -2,16 +2,19 @@
 #define TEXTURE_CLASS_H
 
 #include <glad/glad.h>
+#include <stb/stb_image.h>
+#include <iostream>
 
 class Texture {
 public:
 	GLuint ID;
 	Texture();
 
-	void LinkTex(int numTextures);
+	void LinkTex(const char* path);
+	void ActiveTexture();
+	void SetTexParameters();
 	void Bind();
 	void Unbind();
-	void Generate(int width, int height, unsigned char *data);
 	void Delete();
 };
 

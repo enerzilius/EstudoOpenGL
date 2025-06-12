@@ -7,6 +7,8 @@
 #include <fstream>
 #include <sstream>
 #include <cerrno>
+#include <string>
+#include <iostream>
 
 using namespace std;
 string get_file_contents(const char* filename);

@@ -9,7 +9,7 @@ public:
 	GLuint ID;
 	VAO();
 
-	void LinkVBO(VBO VBO, GLuint layout, GLuint stride, GLuint offset);
+	void LinkVBO(VBO VBO, GLuint layout, GLint n, GLuint stride, GLuint offset);
 	void Bind();
 	void Unbind();
 	void Delete();

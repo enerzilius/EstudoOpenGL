@@ -1,6 +1,5 @@
-#include <iostream>
 #include "shaderClass.h"
-#include <string>
+
 
 using namespace std;
 
