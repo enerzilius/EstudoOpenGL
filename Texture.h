@@ -10,7 +10,7 @@ public:
 	GLuint ID;
 	Texture();
 
-	void LinkTex(const char* path);
+	void LinkTex(int width, int height, unsigned char* data);
 	void ActiveTexture();
 	void SetTexParameters();
 	void Bind();

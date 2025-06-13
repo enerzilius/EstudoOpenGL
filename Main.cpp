@@ -107,11 +107,6 @@ int main() {
 	}
 
 	Shader shaderProgram("text.vert", "text.frag");
-	//Texture tex; 
-	//tex.LinkTex("wall.jpg");
-	//tex.ActiveTexture();
-	//tex.Bind();
-	//tex.SetTexParameters();
 
 	int width, height, ch;
 	unsigned char* data = stbi_load("wall.jpg", &width, &height, &ch, 0);
@@ -130,23 +125,17 @@ int main() {
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	GLuint texture;
-	glGenTextures(1, &texture);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	Texture texture;
+	texture.ActiveTexture();
+	texture.Bind();
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	texture.SetTexParameters();
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	texture.LinkTex(width, height, data);
 
 	stbi_image_free(data);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+	texture.Unbind();
 
 	GLuint tex0 = glGetUniformLocation(shaderProgram.ID, "tex0");
 	shaderProgram.Activate();
@@ -163,9 +152,8 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shaderProgram.Activate();
-		glBindTexture(GL_TEXTURE_2D, texture);
+		texture.Bind();
 		vertexTranslation(shaderProgram.ID);
-		//tex.Bind();
 		VAO1.Bind();
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 
@@ -176,7 +164,7 @@ int main() {
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
-	//tex.Delete();
+	texture.Delete();
 	shaderProgram.Delete();
 
 	glfwDestroyWindow(window);
