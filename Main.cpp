@@ -18,6 +18,7 @@ void resize(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void render(GLFWwindow* window);
 void colorLooping(GLuint program);
+void vertexTranslation(GLuint program);
 
 //coordenadas dos vértices do triângulo
 	//z = 0 para fazer uma imagem 2d
@@ -163,6 +164,7 @@ int main() {
 
 		shaderProgram.Activate();
 		glBindTexture(GL_TEXTURE_2D, texture);
+		vertexTranslation(shaderProgram.ID);
 		//tex.Bind();
 		VAO1.Bind();
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
@@ -204,4 +206,11 @@ void colorLooping(GLuint program) {
 	GLfloat blue = (sin(timeValue - 1) / 2.0f) + 0.5f;
 	GLint vertexColorLocation = glGetUniformLocation(program, "cor");
 	glUniform4f(vertexColorLocation, red, green, blue, 1.0f);
+}
+
+void vertexTranslation(GLuint program) {
+	GLfloat timeValue = 0.3 * glfwGetTime();
+	GLfloat offset = sin(timeValue)*0.5;
+	GLint vertexOffset = glGetUniformLocation(program, "offset");
+	glUniform3f(vertexOffset, offset, offset, 0);
 }
