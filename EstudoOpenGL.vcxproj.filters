@@ -101,5 +101,8 @@
     <Image Include="..\..\..\OneDrive\Imagens\wall.jpg">
       <Filter>Arquivos de Recurso\Assets</Filter>
     </Image>
+    <Image Include="awesomeface.png">
+      <Filter>Arquivos de Recurso\Assets</Filter>
+    </Image>
   </ItemGroup>
 </Project>

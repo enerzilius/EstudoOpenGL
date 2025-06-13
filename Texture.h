@@ -10,8 +10,9 @@ public:
 	GLuint ID;
 	Texture();
 
-	void LinkTex(int width, int height, unsigned char* data);
-	void ActiveTexture();
+	void LinkTexJPG(int width, int height, unsigned char* data);
+	void LinkTexPNG(int width, int height, unsigned char* data);
+	void ActiveTexture(GLuint unit);
 	void SetTexParameters();
 	void Bind();
 	void Unbind();

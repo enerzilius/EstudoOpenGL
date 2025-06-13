@@ -126,20 +126,27 @@ int main() {
 	EBO1.Unbind();
 
 	Texture texture;
-	texture.ActiveTexture();
+	texture.ActiveTexture(GL_TEXTURE0);
 	texture.Bind();
 
 	texture.SetTexParameters();
 
-	texture.LinkTex(width, height, data);
+	texture.LinkTexJPG(width, height, data);
+
+	data = stbi_load("awesomeface.png", &width, &height, &ch, 0);
+
+	texture.ActiveTexture(GL_TEXTURE1);
+	texture.Bind();
+
+	texture.LinkTexPNG(width, height, data);
 
 	stbi_image_free(data);
-
+		
 	texture.Unbind();
 
-	GLuint tex0 = glGetUniformLocation(shaderProgram.ID, "tex0");
+	shaderProgram.setInt("tex0", 0);
+	shaderProgram.setInt("tex1", 1);
 	shaderProgram.Activate();
-	glUniform1i(tex0, 0);
 
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
@@ -152,6 +159,9 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shaderProgram.Activate();
+		texture.ActiveTexture(GL_TEXTURE0);
+		texture.Bind();
+		texture.ActiveTexture(GL_TEXTURE1);
 		texture.Bind();
 		vertexTranslation(shaderProgram.ID);
 		VAO1.Bind();

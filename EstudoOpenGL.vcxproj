@@ -169,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\OneDrive\Imagens\wall.jpg" />
+    <Image Include="awesomeface.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
