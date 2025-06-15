@@ -64,10 +64,10 @@ float texCoords[] = {
 
 float sqr[] = {
 	// positions          // colors           // texture coords
-	0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.6f, 0.6f,   // top right
-	0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.6f, 0.4f,   // bottom right
-   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.4f, 0.4f,   // bottom left
-   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.4f, 0.6f    // top left 
+	0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.8f, 0.8f,   // top right
+	0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.8f, 0.2f,   // bottom right
+   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.2f, 0.2f,   // bottom left
+   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.2f, 0.8f    // top left 
 };
 
 GLuint sqrIndices[] = {
@@ -149,6 +149,7 @@ int main() {
 	shaderProgram.Activate();
 	shaderProgram.setInt("tex0", 0);
 	shaderProgram.setInt("tex1", 1);
+	shaderProgram.setFloat("mixParam", 0.5);
 
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
