@@ -64,10 +64,10 @@ float texCoords[] = {
 
 float sqr[] = {
 	// positions          // colors           // texture coords
-	0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-	0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+	0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.6f, 0.6f,   // top right
+	0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.6f, 0.4f,   // bottom right
+   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.4f, 0.4f,   // bottom left
+   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.4f, 0.6f    // top left 
 };
 
 GLuint sqrIndices[] = {
@@ -108,9 +108,6 @@ int main() {
 
 	Shader shaderProgram("text.vert", "text.frag");
 
-	int width, height, ch;
-	unsigned char* data = stbi_load("wall.jpg", &width, &height, &ch, 0);
-
 	VAO VAO1; 
 	VAO1.Bind();
 
@@ -128,25 +125,30 @@ int main() {
 	Texture texture;
 	texture.ActiveTexture(GL_TEXTURE0);
 	texture.Bind();
-
 	texture.SetTexParameters();
 
-	texture.LinkTexJPG(width, height, data);
+	int width, height, ch;
+	stbi_set_flip_vertically_on_load(true);
+	const char* path = "wall.jpg";
+	unsigned char* data = stbi_load(path, &width, &height, &ch, 0);
 
-	data = stbi_load("awesomeface.png", &width, &height, &ch, 0);
-
-	texture.ActiveTexture(GL_TEXTURE1);
-	texture.Bind();
-
-	texture.LinkTexPNG(width, height, data);
-
+	if (data) texture.LinkTexJPG(width, height, data);
+	else cout << "Erro ao carregar a imagem "<<path<<endl;
 	stbi_image_free(data);
-		
-	texture.Unbind();
 
+	Texture texture2;
+	texture2.Bind();
+	texture2.SetTexParameters();
+
+	path = "awesomeface.png";
+	data = stbi_load(path, &width, &height, &ch, 0);
+	if (data) texture2.LinkTexPNG(width, height, data);
+	else cout << "Erro ao carregar a imagem " << path << endl;
+	stbi_image_free(data);
+
+	shaderProgram.Activate();
 	shaderProgram.setInt("tex0", 0);
 	shaderProgram.setInt("tex1", 1);
-	shaderProgram.Activate();
 
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
@@ -158,12 +160,13 @@ int main() {
 		glClearColor(0.3f, 0.0f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		shaderProgram.Activate();
 		texture.ActiveTexture(GL_TEXTURE0);
 		texture.Bind();
-		texture.ActiveTexture(GL_TEXTURE1);
-		texture.Bind();
+		texture2.ActiveTexture(GL_TEXTURE1);
+		texture2.Bind();
 		vertexTranslation(shaderProgram.ID);
+
+		shaderProgram.Activate();
 		VAO1.Bind();
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 
