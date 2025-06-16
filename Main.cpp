@@ -62,12 +62,14 @@ float texCoords[] = {
 	0.5f, 1.0f   // top-center corner
 };
 
+float zoom = 0.0;
+
 float sqr[] = {
 	// positions          // colors           // texture coords
-	0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.8f, 0.8f,   // top right
-	0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.8f, 0.2f,   // bottom right
-   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.2f, 0.2f,   // bottom left
-   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.2f, 0.8f    // top left 
+	0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f+zoom, 1.0f+zoom,   // top right
+	0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f+zoom, 0.0f-zoom,   // bottom right
+   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f-zoom, 0.0f-zoom,   // bottom left
+   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f-zoom, 1.0f+zoom    // top left 
 };
 
 GLuint sqrIndices[] = {
