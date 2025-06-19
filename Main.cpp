@@ -23,6 +23,7 @@ void processInput(GLFWwindow* window);
 void render(GLFWwindow* window);
 void colorLooping(GLuint program);
 void vertexTranslation(GLuint program);
+void transformation(GLuint program);
 
 //coordenadas dos vértices do triângulo
 	//z = 0 para fazer uma imagem 2d
@@ -89,7 +90,9 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "Omor", NULL, NULL);
+	
+
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Omor", NULL, NULL);
 
 	glfwSetFramebufferSizeCallback(window, resize);
 
@@ -112,7 +115,7 @@ int main() {
 		return -1;
 	}
 
-	Shader shaderProgram("text.vert", "text.frag");
+	Shader shaderProgram("transform.vert", "text.frag");
 
 	VAO VAO1; 
 	VAO1.Bind();
@@ -167,11 +170,21 @@ int main() {
 		glClearColor(0.3f, 0.0f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		//glm::mat4 model = glm::mat4(1.0f);
+		//glm::mat4 view = glm::mat4(1.0f);
+		//glm::mat4 proj = glm::mat4(1.0f);
+
+		//view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+		//proj = glm::perspective(glm::radians(45.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
+
+		
+
 		texture.ActiveTexture(GL_TEXTURE0);
 		texture.Bind();
 		texture2.ActiveTexture(GL_TEXTURE1);
 		texture2.Bind();
-		vertexTranslation(shaderProgram.ID);
+		//vertexTranslation(shaderProgram.ID);
+		transformation(shaderProgram.ID);
 
 		shaderProgram.Activate();
 		VAO1.Bind();
@@ -221,4 +234,14 @@ void vertexTranslation(GLuint program) {
 	GLfloat offset = sin(timeValue)*0.5;
 	GLint vertexOffset = glGetUniformLocation(program, "offset");
 	glUniform3f(vertexOffset, offset, offset, 0);
+}
+
+void transformation(GLuint program) {
+	GLfloat timeValue = glfwGetTime();
+	glm::mat4 trans = glm::mat4(1.0f);
+	trans = glm::translate(trans, glm::vec3(sin(timeValue)*0.5, sin(timeValue)*0.5, 0.0f));
+	trans = glm::rotate(trans, glm::radians(timeValue*20), glm::vec3(0.0, 0.0, 1.0));
+
+	unsigned int transformLoc = glGetUniformLocation(program, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 }
