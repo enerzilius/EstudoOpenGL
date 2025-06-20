@@ -20,10 +20,10 @@ const unsigned int SCR_HEIGHT = 600;
 
 void resize(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-void render(GLFWwindow* window);
 void colorLooping(GLuint program);
 void vertexTranslation(GLuint program);
 void transformation(GLuint program);
+void transformation2(GLuint program);
 
 //coordenadas dos vértices do triângulo
 	//z = 0 para fazer uma imagem 2d
@@ -52,9 +52,9 @@ GLuint indices[] = {
 
 float triangle[] = {
 	// positions         // colors
-	 0.5f, -0.5f, 0.0f,  0.3f, 0.0f, 0.3f, 1.0f, 1.0f   // bottom right
-	-0.5f, -0.5f, 0.0f,  0.3f, 0.0f, 0.3f,   // bottom left
-	 0.0f,  0.5f, 0.0f,  0.9f, 0.0f, 0.9f,   // top 
+	 0.5f, -0.5f, 0.0f,  0.3f, 0.0f, 0.3f, 1.0f, 0.0f,   // bottom right
+	-0.5f, -0.5f, 0.0f,  0.3f, 0.0f, 0.3f, 0.0f, 0.0f,   // bottom left
+	 0.0f,  0.5f, 0.0f,  0.9f, 0.0f, 0.9f, 0.5f, 1.0f,  // top 
 };
 
 GLuint triangleIndices[] = {
@@ -126,7 +126,7 @@ int main() {
 	VAO1.LinkVBO(VBO1, 0, 3, 8, 0);
 	VAO1.LinkVBO(VBO1, 1, 3, 8, 3);
 	VAO1.LinkVBO(VBO1, 2, 2, 8, 6);
-	//tex.Unbind();
+
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
@@ -177,8 +177,6 @@ int main() {
 		//view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
 		//proj = glm::perspective(glm::radians(45.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
 
-		
-
 		texture.ActiveTexture(GL_TEXTURE0);
 		texture.Bind();
 		texture2.ActiveTexture(GL_TEXTURE1);
@@ -189,6 +187,9 @@ int main() {
 		shaderProgram.Activate();
 		VAO1.Bind();
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
+		
+		transformation2(shaderProgram.ID);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		//checar por eventos e trocar os buffers
 		glfwPollEvents();
@@ -214,12 +215,6 @@ void resize(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void render(GLFWwindow* window) {
-
-	// here we put our rendering code
-
-}
-
 void colorLooping(GLuint program) {
 	GLfloat timeValue = 0.3 * glfwGetTime();
 	GLfloat red = (sin(timeValue + 1) / 2.0f) + 0.5f;
@@ -239,9 +234,18 @@ void vertexTranslation(GLuint program) {
 void transformation(GLuint program) {
 	GLfloat timeValue = glfwGetTime();
 	glm::mat4 trans = glm::mat4(1.0f);
-	trans = glm::translate(trans, glm::vec3(sin(timeValue)*0.5, sin(timeValue)*0.5, 0.0f));
 	trans = glm::rotate(trans, glm::radians(timeValue*20), glm::vec3(0.0, 0.0, 1.0));
+	trans = glm::translate(trans, glm ::vec3(cos(timeValue) * 0.5, cos(timeValue)*0.5, 0.0f));
 
+	unsigned int transformLoc = glGetUniformLocation(program, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+}
+
+void transformation2(GLuint program) {
+	glm::mat4 trans = glm::mat4(1.0f);
+	trans = glm::translate(trans, glm::vec3(-0.9f, 0.9f, 0.0f));
+	float scaleAmount = static_cast<float>(sin(glfwGetTime()))*0.5;
+	trans = glm::scale(trans, glm::vec3(scaleAmount, scaleAmount, scaleAmount));
 	unsigned int transformLoc = glGetUniformLocation(program, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 }
