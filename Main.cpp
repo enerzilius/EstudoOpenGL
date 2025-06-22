@@ -24,6 +24,7 @@ void colorLooping(GLuint program);
 void vertexTranslation(GLuint program);
 void transformation(GLuint program);
 void transformation2(GLuint program);
+void fractal(GLuint program, int depth);
 
 //coordenadas dos vértices do triângulo
 	//z = 0 para fazer uma imagem 2d
@@ -51,10 +52,10 @@ GLuint indices[] = {
 };
 
 float triangle[] = {
-	// positions         // colors
-	 0.5f, -0.5f, 0.0f,  0.3f, 0.0f, 0.3f, 1.0f, 0.0f,   // bottom right
-	-0.5f, -0.5f, 0.0f,  0.3f, 0.0f, 0.3f, 0.0f, 0.0f,   // bottom left
-	 0.0f,  0.5f, 0.0f,  0.9f, 0.0f, 0.9f, 0.5f, 1.0f,  // top 
+	// positions         // colors         // tex coords
+	 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 1.5f, 0.0f,   // bottom right
+	-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,-0.5f, 0.0f,   // bottom left
+	 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 0.5f, 1.5f,  // top 
 };
 
 GLuint triangleIndices[] = {
@@ -67,7 +68,7 @@ float texCoords[] = {
 	0.5f, 1.0f   // top-center corner
 };
 
-float zoom = 0.0;
+float zoom = -1.0;
 
 float sqr[] = {
 	// positions          // colors           // texture coords
@@ -82,15 +83,14 @@ GLuint sqrIndices[] = {
 	0, 3, 2
 };
 
+int vertexCount = sizeof(triangleIndices) / sizeof(GLuint);
+
 int main() {
-	int vertexCount = sizeof(sqrIndices) / sizeof(GLuint);
 	glfwInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	
 
 	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Omor", NULL, NULL);
 
@@ -120,8 +120,8 @@ int main() {
 	VAO VAO1; 
 	VAO1.Bind();
 
-	VBO VBO1(sqr, sizeof(sqr));
-	EBO EBO1(sqrIndices, sizeof(sqrIndices));
+	VBO VBO1(triangle, sizeof(triangle));
+	EBO EBO1(triangleIndices, sizeof(triangleIndices));
 
 	VAO1.LinkVBO(VBO1, 0, 3, 8, 0);
 	VAO1.LinkVBO(VBO1, 1, 3, 8, 3);
@@ -182,14 +182,18 @@ int main() {
 		texture2.ActiveTexture(GL_TEXTURE1);
 		texture2.Bind();
 		//vertexTranslation(shaderProgram.ID);
-		transformation(shaderProgram.ID);
+		//transformation(shaderProgram.ID);
 
 		shaderProgram.Activate();
 		VAO1.Bind();
-		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
+		fractal(shaderProgram.ID, 3);
+
+
+		//glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 		
-		transformation2(shaderProgram.ID);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//transformation2(shaderProgram.ID);
+		//glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
+
 
 		//checar por eventos e trocar os buffers
 		glfwPollEvents();
@@ -248,4 +252,16 @@ void transformation2(GLuint program) {
 	trans = glm::scale(trans, glm::vec3(scaleAmount, scaleAmount, scaleAmount));
 	unsigned int transformLoc = glGetUniformLocation(program, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+}
+
+void fractal(GLuint program, int depth) {
+	glm::mat4 trans = glm::mat4(1.0f);
+	for (int i = 0; i < depth; i++) {
+		if(i == 0) trans = glm::translate(trans, glm::vec3(0.0f, 0.5f, 0.0f));
+		if (i == 1) trans = glm::translate(trans, glm::vec3(-0.5f, -0.5f, 0.0f));
+		if (i == 2) trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		unsigned int transformLoc = glGetUniformLocation(program, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
+	}
 }
