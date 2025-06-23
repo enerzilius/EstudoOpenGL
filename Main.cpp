@@ -258,8 +258,8 @@ void fractal(GLuint program, int depth) {
 	glm::mat4 trans = glm::mat4(1.0f);
 	for (int i = 0; i < depth; i++) {
 		if(i == 0) trans = glm::translate(trans, glm::vec3(0.0f, 0.5f, 0.0f));
-		if (i == 1) trans = glm::translate(trans, glm::vec3(-0.5f, -0.5f, 0.0f));
-		if (i == 2) trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		if (i == 1) trans = glm::translate(trans, glm::vec3(-0.5f, -1.0f, 0.0f));
+		if (i == 2) trans = glm::translate(trans, glm::vec3(1.0f, -0.0f, 0.0f));
 		unsigned int transformLoc = glGetUniformLocation(program, "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
