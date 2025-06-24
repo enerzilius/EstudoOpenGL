@@ -1,4 +1,7 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
@@ -83,7 +86,7 @@ GLuint sqrIndices[] = {
 	0, 3, 2
 };
 
-int vertexCount = sizeof(triangleIndices) / sizeof(GLuint);
+int vertexCount = sizeof(sqrIndices) / sizeof(GLuint);
 
 int main() {
 	glfwInit();
@@ -120,8 +123,8 @@ int main() {
 	VAO VAO1; 
 	VAO1.Bind();
 
-	VBO VBO1(triangle, sizeof(triangle));
-	EBO EBO1(triangleIndices, sizeof(triangleIndices));
+	VBO VBO1(sqr, sizeof(sqr));
+	EBO EBO1(sqrIndices, sizeof(sqrIndices));
 
 	VAO1.LinkVBO(VBO1, 0, 3, 8, 0);
 	VAO1.LinkVBO(VBO1, 1, 3, 8, 3);
@@ -182,17 +185,19 @@ int main() {
 		texture2.ActiveTexture(GL_TEXTURE1);
 		texture2.Bind();
 		//vertexTranslation(shaderProgram.ID);
-		//transformation(shaderProgram.ID);
 
 		shaderProgram.Activate();
 		VAO1.Bind();
-		fractal(shaderProgram.ID, 3);
 
 
-		//glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
+		//fractal(shaderProgram.ID, 3);
+
+
+		transformation(shaderProgram.ID);
+		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 		
-		//transformation2(shaderProgram.ID);
-		//glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
+		transformation2(shaderProgram.ID);
+		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 
 
 		//checar por eventos e trocar os buffers
@@ -238,8 +243,8 @@ void vertexTranslation(GLuint program) {
 void transformation(GLuint program) {
 	GLfloat timeValue = glfwGetTime();
 	glm::mat4 trans = glm::mat4(1.0f);
-	trans = glm::rotate(trans, glm::radians(timeValue*20), glm::vec3(0.0, 0.0, 1.0));
-	trans = glm::translate(trans, glm ::vec3(cos(timeValue) * 0.5, cos(timeValue)*0.5, 0.0f));
+	trans = glm::translate(trans, glm ::vec3(0, cos(timeValue)*0.5, 0.0f));
+	trans = glm::rotate(trans, glm::radians(timeValue*100), glm::vec3(0.0, 0.0, 1.0));
 
 	unsigned int transformLoc = glGetUniformLocation(program, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
@@ -257,11 +262,21 @@ void transformation2(GLuint program) {
 void fractal(GLuint program, int depth) {
 	glm::mat4 trans = glm::mat4(1.0f);
 	for (int i = 0; i < depth; i++) {
-		if(i == 0) trans = glm::translate(trans, glm::vec3(0.0f, 0.5f, 0.0f));
-		if (i == 1) trans = glm::translate(trans, glm::vec3(-0.5f, -1.0f, 0.0f));
-		if (i == 2) trans = glm::translate(trans, glm::vec3(1.0f, -0.0f, 0.0f));
+		srand(static_cast <unsigned> (time(0)));
+		float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/1);
+		float s = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/1);
+		float theta = rand() % 360;
+		float phi = rand() % 360;
+		float h = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/1);
+		float k = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/1);
+
+		float x = r * cos(theta) + s * sin(phi) + h;
+		float y = r * cos(theta) + s * sin(phi) + h;
+
 		unsigned int transformLoc = glGetUniformLocation(program, "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
+
+
 	}
 }
