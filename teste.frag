@@ -8,27 +8,21 @@ uniform float mixParam;
 uniform sampler2D tex0;
 uniform sampler2D tex1;
 
-vec2 map(vec2 val){
-    if(val.x < 0.1 && val.y < 0.1){
-        return vec2(0.0, 0.0);
-    }
-    if(val.x > 0.25 && val.y < 0.2){
-        return vec2(0.6, 0.1);
-    }
-    if((val.x < 0.25 && val.x > 0.1) && val.y < 0.2){
-        return vec2(0.2, 0.0);
-    }
-    return val;
+vec3 map(float val){
+    if(val < 0.03) return vec3(1.0, 1.0, 1.0);
+    if(val < 0.1) return vec3(0.95, 0.0, 0.95);
+    if(val < 1.0) return vec3(0.4, 0.4, 0.99);
+    return vec3(val);
 }
 
 void main()
 {
     vec4 color;
     float med =(UV.x+UV.y)/2;
-    float val_x = UV.x-med;
-    float val_y = UV.y-med;
-    vec2 rg = vec2(val_x, val_y);
-    rg = map(rg);
-    color = vec4(rg.x, rg.y, 0, 1);
+    float val_x = pow(UV.x-med, 2);
+    float val_y = pow(UV.y-med, 2);
+    float s = val_x+val_y;
+    vec3 rg = map(s);
+    color = vec4(rg, 1);
     FragColor = color;
 }
