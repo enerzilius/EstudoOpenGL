@@ -77,6 +77,9 @@
     <None Include="transform.vert">
       <Filter>Arquivos de Recurso\Shaders</Filter>
     </None>
+    <None Include="teste.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="purple.frag">

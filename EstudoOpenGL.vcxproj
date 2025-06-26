@@ -153,6 +153,7 @@
     <None Include="offset.vert" />
     <None Include="pointColoring.frag" />
     <None Include="pointColoring.vert" />
+    <None Include="teste.frag" />
     <None Include="text.frag" />
     <None Include="text.vert" />
     <None Include="time.frag" />
