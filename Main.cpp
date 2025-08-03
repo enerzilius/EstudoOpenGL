@@ -118,7 +118,7 @@ int main() {
 		return -1;
 	}
 
-	Shader shaderProgram("transform.vert", "teste.frag");
+	Shader shaderProgram("AL.vert", "AL.frag");
 
 	VAO VAO1; 
 	VAO1.Bind();

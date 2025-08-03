@@ -80,9 +80,15 @@
     <None Include="teste.frag">
       <Filter>Arquivos de Recurso\Shaders</Filter>
     </None>
+    <None Include="AL.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="purple.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </Text>
+    <Text Include="AL.vert">
       <Filter>Arquivos de Recurso\Shaders</Filter>
     </Text>
   </ItemGroup>
