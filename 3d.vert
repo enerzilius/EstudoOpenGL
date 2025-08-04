@@ -10,11 +10,12 @@ uniform mat4 transform;
 
 uniform mat4 model;   
 uniform mat4 view; 
-uniform mat4 projection; 
+uniform mat4 proj; 
 
 void main()
 {
-    gl_Position = vec4((aPos), 1.0);
+    mat4 MVP = proj * view * model;
+    gl_Position =  transform * MVP * vec4((aPos), 1.0);
     ourColor = vec4(aColor, 1.0);
     UV = aTexCoord;
 }

@@ -173,6 +173,9 @@ int main() {
 		glClearColor(0.3f, 0.0f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		shaderProgram.Activate();
+		VAO1.Bind();
+
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
@@ -181,15 +184,16 @@ int main() {
 		proj = glm::perspective(glm::radians(50.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
 
 		int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE glm::value_ptr)
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+		int viewLocation = glGetUniformLocation(shaderProgram.ID, "view");
+		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+		int projLocation = glGetUniformLocation(shaderProgram.ID, "proj");
+		glUniformMatrix4fv(projLocation, 1, GL_FALSE, glm::value_ptr(proj));
 		
 		texture.ActiveTexture(GL_TEXTURE0);
 		texture.Bind();
 		texture2.ActiveTexture(GL_TEXTURE1);
 		texture2.Bind();
-
-		shaderProgram.Activate();
-		VAO1.Bind();
 
 		//fractal(shaderProgram.ID, 3);
 
