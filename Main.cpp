@@ -118,7 +118,7 @@ int main() {
 		return -1;
 	}
 
-	Shader shaderProgram("AL.vert", "AL.frag");
+	Shader shaderProgram("3d.vert", "3d.frag");
 
 	VAO VAO1; 
 	VAO1.Bind();
@@ -173,25 +173,25 @@ int main() {
 		glClearColor(0.3f, 0.0f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//glm::mat4 model = glm::mat4(1.0f);
-		//glm::mat4 view = glm::mat4(1.0f);
-		//glm::mat4 proj = glm::mat4(1.0f);
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 proj = glm::mat4(1.0f);
 
-		//view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-		//proj = glm::perspective(glm::radians(45.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
+		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+		proj = glm::perspective(glm::radians(50.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
 
+		int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE glm::value_ptr)
+		
 		texture.ActiveTexture(GL_TEXTURE0);
 		texture.Bind();
 		texture2.ActiveTexture(GL_TEXTURE1);
 		texture2.Bind();
-		//vertexTranslation(shaderProgram.ID);
 
 		shaderProgram.Activate();
 		VAO1.Bind();
 
-
 		//fractal(shaderProgram.ID, 3);
-
 
 		transformation(shaderProgram.ID);
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);

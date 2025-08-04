@@ -83,6 +83,12 @@
     <None Include="AL.frag">
       <Filter>Arquivos de Recurso\Shaders</Filter>
     </None>
+    <None Include="3d.vert">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="3d.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="purple.frag">

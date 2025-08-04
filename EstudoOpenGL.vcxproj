@@ -147,6 +147,8 @@
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="3d.frag" />
+    <None Include="3d.vert" />
     <None Include="AL.frag" />
     <None Include="default.frag" />
     <None Include="default.vert" />
