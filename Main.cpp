@@ -140,7 +140,7 @@ int main() {
 	texture.SetTexParameters();
 
 	int width, height, ch;
-	stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(false);
 	const char* path = "wall.jpg";
 	unsigned char* data = stbi_load(path, &width, &height, &ch, 0);
 
@@ -180,6 +180,7 @@ int main() {
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
 
+		model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
 		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
 		proj = glm::perspective(glm::radians(50.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
 
@@ -196,11 +197,6 @@ int main() {
 		texture2.Bind();
 
 		//fractal(shaderProgram.ID, 3);
-
-		transformation(shaderProgram.ID);
-		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
-		
-		transformation2(shaderProgram.ID);
 		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 
 
