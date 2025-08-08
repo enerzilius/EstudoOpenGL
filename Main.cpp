@@ -106,6 +106,8 @@ int main() {
 		return -1;
 	}
 
+	glEnable(GL_DEPTH_TEST);
+
 	Shader shaderProgram("3d.vert", "3d.frag");
 
 	VAO VAO1; 
@@ -158,7 +160,7 @@ int main() {
 
 		//aqui vai os processos de renderização
 		glClearColor(0.3f, 0.0f, 0.2f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		texture.ActiveTexture(GL_TEXTURE0);
 		texture.Bind();
