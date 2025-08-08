@@ -29,64 +29,52 @@ void transformation(GLuint program);
 void transformation2(GLuint program);
 void fractal(GLuint program, int depth);
 
-//coordenadas dos vértices do triângulo
-	//z = 0 para fazer uma imagem 2d
-float vertices[] = {
-	 -1.0f,  0.5f, 0.0f, // esquerda cima
-	 -0.5f, -0.5f, 0.0f, // meio do negativo
-	  0.0f,  0.5f, 0.0f, // meio cima
-	  //segundo e terceiro
-	  0.5f, -0.5f, 0.0f,
-	  1.0f,  0.5f, 0.0f,
-	  // triangulos pra baixo
-	  0.0f, -0.5f, 0.0f,
-	  0.0f, -1.0f, 0.0f,
-	  //topo
-	  0.0f,  1.0f, 0.0f
+float cubeVertices[] = {
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
 
-GLuint indices[] = {
-	0, 1, 2,
-	2, 3, 4,
-	2, 1, 3,
-	2, 3, 6,
-	1, 5, 6,
-	0, 7, 4
-};
-
-float triangle[] = {
-	// positions         // colors         // tex coords
-	 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 1.5f, 0.0f,   // bottom right
-	-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,-0.5f, 0.0f,   // bottom left
-	 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 0.5f, 1.5f,  // top 
-};
-
-GLuint triangleIndices[] = {
-	0, 1, 2,
-};
-
-float texCoords[] = {
-	0.0f, 0.0f,  // lower-left corner  
-	1.0f, 0.0f,  // lower-right corner
-	0.5f, 1.0f   // top-center corner
-};
-
-float zoom = -1.0;
-
-float sqr[] = {
-	// positions          // colors           // texture coords
-	0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f+zoom, 1.0f+zoom,   // top right
-	0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f+zoom, 0.0f-zoom,   // bottom right
-   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f-zoom, 0.0f-zoom,   // bottom left
-   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f-zoom, 1.0f+zoom    // top left 
-};
-
-GLuint sqrIndices[] = {
-	0, 2, 1,
-	0, 3, 2
-};
-
-int vertexCount = sizeof(sqrIndices) / sizeof(GLuint);
+//int vertexCount = sizeof(cubeVertices) / sizeof(GLuint);
+int vertexCount = 36;
 
 int main() {
 	glfwInit();
@@ -123,16 +111,15 @@ int main() {
 	VAO VAO1; 
 	VAO1.Bind();
 
-	VBO VBO1(sqr, sizeof(sqr));
-	EBO EBO1(sqrIndices, sizeof(sqrIndices));
+	VBO VBO1(cubeVertices, sizeof(cubeVertices));
+	//EBO EBO1(sqrIndices, sizeof(sqrIndices));
 
-	VAO1.LinkVBO(VBO1, 0, 3, 8, 0);
-	VAO1.LinkVBO(VBO1, 1, 3, 8, 3);
-	VAO1.LinkVBO(VBO1, 2, 2, 8, 6);
+	VAO1.LinkVBO(VBO1, 0, 3, 5, 0);
+	VAO1.LinkVBO(VBO1, 1, 3, 5, 3);
 
 	VAO1.Unbind();
 	VBO1.Unbind();
-	EBO1.Unbind();
+	//EBO1.Unbind();
 
 	Texture texture;
 	texture.ActiveTexture(GL_TEXTURE0);
@@ -140,7 +127,7 @@ int main() {
 	texture.SetTexParameters();
 
 	int width, height, ch;
-	stbi_set_flip_vertically_on_load(false);
+	stbi_set_flip_vertically_on_load(true);
 	const char* path = "wall.jpg";
 	unsigned char* data = stbi_load(path, &width, &height, &ch, 0);
 
@@ -173,15 +160,20 @@ int main() {
 		glClearColor(0.3f, 0.0f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		texture.ActiveTexture(GL_TEXTURE0);
+		texture.Bind();
+		texture2.ActiveTexture(GL_TEXTURE1);
+		texture2.Bind();
+
 		shaderProgram.Activate();
-		VAO1.Bind();
 
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
 
-		model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
-		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+		//model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
+		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 		proj = glm::perspective(glm::radians(50.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
 
 		int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
@@ -190,14 +182,12 @@ int main() {
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
 		int projLocation = glGetUniformLocation(shaderProgram.ID, "proj");
 		glUniformMatrix4fv(projLocation, 1, GL_FALSE, glm::value_ptr(proj));
-		
-		texture.ActiveTexture(GL_TEXTURE0);
-		texture.Bind();
-		texture2.ActiveTexture(GL_TEXTURE1);
-		texture2.Bind();
 
 		//fractal(shaderProgram.ID, 3);
-		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
+
+		VAO1.Bind();
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
 		//checar por eventos e trocar os buffers
@@ -206,7 +196,7 @@ int main() {
 	}
 	VAO1.Delete();
 	VBO1.Delete();
-	EBO1.Delete();
+	//EBO1.Delete();
 	texture.Delete();
 	shaderProgram.Delete();
 

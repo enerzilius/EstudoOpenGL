@@ -1,9 +1,7 @@
 #version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColor;
-layout (location = 2) in vec2 aTexCoord;
 
-out vec4 ourColor;
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec2 aTexCoord;
 out vec2 UV;
 
 uniform mat4 model;   
@@ -14,6 +12,5 @@ void main()
 {
     mat4 MVP = proj * view * model;
     gl_Position =  MVP * vec4((aPos), 1.0);
-    ourColor = vec4(aColor, 1.0);
     UV = aTexCoord;
 }
