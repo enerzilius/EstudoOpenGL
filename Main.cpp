@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <vector>
 
 
 #include "shaderClass.h"
@@ -28,6 +29,7 @@ void vertexTranslation(GLuint program);
 void transformation(GLuint program);
 void transformation2(GLuint program);
 void fractal(GLuint program, int depth);
+void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model);
 
 float cubeVertices[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -71,6 +73,20 @@ float cubeVertices[] = {
 	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+};
+
+
+vector<glm::vec3> cubePositions = {
+	glm::vec3(0.0f,  0.0f,  0.0f),
+	glm::vec3(2.0f,  5.0f, -15.0f),
+	glm::vec3(-1.5f, -2.2f, -2.5f),
+	glm::vec3(-3.8f, -2.0f, -12.3f),
+	glm::vec3(2.4f, -0.4f, -3.5f),
+	glm::vec3(-1.7f,  3.0f, -7.5f),
+	glm::vec3(1.3f, -2.0f, -2.5f),
+	glm::vec3(1.5f,  2.0f, -2.5f),
+	glm::vec3(1.5f,  0.2f, -1.5f),
+	glm::vec3(-1.3f,  1.0f, -1.5f)
 };
 
 //int vertexCount = sizeof(cubeVertices) / sizeof(GLuint);
@@ -174,22 +190,29 @@ int main() {
 		glm::mat4 proj = glm::mat4(1.0f);
 
 		//model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
-		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		//model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
 		proj = glm::perspective(glm::radians(50.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
 
-		int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-		int viewLocation = glGetUniformLocation(shaderProgram.ID, "view");
-		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
-		int projLocation = glGetUniformLocation(shaderProgram.ID, "proj");
-		glUniformMatrix4fv(projLocation, 1, GL_FALSE, glm::value_ptr(proj));
+		//int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
+		//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+		//int viewLocation = glGetUniformLocation(shaderProgram.ID, "view");
+		//glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+		//int projLocation = glGetUniformLocation(shaderProgram.ID, "proj");
+		//glUniformMatrix4fv(projLocation, 1, GL_FALSE, glm::value_ptr(proj));
+
+		shaderProgram.setMat4("model", model);
+		shaderProgram.setMat4("view", view);
+		shaderProgram.setMat4("proj", proj);
+
 
 		//fractal(shaderProgram.ID, 3);
 		//glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 
 		VAO1.Bind();
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		renderCubes(cubePositions, shaderProgram, model);
 
 
 		//checar por eventos e trocar os buffers
@@ -249,6 +272,19 @@ void transformation2(GLuint program) {
 	trans = glm::scale(trans, glm::vec3(scaleAmount, scaleAmount, scaleAmount));
 	unsigned int transformLoc = glGetUniformLocation(program, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+}
+
+void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model) {
+	srand(static_cast <unsigned> (time(0)));
+	for (glm::vec3 cubePosition : cubePositions) {
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, cubePosition);
+		float angle = 20.0f * (rand() % cubePositions.size());
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		program.setMat4("model", model);
+
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 }
 
 void fractal(GLuint program, int depth) {
