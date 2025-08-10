@@ -282,7 +282,7 @@ void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 mod
 		model = glm::translate(model, cubePosition);
 		view = glm::translate(model, glm::vec3(-(rand() % 5)));
 		float angle = 20.0f * (rand() % cubePositions.size());
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		model = glm::rotate(model, glm::radians((angle+(float)glfwGetTime())*50), glm::vec3(1.0f, 0.3f, 0.5f));
 		program.setMat4("model", model);
 		program.setMat4("view", view);
 
