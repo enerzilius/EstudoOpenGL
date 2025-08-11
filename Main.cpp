@@ -192,7 +192,7 @@ int main() {
 		//model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
 		//model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
-		proj = glm::perspective(glm::radians(50.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
+		proj = glm::perspective(glm::radians(70.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 3.0f, 100.0f);
 
 		//int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
 		//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
@@ -276,17 +276,18 @@ void transformation2(GLuint program) {
 
 void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model, glm::mat4 view) {
 	srand(static_cast <unsigned> (time(0)));
+	int i = 0;
 	for (glm::vec3 cubePosition : cubePositions) {
 		model = glm::mat4(1.0f);
 		view = glm::mat4(1.0f);
 		model = glm::translate(model, cubePosition);
-		view = glm::translate(model, glm::vec3(-(rand() % 5)));
-		float angle = 20.0f * (rand() % cubePositions.size());
-		model = glm::rotate(model, glm::radians((angle+(float)glfwGetTime())*50), glm::vec3(1.0f, 0.3f, 0.5f));
+		view = glm::translate(model, glm::vec3(0.0, 0.0, -3));
+		if(i % 2 == 0) model = glm::rotate(model, glm::radians(((float)glfwGetTime())*50), glm::vec3(1.0f, 0.3f, 0.5f));
 		program.setMat4("model", model);
 		program.setMat4("view", view);
 
 		glDrawArrays(GL_TRIANGLES, 0, 36);
+		i++;
 	}
 }
 
