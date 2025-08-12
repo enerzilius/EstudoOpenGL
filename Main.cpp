@@ -92,6 +92,11 @@ vector<glm::vec3> cubePositions = {
 //int vertexCount = sizeof(cubeVertices) / sizeof(GLuint);
 int vertexCount = 36;
 
+const float radius = 10.0;
+glm::vec3 cameraPosition = glm::vec3(sin(glfwGetTime()) * radius, 0.0, cos(glfwGetTime()) * radius);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+
 int main() {
 	glfwInit();
 
@@ -189,18 +194,16 @@ int main() {
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
 
-		float radius = 10.0;
-		glm::vec3 cameraPosition = glm::vec3(sin(glfwGetTime()) * radius, 0.0, cos(glfwGetTime()) * radius);
 		glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
 		glm::vec3 cameraDirection = glm::normalize(cameraPosition - cameraTarget);
 
-		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-		glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+		
+		glm::vec3 cameraRight = glm::normalize(glm::cross(cameraUp, cameraDirection));
 		glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
 
-		view = glm::lookAt(cameraPosition, cameraTarget, up);
+		view = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
 
-		proj = glm::perspective(glm::radians(70.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 3.0f, 100.0f);
+		proj = glm::perspective(glm::radians(70.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
 
 		//shaderProgram.setMat4("model", model);
 		shaderProgram.setMat4("view", view);
@@ -233,6 +236,16 @@ int main() {
 
 void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
+
+	const float cameraSpeed = 0.01f; // adjust accordingly
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		cameraPosition += cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		cameraPosition -= cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		cameraPosition -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		cameraPosition += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 }
 
 void resize(GLFWwindow* window, int width, int height)
