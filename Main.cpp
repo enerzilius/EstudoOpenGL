@@ -29,7 +29,7 @@ void vertexTranslation(GLuint program);
 void transformation(GLuint program);
 void transformation2(GLuint program);
 void fractal(GLuint program, int depth);
-void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model, glm::mat4 view);
+void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model);
 
 float cubeVertices[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -189,20 +189,21 @@ int main() {
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
 
-		//model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
-		//model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
+		float radius = 10.0;
+		glm::vec3 cameraPosition = glm::vec3(sin(glfwGetTime()) * radius, 0.0, cos(glfwGetTime()) * radius);
+		glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::vec3 cameraDirection = glm::normalize(cameraPosition - cameraTarget);
+
+		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+		glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+
+		view = glm::lookAt(cameraPosition, cameraTarget, up);
+
 		proj = glm::perspective(glm::radians(70.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 3.0f, 100.0f);
 
-		//int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
-		//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-		//int viewLocation = glGetUniformLocation(shaderProgram.ID, "view");
-		//glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
-		//int projLocation = glGetUniformLocation(shaderProgram.ID, "proj");
-		//glUniformMatrix4fv(projLocation, 1, GL_FALSE, glm::value_ptr(proj));
-
 		//shaderProgram.setMat4("model", model);
-		//shaderProgram.setMat4("view", view);
+		shaderProgram.setMat4("view", view);
 		shaderProgram.setMat4("proj", proj);
 
 
@@ -212,7 +213,7 @@ int main() {
 		VAO1.Bind();
 		//glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		renderCubes(cubePositions, shaderProgram, model, view);
+		renderCubes(cubePositions, shaderProgram, model);
 
 
 		//checar por eventos e trocar os buffers
@@ -274,17 +275,14 @@ void transformation2(GLuint program) {
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 }
 
-void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model, glm::mat4 view) {
+void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model) {
 	srand(static_cast <unsigned> (time(0)));
 	int i = 0;
 	for (glm::vec3 cubePosition : cubePositions) {
 		model = glm::mat4(1.0f);
-		view = glm::mat4(1.0f);
 		model = glm::translate(model, cubePosition);
-		view = glm::translate(model, glm::vec3(0.0, 0.0, -3));
 		if(i % 2 == 0) model = glm::rotate(model, glm::radians(((float)glfwGetTime())*50), glm::vec3(1.0f, 0.3f, 0.5f));
 		program.setMat4("model", model);
-		program.setMat4("view", view);
 
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		i++;
