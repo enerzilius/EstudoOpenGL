@@ -124,7 +124,7 @@ int main() {
 
 	glEnable(GL_DEPTH_TEST);
 
-	Shader shaderProgram("3d.vert", "3d.frag");
+	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 
 	VAO VAO1; 
 	VAO1.Bind();
@@ -146,7 +146,7 @@ int main() {
 
 	int width, height, ch;
 	stbi_set_flip_vertically_on_load(true);
-	const char* path = "wall.jpg";
+	const char* path = "Textures/wall.jpg";
 	unsigned char* data = stbi_load(path, &width, &height, &ch, 0);
 
 	if (data) texture.LinkTexJPG(width, height, data);
@@ -157,7 +157,7 @@ int main() {
 	texture2.Bind();
 	texture2.SetTexParameters();
 
-	path = "awesomeface.png";
+	path = "Textures/awesomeface.png";
 	data = stbi_load(path, &width, &height, &ch, 0);
 	if (data) texture2.LinkTexPNG(width, height, data);
 	else cout << "Erro ao carregar a imagem " << path << endl;
