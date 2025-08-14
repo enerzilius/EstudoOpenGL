@@ -27,6 +27,7 @@ void processInput(GLFWwindow* window);
 void fractal(GLuint program, int depth);
 void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 float cubeVertices[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -96,6 +97,7 @@ float lastFrame = 0.0f; // Time of last frame
 float lastX = 400, lastY = 300;
 float yaw = -90.0f;
 float pitch = 0.0f;
+float fov = 70.0f;
 
 glm::vec3 cameraPosition = glm::vec3(sin(glfwGetTime()) * radius, 0.0, cos(glfwGetTime()) * radius);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -126,6 +128,7 @@ int main() {
 	glfwSetFramebufferSizeCallback(window, resize);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 
 	// glad: load all OpenGL function pointers
 	// ---------------------------------------
@@ -215,7 +218,7 @@ int main() {
 
 		view = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
 
-		proj = glm::perspective(glm::radians(70.0f), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
+		proj = glm::perspective(glm::radians(fov), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
 
 		//shaderProgram.setMat4("model", model);
 		shaderProgram.setMat4("view", view);
@@ -313,6 +316,15 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
 	direction.y = sin(glm::radians(pitch));
 	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 	cameraFront = glm::normalize(direction);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	fov -= (float)yoffset;
+	if (fov < 1.0f)
+		fov = 1.0f;
+	if (fov > 45.0f)
+		fov = 45.0f;
 }
 
 void fractal(GLuint program, int depth) {
