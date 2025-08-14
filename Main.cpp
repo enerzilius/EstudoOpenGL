@@ -24,12 +24,9 @@ const unsigned int SCR_HEIGHT = 600;
 
 void resize(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-void colorLooping(GLuint program);
-void vertexTranslation(GLuint program);
-void transformation(GLuint program);
-void transformation2(GLuint program);
 void fractal(GLuint program, int depth);
 void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 float cubeVertices[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -96,6 +93,7 @@ const float radius = 10.0;
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
+float lastX = 400, lastY = 300;
 float yaw = -90.0f;
 float pitch = 0.0f;
 
@@ -103,6 +101,7 @@ glm::vec3 cameraPosition = glm::vec3(sin(glfwGetTime()) * radius, 0.0, cos(glfwG
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 
+bool firstTouch = true;
 
 int main() {
 	glfwInit();
@@ -125,6 +124,8 @@ int main() {
 	gladLoadGL();
 
 	glfwSetFramebufferSizeCallback(window, resize);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(window, mouse_callback);
 
 	// glad: load all OpenGL function pointers
 	// ---------------------------------------
@@ -201,11 +202,6 @@ int main() {
 
 		shaderProgram.Activate();
 
-		glm::vec3 direction;
-		direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-		direction.y = sin(glm::radians(pitch));
-		direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
@@ -271,41 +267,6 @@ void resize(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void colorLooping(GLuint program) {
-	GLfloat timeValue = 0.3 * glfwGetTime();
-	GLfloat red = (sin(timeValue + 1) / 2.0f) + 0.5f;
-	GLfloat green = (sin(timeValue) / 2.0f) + 0.5f;
-	GLfloat blue = (sin(timeValue - 1) / 2.0f) + 0.5f;
-	GLint vertexColorLocation = glGetUniformLocation(program, "cor");
-	glUniform4f(vertexColorLocation, red, green, blue, 1.0f);
-}
-
-void vertexTranslation(GLuint program) {
-	GLfloat timeValue = 0.3 * glfwGetTime();
-	GLfloat offset = sin(timeValue)*0.5;
-	GLint vertexOffset = glGetUniformLocation(program, "offset");
-	glUniform3f(vertexOffset, offset, offset, 0);
-}
-
-void transformation(GLuint program) {
-	GLfloat timeValue = glfwGetTime();
-	glm::mat4 trans = glm::mat4(1.0f);
-	trans = glm::translate(trans, glm ::vec3(0, cos(timeValue)*0.5, 0.0f));
-	trans = glm::rotate(trans, glm::radians(timeValue*100), glm::vec3(0.0, 0.0, 1.0));
-
-	unsigned int transformLoc = glGetUniformLocation(program, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-}
-
-void transformation2(GLuint program) {
-	glm::mat4 trans = glm::mat4(1.0f);
-	trans = glm::translate(trans, glm::vec3(-0.9f, 0.9f, 0.0f));
-	float scaleAmount = static_cast<float>(sin(glfwGetTime()))*0.5;
-	trans = glm::scale(trans, glm::vec3(scaleAmount, scaleAmount, scaleAmount));
-	unsigned int transformLoc = glGetUniformLocation(program, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-}
-
 void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model) {
 	srand(static_cast <unsigned> (time(0)));
 	int i = 0;
@@ -318,6 +279,40 @@ void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 mod
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		i++;
 	}
+}
+
+void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
+	if (firstTouch) // initially set to true
+	{
+		lastX = xPos;
+		lastY = yPos;
+		firstTouch = false;
+
+		return;
+	}
+
+	float deltaX = xPos - lastX;
+	float deltaY = lastY - yPos;
+
+	lastX = xPos;
+	lastY = yPos;
+
+	const float sensitivity = 0.1f;
+	deltaX *= sensitivity;
+	deltaY *= sensitivity;
+
+
+	yaw += deltaX;
+	pitch += deltaY;
+
+	if (pitch > 89.0f) pitch = 89.0f;
+	if (pitch < -89.0f) pitch = -89.0f;
+
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraFront = glm::normalize(direction);
 }
 
 void fractal(GLuint program, int depth) {
