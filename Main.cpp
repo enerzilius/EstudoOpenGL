@@ -104,6 +104,7 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 
 bool firstTouch = true;
+const float sensitivity = 0.1f;
 
 int main() {
 	glfwInit();
@@ -299,8 +300,7 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
 
 	lastX = xPos;
 	lastY = yPos;
-
-	const float sensitivity = 0.1f;
+	
 	deltaX *= sensitivity;
 	deltaY *= sensitivity;
 
