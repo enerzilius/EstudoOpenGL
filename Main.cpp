@@ -16,6 +16,7 @@
 #include "EBO.h"
 #include "VAO.h"
 #include "Texture.h"
+#include "Camera.h"
 
 using namespace std;
 
@@ -184,6 +185,8 @@ int main() {
 	shaderProgram.setInt("tex0", 0);
 	shaderProgram.setInt("tex1", 1);
 	shaderProgram.setFloat("mixParam", 0.5);
+
+	//Camera camera(cameraPosition, );
 
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
