@@ -30,14 +30,12 @@ class Camera {
 
 	bool firstTouch;
 
-	Camera(glm::vec3 cameraPosition, glm::vec3 worldUp , float yaw, float pitch, float fov, float sensitivity, float movementSpeed, float zoom);
+	Camera(glm::vec3 cameraPosition, glm::vec3 _worldUp , float _yaw, float _pitch, float _fov, float _sensitivity, float _movementSpeed, float _zoom);
 	glm::mat4 GetViewMatrix(); 
-	void ProcessKeyboard(Camera_Movement direction, float deltaTime);
-	void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
-	void ProcessMouseScroll(float yoffset);
-
-private:
-	void updateCameraVectors();
+	void ProcessKeyboardInput(Camera_Movement direction, float deltaTime);
+	void ProcessMouseMovement(float detaX, float deltaY, GLboolean constrainPitch = true);
+	void ProcessMouseScroll(float deltaY);
+	void UpdateCameraVectors();
 };
 
 #endif
