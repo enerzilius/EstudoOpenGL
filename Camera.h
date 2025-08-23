@@ -1,5 +1,5 @@
-#ifndef EBO_CLASS_H
-#define EBO_CLASS_H
+#ifndef CAMERA_CLASS_H
+#define CAMERA_CLASS_H
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -22,19 +22,18 @@ public:
 	glm::vec3 worldUp;
 	float fov;
 	float sensitivity;
-	float zoom;
 	float movementSpeed;
 	float yaw;
 	float pitch;
-	float lastX;
-	float lastY;
+	//float lastX;
+	//float lastY;
 
 	bool firstTouch;
 
-	Camera(glm::vec3 cameraPosition, glm::vec3 _worldUp , float _yaw, float _pitch, float _fov, float _sensitivity, float _movementSpeed, float _zoom);
+	Camera(glm::vec3 cameraPosition, glm::vec3 _worldUp , float _yaw, float _pitch, float _fov, float _sensitivity, float _movementSpeed);
 	glm::mat4 GetViewMatrix(); 
 	void ProcessKeyboardInput(Camera_Movement direction, float deltaTime);
-	void ProcessMouseMovement(float detaX, float deltaY, GLboolean constrainPitch = true);
+	void ProcessMouseMovement(float detaX, float deltaY, GLboolean constrainPitch);
 	void ProcessMouseScroll(float deltaY);
 	void UpdateCameraVectors();
 };

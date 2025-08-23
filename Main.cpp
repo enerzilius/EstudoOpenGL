@@ -99,6 +99,7 @@ float lastX = 400, lastY = 300;
 float yaw = -90.0f;
 float pitch = 0.0f;
 float fov = 70.0f;
+float movementSpeed = 2.5f;
 
 glm::vec3 cameraPosition = glm::vec3(sin(glfwGetTime()) * radius, 0.0, cos(glfwGetTime()) * radius);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -106,6 +107,9 @@ glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 
 bool firstTouch = true;
 const float sensitivity = 0.1f;
+
+glm::vec3 worldUp = glm::vec3(0.0, 1.0, 0.0);
+Camera camera(cameraPosition, worldUp, yaw, pitch, fov, sensitivity, movementSpeed);
 
 int main() {
 	glfwInit();
@@ -129,6 +133,8 @@ int main() {
 
 	glfwSetFramebufferSizeCallback(window, resize);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
@@ -185,9 +191,7 @@ int main() {
 	shaderProgram.setInt("tex0", 0);
 	shaderProgram.setInt("tex1", 1);
 	shaderProgram.setFloat("mixParam", 0.5);
-
-	//Camera camera(cameraPosition, );
-
+	
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
 	{
@@ -228,15 +232,9 @@ int main() {
 		shaderProgram.setMat4("view", view);
 		shaderProgram.setMat4("proj", proj);
 
-
-		//fractal(shaderProgram.ID, 3);
-		//glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
-
 		VAO1.Bind();
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		renderCubes(cubePositions, shaderProgram, model);
-
 
 		//checar por eventos e trocar os buffers
 		glfwPollEvents();
@@ -256,17 +254,16 @@ int main() {
 void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 
-	float cameraSpeed = 2.5f*deltaTime; // adjust accordingly
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) cameraSpeed = 4.0 * cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) deltaTime *= 4.0;
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		cameraPosition += cameraSpeed * cameraFront;
+		camera.ProcessKeyboardInput(FORWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		cameraPosition -= cameraSpeed * cameraFront;
+		camera.ProcessKeyboardInput(BACKWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		cameraPosition -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		camera.ProcessKeyboardInput(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		cameraPosition += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		camera.ProcessKeyboardInput(RIGHT, deltaTime);
 }
 
 void resize(GLFWwindow* window, int width, int height)
@@ -280,7 +277,7 @@ void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 mod
 	for (glm::vec3 cubePosition : cubePositions) {
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, cubePosition);
-		if(i % 2 == 0) model = glm::rotate(model, glm::radians(((float)glfwGetTime())*50), glm::vec3(1.0f, 0.3f, 0.5f));
+		if (i % 2 == 0) model = glm::rotate(model, glm::radians(((float)glfwGetTime()) * 50), glm::vec3(1.0f, 0.3f, 0.5f));
 		program.setMat4("model", model);
 
 		glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -303,7 +300,7 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
 
 	lastX = xPos;
 	lastY = yPos;
-	
+
 	deltaX *= sensitivity;
 	deltaY *= sensitivity;
 
@@ -314,24 +311,16 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
 	if (pitch > 89.0f) pitch = 89.0f;
 	if (pitch < -89.0f) pitch = -89.0f;
 
-	glm::vec3 direction;
-	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	direction.y = sin(glm::radians(pitch));
-	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	cameraFront = glm::normalize(direction);
+	camera.ProcessMouseMovement(deltaX, deltaY, true);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	fov -= (float)yoffset;
-	if (fov < 1.0f)
-		fov = 1.0f;
-	if (fov > 45.0f)
-		fov = 45.0f;
+	camera.ProcessMouseScroll(yoffset);
 }
 
 void fractal(GLuint program, int depth) {
-	glm::mat4 trans = glm::mat4(1.0f);
+	glm::mat4 trans = glm::mat4(1.0f); 
 	for (int i = 0; i < depth; i++) {
 		srand(static_cast <unsigned> (time(0)));
 		float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/1);

@@ -5,7 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 
-Camera::Camera(glm::vec3 cameraPosition, glm::vec3 _worldUp, float _yaw, float _pitch, float _fov, float _sensitivity, float _movementSpeed, float _zoom) {
+Camera::Camera(glm::vec3 cameraPosition, glm::vec3 _worldUp, float _yaw, float _pitch, float _fov, float _sensitivity, float _movementSpeed) {
 	position = cameraPosition;
 	worldUp = _worldUp;
 	yaw = _yaw;
@@ -13,7 +13,6 @@ Camera::Camera(glm::vec3 cameraPosition, glm::vec3 _worldUp, float _yaw, float _
 	fov = _fov;
 	sensitivity = _sensitivity;
 	movementSpeed = _movementSpeed;
-	zoom = _zoom;
 	firstTouch = true;
 	UpdateCameraVectors();
 }	
@@ -36,7 +35,7 @@ void Camera::ProcessKeyboardInput(Camera_Movement direction, float deltaTime)
 		position += right * velocity;
 }
 
-void Camera::ProcessMouseMovement(float deltaX, float deltaY, GLboolean constrainPitch = true)
+void Camera::ProcessMouseMovement(float deltaX, float deltaY, GLboolean constrainPitch)
 {
 	deltaX *= sensitivity;
 	deltaY *= sensitivity;
@@ -52,19 +51,18 @@ void Camera::ProcessMouseMovement(float deltaX, float deltaY, GLboolean constrai
 		if (pitch < -89.0f)
 			pitch = -89.0f;
 
-
-		// update Front, Right and Up Vectors using the updated Euler angles
-		UpdateCameraVectors();
 	}
+	// update Front, Right and Up Vectors using the updated Euler angles
+	UpdateCameraVectors();
 }
 
 void Camera::ProcessMouseScroll(float deltaY)
 {
-	zoom -= (float)deltaY;
-	if (zoom < 1.0f)
-		zoom = 1.0f;
-	if (zoom > 45.0f)
-		zoom = 45.0f;
+	fov -= (float)deltaY;
+	if (fov < 1.0f)
+		fov = 1.0f;
+	if (fov > 45.0f)
+		fov = 45.0f;
 }
 
 void Camera::UpdateCameraVectors() {
