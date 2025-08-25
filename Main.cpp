@@ -91,6 +91,9 @@ vector<glm::vec3> cubePositions = {
 //int vertexCount = sizeof(cubeVertices) / sizeof(GLuint);
 int vertexCount = 36;
 
+float CLIP_NEAR = 0.1f;
+float CLIP_FAR = 100.0f;
+
 const float radius = 10.0;
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
@@ -106,7 +109,7 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 
 bool firstTouch = true;
-const float sensitivity = 0.1f;
+const float sensitivity = 0.5f;
 
 glm::vec3 worldUp = glm::vec3(0.0, 1.0, 0.0);
 Camera camera(cameraPosition, worldUp, yaw, pitch, fov, sensitivity, movementSpeed);
@@ -218,15 +221,15 @@ int main() {
 		glm::mat4 proj = glm::mat4(1.0f);
 
 		glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-		glm::vec3 cameraDirection = glm::normalize(cameraPosition - cameraTarget);
+		glm::vec3 cameraDirection = glm::normalize(camera.position - cameraTarget);
 
 		
-		glm::vec3 cameraRight = glm::normalize(glm::cross(cameraUp, cameraDirection));
-		glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+		camera.right = glm::normalize(glm::cross(camera.up, cameraDirection));
+		camera.up = glm::cross(cameraDirection, camera.right);
 
-		view = glm::lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
+		view = glm::lookAt(camera.position, camera.position + camera.front, camera.up);
 
-		proj = glm::perspective(glm::radians(fov), (float)(SCR_WIDTH/SCR_HEIGHT), 0.1f, 100.0f);
+		proj = glm::perspective(glm::radians(camera.fov), (float)(SCR_WIDTH/SCR_HEIGHT), CLIP_NEAR, CLIP_FAR);
 
 		//shaderProgram.setMat4("model", model);
 		shaderProgram.setMat4("view", view);
