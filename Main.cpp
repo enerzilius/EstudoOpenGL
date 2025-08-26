@@ -30,8 +30,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 glm::vec3 sphericalToCartesian(float r, float theta, float phi);
-void getSphereVertices(float& verticesArray, float radius, int resolution);
-void insertVec3InArray(float& array, glm::vec3);
+void getSphereVertices(vector<float>& vertices, float radius, int resolution);
+void insertVec3InVector(vector<float>& vector, glm::vec3);
 
 float cubeVertices[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -196,6 +196,11 @@ int main() {
 	shaderProgram.setInt("tex0", 0);
 	shaderProgram.setInt("tex1", 1);
 	shaderProgram.setFloat("mixParam", 0.5);
+
+	glm::vec3 vec = { 0.0, 1.0, 2.0 };
+	vector<float> vectorr;
+	insertVec3InVector(vectorr, vec);
+	cout << vectorr[1] << endl;
 	
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
@@ -325,7 +330,7 @@ glm::vec3 sphericalToCartesian(float r, float theta, float phi) {
 	return pos;
 };
 
-void getSphereVertices(vector<float>& verticesArray, float radius, int resolution) {
+void getSphereVertices(vector<float>& vertices, float radius, int resolution) {
 	constexpr float pi = glm::pi<float>();
 	for (float i = 0.0; i < resolution; i++) {
 		float theta = (i / resolution) * pi;
@@ -336,9 +341,23 @@ void getSphereVertices(vector<float>& verticesArray, float radius, int resolutio
 			float phi2 = (j+1) / resolution * 2 * pi;
 
 			glm::vec3 v1 = sphericalToCartesian(radius, theta, phi);
-			glm::vec3 v2 = sphericalToCartesian(radius, theta2, phi);
-			glm::vec3 v3 = sphericalToCartesian(radius, theta2, phi2);
-			glm::vec3 v4 = sphericalToCartesian(radius, theta, phi2);
+			glm::vec3 v2 = sphericalToCartesian(radius, theta, phi2);
+			glm::vec3 v3 = sphericalToCartesian(radius, theta2, phi);
+			glm::vec3 v4 = sphericalToCartesian(radius, theta2, phi2);
+
+			insertVec3InVector(vertices, v1);
+			insertVec3InVector(vertices, v2);
+			insertVec3InVector(vertices, v3); 
+
+			insertVec3InVector(vertices, v2);
+			insertVec3InVector(vertices, v4);
+			insertVec3InVector(vertices, v3);
 		}
+	}
+}
+
+void insertVec3InVector(vector<float>& vector, glm::vec3 vertex) {
+	for (int i = 0; i < 3; i++) {
+		vector.push_back(vertex[i]);
 	}
 }
