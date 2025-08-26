@@ -108,7 +108,6 @@ glm::vec3 cameraPosition = glm::vec3(sin(glfwGetTime()) * radius, 0.0, cos(glfwG
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 
-bool firstTouch = true;
 const float sensitivity = 0.5f;
 
 glm::vec3 worldUp = glm::vec3(0.0, 1.0, 0.0);
@@ -289,11 +288,11 @@ void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 mod
 }
 
 void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
-	if (firstTouch) // initially set to true
+	if (camera.firstTouch) // initially set to true
 	{
 		lastX = xPos;
 		lastY = yPos;
-		firstTouch = false;
+		camera.firstTouch = false;
 
 		return;
 	}
@@ -304,15 +303,8 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
 	lastX = xPos;
 	lastY = yPos;
 
-	deltaX *= sensitivity;
-	deltaY *= sensitivity;
-
-
-	yaw += deltaX;
-	pitch += deltaY;
-
-	if (pitch > 89.0f) pitch = 89.0f;
-	if (pitch < -89.0f) pitch = -89.0f;
+	deltaX *= camera.sensitivity;
+	deltaY *= camera.sensitivity;
 
 	camera.ProcessMouseMovement(deltaX, deltaY, true);
 }

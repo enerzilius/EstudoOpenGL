@@ -25,7 +25,6 @@ public:
 	float movementSpeed;
 	float yaw;
 	float pitch;
- 
 	bool firstTouch;
 
 	Camera(glm::vec3 cameraPosition, glm::vec3 _worldUp , float _yaw, float _pitch, float _fov, float _sensitivity, float _movementSpeed);
