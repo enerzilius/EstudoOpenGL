@@ -50,58 +50,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.vert">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-    <None Include="green.frag">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-    <None Include="default.frag">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-    <None Include="time.frag">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-    <None Include="pointColoring.frag">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-    <None Include="pointColoring.vert">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-    <None Include="offset.vert">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-    <None Include="text.vert">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-    <None Include="text.frag">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-    <None Include="transform.vert">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-    <None Include="teste.frag">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-    <None Include="AL.frag">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-    <None Include="3d.vert">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-    <None Include="3d.frag">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="purple.frag">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </Text>
-    <Text Include="AL.vert">
-      <Filter>Arquivos de Recurso\Shaders</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="shaderClass.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
@@ -131,5 +79,55 @@
     <Image Include="awesomeface.png">
       <Filter>Arquivos de Recurso\Assets</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaderfiles\3d.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\3d.vert">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\AL.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\AL.vert">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\default.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\default.vert">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\green.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\offset.vert">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\pointColoring.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\pointColoring.vert">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\purple.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\teste.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\text.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\text.vert">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\time.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+    <None Include="Shaderfiles\transform.vert">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

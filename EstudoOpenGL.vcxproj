@@ -148,26 +148,6 @@
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="3d.frag" />
-    <None Include="3d.vert" />
-    <None Include="AL.frag" />
-    <None Include="default.frag" />
-    <None Include="default.vert" />
-    <None Include="green.frag" />
-    <None Include="offset.vert" />
-    <None Include="pointColoring.frag" />
-    <None Include="pointColoring.vert" />
-    <None Include="teste.frag" />
-    <None Include="text.frag" />
-    <None Include="text.vert" />
-    <None Include="time.frag" />
-    <None Include="transform.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="AL.vert" />
-    <Text Include="purple.frag" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="Transformer.h" />
@@ -179,6 +159,24 @@
   <ItemGroup>
     <Image Include="..\..\..\OneDrive\Imagens\wall.jpg" />
     <Image Include="awesomeface.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaderfiles\3d.frag" />
+    <None Include="Shaderfiles\3d.vert" />
+    <None Include="Shaderfiles\AL.frag" />
+    <None Include="Shaderfiles\AL.vert" />
+    <None Include="Shaderfiles\default.frag" />
+    <None Include="Shaderfiles\default.vert" />
+    <None Include="Shaderfiles\green.frag" />
+    <None Include="Shaderfiles\offset.vert" />
+    <None Include="Shaderfiles\pointColoring.frag" />
+    <None Include="Shaderfiles\pointColoring.vert" />
+    <None Include="Shaderfiles\purple.frag" />
+    <None Include="Shaderfiles\teste.frag" />
+    <None Include="Shaderfiles\text.frag" />
+    <None Include="Shaderfiles\text.vert" />
+    <None Include="Shaderfiles\time.frag" />
+    <None Include="Shaderfiles\transform.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

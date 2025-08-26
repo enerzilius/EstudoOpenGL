@@ -25,10 +25,13 @@ const unsigned int SCR_HEIGHT = 600;
 
 void resize(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-void fractal(GLuint program, int depth);
 void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+
+glm::vec3 sphericalToCartesian(float r, float theta, float phi);
+void getSphereVertices(float& verticesArray, float radius, int resolution);
+void insertVec3InArray(float& array, glm::vec3);
 
 float cubeVertices[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -314,24 +317,28 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	camera.ProcessMouseScroll(yoffset);
 }
 
-void fractal(GLuint program, int depth) {
-	glm::mat4 trans = glm::mat4(1.0f); 
-	for (int i = 0; i < depth; i++) {
-		srand(static_cast <unsigned> (time(0)));
-		float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/1);
-		float s = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/1);
-		float theta = rand() % 360;
-		float phi = rand() % 360;
-		float h = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/1);
-		float k = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/1);
+glm::vec3 sphericalToCartesian(float r, float theta, float phi) {
+	glm::vec3 pos = glm::vec3(0.0);
+	pos.x = r * sin(theta) * cos(phi);
+	pos.y = r * cos(theta);
+	pos.z = r * sin(theta) * sin(phi);
+	return pos;
+};
 
-		float x = r * cos(theta) + s * sin(phi) + h;
-		float y = r * cos(theta) + s * sin(phi) + h;
+void getSphereVertices(vector<float>& verticesArray, float radius, int resolution) {
+	constexpr float pi = glm::pi<float>();
+	for (float i = 0.0; i < resolution; i++) {
+		float theta = (i / resolution) * pi;
+		float theta2 = (i+1 / resolution) * pi;
+		
+		for (float j = 0.0; j < resolution; j++) {
+			float phi = j / resolution * 2 * pi;
+			float phi2 = (j+1) / resolution * 2 * pi;
 
-		unsigned int transformLoc = glGetUniformLocation(program, "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
-
-
+			glm::vec3 v1 = sphericalToCartesian(radius, theta, phi);
+			glm::vec3 v2 = sphericalToCartesian(radius, theta2, phi);
+			glm::vec3 v3 = sphericalToCartesian(radius, theta2, phi2);
+			glm::vec3 v4 = sphericalToCartesian(radius, theta, phi2);
+		}
 	}
 }
