@@ -32,7 +32,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 glm::vec3 sphericalToCartesian(float r, float theta, float phi);
 void getSphereVertices(vector<float>& vertices, float radius, int resolution);
 void insertVec3InVector(vector<float>& vector, glm::vec3);
-void insertQuadVertexVectorTexture(vector<float>& vector, glm::vec3 vertices);
+void insertQuadVertexVectorTexture(vector<float>& vector, glm::vec3 vertices[4]);
 
 float cubeVertices[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -346,9 +346,9 @@ void getSphereVertices(vector<float>& vertices, float radius, int resolution) {
 			glm::vec3 v3 = sphericalToCartesian(radius, theta2, phi);
 			glm::vec3 v4 = sphericalToCartesian(radius, theta2, phi2);
 
-			glm::vec3 vectors[4] = { v1, v2, v3, v4 };
+			glm::vec3 quadVertices[] = { v1, v2, v3, v4 };
 
-
+			insertQuadVertexVectorTexture(vertices, quadVertices);
 		}
 	}
 }
@@ -359,7 +359,7 @@ void insertVec3InVector(vector<float>& vector, glm::vec3 vertex) {
 	}
 }
 
-void insertQuadVertexVectorTexture(vector<float>& allVertices, glm::vec3 quadVertices[]) {
+void insertQuadVertexVectorTexture(vector<float>& allVertices, glm::vec3 quadVertices[4]) {
 	float textureVertexMatrix[6][2] = {
 		{ 0.0f, 0.0f },
 		{ 1.0f, 0.0f },
@@ -369,8 +369,9 @@ void insertQuadVertexVectorTexture(vector<float>& allVertices, glm::vec3 quadVer
 		{ 0.0f, 0.0f }
 	};
 	int triangle = 0;
-	for (int i = 0; i < 3; i++) {
-		insertVec3InVector(allVertices, quadVertices[i]);
+	for (int i = 0; i < 6; i++) {
+		if (i >= 3) triangle = 2;
+		insertVec3InVector(allVertices, quadVertices[i-triangle]);
 		for (int j = 0; j < 2; j++) allVertices.push_back(textureVertexMatrix[i][j]);
 	}
 }
