@@ -153,7 +153,7 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	vector<float> verticesVector;
-	getSphereVertices(verticesVector, 5, 5);
+	getSphereVertices(verticesVector, 1, 5);
 
 	float* sphereVertices = &verticesVector[0];
 
