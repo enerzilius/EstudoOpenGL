@@ -91,9 +91,7 @@ vector<glm::vec3> cubePositions = {
 	glm::vec3(1.5f,  0.2f, -1.5f),
 	glm::vec3(-1.3f,  1.0f, -1.5f)
 };
-
-//int vertexCount = sizeof(cubeVertices) / sizeof(GLuint);
-int vertexCount = 36;
+//int vertexCount = 36;
 
 float CLIP_NEAR = 0.1f;
 float CLIP_FAR = 100.0f;
@@ -153,6 +151,15 @@ int main() {
 	}
 
 	glEnable(GL_DEPTH_TEST);
+
+	vector<float> verticesVector;
+	getSphereVertices(verticesVector, 5, 5);
+
+	float* sphereVertices = &verticesVector[0];
+
+	int vertexCount = sizeof(sphereVertices) / (sizeof(GLuint) * 5);
+
+	cout << vertexCount << endl;
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 
