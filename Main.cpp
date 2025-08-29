@@ -152,12 +152,8 @@ int main() {
 
 	glEnable(GL_DEPTH_TEST);
 
-	vector<float> verticesVector;
-	getSphereVertices(verticesVector, 2, 3);
-
-	float* sphereVertices = &verticesVector[0];
-
-	//int vertexCount = verticesVector.size() / 5;
+	vector<float> sphereVertices;
+	getSphereVertices(sphereVertices, 2, 5);
 	int vertexCount = sizeof(cubeVertices) / sizeof(float) / 5;
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
@@ -165,8 +161,8 @@ int main() {
 	VAO VAO1;
 	VAO1.Bind();
 
-	VBO VBO1(cubeVertices, sizeof(cubeVertices));
-	//VBO VBO1(sphereVertices, sizeof(sphereVertices));
+	//VBO VBO1(cubeVertices, sizeof(cubeVertices));
+	VBO VBO1(sphereVertices.data(), (sphereVertices.size()*sizeof(float)));
 	//EBO EBO1(sqrIndices, sizeof(sqrIndices));
 
 	VAO1.LinkVBO(VBO1, 0, 3, 5, 0); // tirar esses magic numbers
@@ -221,7 +217,7 @@ int main() {
 		lastFrame = currentFrame;
 
 		//aqui vai os processos de renderização
-		glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
+		glClearColor(0.5f, 0.6f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		texture.ActiveTexture(GL_TEXTURE0);
@@ -253,9 +249,9 @@ int main() {
 
 		VAO1.Bind();
 
-		renderCubes(cubePositions, shaderProgram, model);
+		//renderCubes(cubePositions, shaderProgram, model);
 
-		//glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 
 		//checar por eventos e trocar os buffers
 		glfwPollEvents();
@@ -298,7 +294,7 @@ void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 mod
 	for (glm::vec3 cubePosition : cubePositions) {
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, cubePosition);
-		if (i % 2 == 0) model = glm::rotate(model, glm::radians(((float)glfwGetTime()) * 50), glm::vec3(1.0f, 0.3f, 0.5f));
+		model = glm::rotate(model, glm::radians(((float)glfwGetTime()) * 50), glm::vec3(1.0f, 0.3f, 0.5f));
 		program.setMat4("model", model);
 
 		glDrawArrays(GL_TRIANGLES, 0, 36);

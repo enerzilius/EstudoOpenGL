@@ -4,7 +4,7 @@ VAO::VAO() {
 	glGenVertexArrays(1, &ID);
 }
 
-void VAO::LinkVBO(VBO VBO, GLuint layout, GLint n, GLuint stride, GLuint offset) {
+void VAO::LinkVBO(VBO& VBO, GLuint layout, GLint n, GLuint stride, GLuint offset) {
 	//glBindVertexArray(VAO);
 	VBO.Bind();
 	// settar os ponteiros dos vértices
