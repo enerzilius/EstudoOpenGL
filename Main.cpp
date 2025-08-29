@@ -153,24 +153,24 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	vector<float> verticesVector;
-	getSphereVertices(verticesVector, 1, 5);
+	getSphereVertices(verticesVector, 2, 3);
 
 	float* sphereVertices = &verticesVector[0];
 
-	int vertexCount = sizeof(sphereVertices) / (sizeof(GLuint) * 5);
-
-	cout << vertexCount << endl;
+	//int vertexCount = verticesVector.size() / 5;
+	int vertexCount = sizeof(cubeVertices) / sizeof(float) / 5;
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 
-	VAO VAO1; 
+	VAO VAO1;
 	VAO1.Bind();
 
 	VBO VBO1(cubeVertices, sizeof(cubeVertices));
+	//VBO VBO1(sphereVertices, sizeof(sphereVertices));
 	//EBO EBO1(sqrIndices, sizeof(sqrIndices));
 
-	VAO1.LinkVBO(VBO1, 0, 3, 5, 0);
-	VAO1.LinkVBO(VBO1, 1, 3, 5, 3);
+	VAO1.LinkVBO(VBO1, 0, 3, 5, 0); // tirar esses magic numbers
+	VAO1.LinkVBO(VBO1, 1, 2, 5, 3);
 
 	VAO1.Unbind();
 	VBO1.Unbind();
@@ -187,7 +187,7 @@ int main() {
 	unsigned char* data = stbi_load(path, &width, &height, &ch, 0);
 
 	if (data) texture.LinkTexJPG(width, height, data);
-	else cout << "Erro ao carregar a imagem "<<path<<endl;
+	else cout << "Erro ao carregar a imagem " << path << endl;
 	stbi_image_free(data);
 
 	Texture texture2;
@@ -209,7 +209,7 @@ int main() {
 	vector<float> vectorr;
 	insertVec3InVector(vectorr, vec);
 	cout << vectorr[1] << endl;
-	
+
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
 	{
@@ -221,7 +221,7 @@ int main() {
 		lastFrame = currentFrame;
 
 		//aqui vai os processos de renderização
-		glClearColor(0.3f, 0.0f, 0.2f, 1.0f);
+		glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		texture.ActiveTexture(GL_TEXTURE0);
@@ -230,6 +230,7 @@ int main() {
 		texture2.Bind();
 
 		shaderProgram.Activate();
+		VBO1.Bind();
 
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = glm::mat4(1.0f);
@@ -238,21 +239,23 @@ int main() {
 		glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
 		glm::vec3 cameraDirection = glm::normalize(camera.position - cameraTarget);
 
-		
+
 		camera.right = glm::normalize(glm::cross(camera.up, cameraDirection));
 		camera.up = glm::cross(cameraDirection, camera.right);
 
 		view = glm::lookAt(camera.position, camera.position + camera.front, camera.up);
 
-		proj = glm::perspective(glm::radians(camera.fov), (float)(SCR_WIDTH/SCR_HEIGHT), CLIP_NEAR, CLIP_FAR);
+		proj = glm::perspective(glm::radians(camera.fov), (float)(SCR_WIDTH / SCR_HEIGHT), CLIP_NEAR, CLIP_FAR);
 
-		//shaderProgram.setMat4("model", model);
+		shaderProgram.setMat4("model", model);
 		shaderProgram.setMat4("view", view);
 		shaderProgram.setMat4("proj", proj);
 
 		VAO1.Bind();
 
 		renderCubes(cubePositions, shaderProgram, model);
+
+		//glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 
 		//checar por eventos e trocar os buffers
 		glfwPollEvents();
@@ -342,11 +345,11 @@ void getSphereVertices(vector<float>& vertices, float radius, int resolution) {
 	constexpr float pi = glm::pi<float>();
 	for (float i = 0.0; i < resolution; i++) {
 		float theta = (i / resolution) * pi;
-		float theta2 = (i+1 / resolution) * pi;
-		
+		float theta2 = (i + 1 / resolution) * pi;
+
 		for (float j = 0.0; j < resolution; j++) {
 			float phi = j / resolution * 2 * pi;
-			float phi2 = (j+1) / resolution * 2 * pi;
+			float phi2 = (j + 1) / resolution * 2 * pi;
 
 			glm::vec3 v1 = sphericalToCartesian(radius, theta, phi);
 			glm::vec3 v2 = sphericalToCartesian(radius, theta, phi2);
@@ -375,10 +378,13 @@ void insertQuadVertexVectorTexture(vector<float>& allVertices, glm::vec3 quadVer
 		{ 0.0f, 1.0f },
 		{ 0.0f, 0.0f }
 	};
+
 	int triangle = 0;
 	for (int i = 0; i < 6; i++) {
 		if (i >= 3) triangle = 2;
-		insertVec3InVector(allVertices, quadVertices[i-triangle]);
+		printf("%f, %f, %f - ", quadVertices[i - triangle].x, quadVertices[i - triangle].y, quadVertices[i - triangle].z);
+		insertVec3InVector(allVertices, quadVertices[i - triangle]);
 		for (int j = 0; j < 2; j++) allVertices.push_back(textureVertexMatrix[i][j]);
+		printf("%f, %f \n", allVertices[allVertices.size() - 1], allVertices[allVertices.size() - 2]);
 	}
 }
