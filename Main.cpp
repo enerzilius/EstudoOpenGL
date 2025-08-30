@@ -153,7 +153,7 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	vector<float> sphereVertices;
-	getSphereVertices(sphereVertices, 2, 5);
+	getSphereVertices(sphereVertices, 2, 10);
 	int vertexCount = sizeof(cubeVertices) / sizeof(float) / 5;
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
@@ -339,13 +339,14 @@ glm::vec3 sphericalToCartesian(float r, float theta, float phi) {
 
 void getSphereVertices(vector<float>& vertices, float radius, int resolution) {
 	constexpr float pi = glm::pi<float>();
-	for (float i = 0.0; i < resolution; i++) {
-		float theta = (i / resolution) * pi;
-		float theta2 = (i + 1 / resolution) * pi;
+	float calculationResolution = (float)resolution;
+	for (float i = 0.0; i < calculationResolution; i++) {
+		float theta = (i / calculationResolution) * pi;
+		float theta2 = (i + 1 / calculationResolution) * pi;
 
-		for (float j = 0.0; j < resolution; j++) {
-			float phi = j / resolution * 2 * pi;
-			float phi2 = (j + 1) / resolution * 2 * pi;
+		for (float j = 0.0; j < calculationResolution; j++) {
+			float phi = j / calculationResolution * 2 * pi;
+			float phi2 = (j + 1) / calculationResolution * 2 * pi;
 
 			glm::vec3 v1 = sphericalToCartesian(radius, theta, phi);
 			glm::vec3 v2 = sphericalToCartesian(radius, theta, phi2);
@@ -375,12 +376,25 @@ void insertQuadVertexVectorTexture(vector<float>& allVertices, glm::vec3 quadVer
 		{ 0.0f, 0.0f }
 	};
 
-	int triangle = 0;
-	for (int i = 0; i < 6; i++) {
-		if (i >= 3) triangle = 2;
-		printf("%f, %f, %f - ", quadVertices[i - triangle].x, quadVertices[i - triangle].y, quadVertices[i - triangle].z);
-		insertVec3InVector(allVertices, quadVertices[i - triangle]);
+	for (int i = 0; i < 3; i++) {
+		printf("%f, %f, %f - ", quadVertices[i].x, quadVertices[i].y, quadVertices[i].z);
+		insertVec3InVector(allVertices, quadVertices[i]);
 		for (int j = 0; j < 2; j++) allVertices.push_back(textureVertexMatrix[i][j]);
 		printf("%f, %f \n", allVertices[allVertices.size() - 1], allVertices[allVertices.size() - 2]);
 	}
+
+	insertVec3InVector(allVertices, quadVertices[1]);
+	printf("%f, %f, %f - ", quadVertices[1].x, quadVertices[1].y, quadVertices[1].z);
+	for (int j = 0; j < 2; j++) allVertices.push_back(textureVertexMatrix[3][j]);
+	printf("%f, %f \n", allVertices[allVertices.size() - 1], allVertices[allVertices.size() - 2]);
+
+	insertVec3InVector(allVertices, quadVertices[3]);
+	printf("%f, %f, %f - ", quadVertices[3].x, quadVertices[3].y, quadVertices[3].z);
+	for (int j = 0; j < 2; j++) allVertices.push_back(textureVertexMatrix[4][j]);
+	printf("%f, %f \n", allVertices[allVertices.size() - 1], allVertices[allVertices.size() - 2]);
+
+	insertVec3InVector(allVertices, quadVertices[2]);
+	printf("%f, %f, %f - ", quadVertices[2].x, quadVertices[2].y, quadVertices[2].z);
+	for (int j = 0; j < 2; j++) allVertices.push_back(textureVertexMatrix[5][j]);
+	printf("%f, %f \n", allVertices[allVertices.size() - 1], allVertices[allVertices.size() - 2]);
 }
