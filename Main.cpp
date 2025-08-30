@@ -102,12 +102,20 @@ int main() {
 	cout << vertexCount << endl;
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
+	Shader lightShaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
+
+	VAO vaoLight;
+	vaoLight.Bind();
+
 
 	VAO VAO1;
 	VAO1.Bind();
 
 	VBO VBO1(sphereVertices.data(), (sphereVertices.size()*sizeof(float)));
 	//EBO EBO1(sqrIndices, sizeof(sqrIndices));
+
+	vaoLight.LinkVBO(VBO1, 0, 3, 5, 0);
+	vaoLight.LinkVBO(VBO1, 0, 2, 5, 0);
 
 	VAO1.LinkVBO(VBO1, 0, 3, 5, 0); // tirar esses magic numbers
 	VAO1.LinkVBO(VBO1, 1, 2, 5, 3);

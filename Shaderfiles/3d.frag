@@ -3,6 +3,9 @@ out vec4 FragColor;
   
 in vec2 UV;
 
+uniform vec3 objectColor;
+uniform vec3 lightColor;
+
 uniform sampler2D tex0;
 uniform sampler2D tex1;
 uniform float mixParam; 
