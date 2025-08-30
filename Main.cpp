@@ -25,7 +25,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 void resize(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model);
+void renderScene(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model, int vertexCount);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
@@ -153,8 +153,10 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	vector<float> sphereVertices;
-	getSphereVertices(sphereVertices, 2, 10);
-	int vertexCount = sizeof(cubeVertices) / sizeof(float) / 5;
+	getSphereVertices(sphereVertices, 1, 10);
+	int vertexCount = sphereVertices.size() / 5;
+	cout << sphereVertices.size() << endl;
+	cout << vertexCount << endl;
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 
@@ -249,9 +251,9 @@ int main() {
 
 		VAO1.Bind();
 
-		//renderCubes(cubePositions, shaderProgram, model);
+		renderScene(cubePositions, shaderProgram, model, vertexCount);
 
-		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+		//glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 
 		//checar por eventos e trocar os buffers
 		glfwPollEvents();
@@ -288,7 +290,7 @@ void resize(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model) {
+void renderScene(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model, int vertexCount) {
 	srand(static_cast <unsigned> (time(0)));
 	int i = 0;
 	for (glm::vec3 cubePosition : cubePositions) {
@@ -297,7 +299,7 @@ void renderCubes(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 mod
 		model = glm::rotate(model, glm::radians(((float)glfwGetTime()) * 50), glm::vec3(1.0f, 0.3f, 0.5f));
 		program.setMat4("model", model);
 
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 		i++;
 	}
 }
@@ -340,11 +342,11 @@ glm::vec3 sphericalToCartesian(float r, float theta, float phi) {
 void getSphereVertices(vector<float>& vertices, float radius, int resolution) {
 	constexpr float pi = glm::pi<float>();
 	float calculationResolution = (float)resolution;
-	for (float i = 0.0; i < calculationResolution; i++) {
+	for (float i = 0.0f; i <= resolution; ++i) {
 		float theta = (i / calculationResolution) * pi;
-		float theta2 = (i + 1 / calculationResolution) * pi;
+		float theta2 = (i + 1) / calculationResolution * pi;
 
-		for (float j = 0.0; j < calculationResolution; j++) {
+		for (float j = 0.0f; j < resolution; ++j) {
 			float phi = j / calculationResolution * 2 * pi;
 			float phi2 = (j + 1) / calculationResolution * 2 * pi;
 
@@ -366,35 +368,23 @@ void insertVec3InVector(vector<float>& vector, glm::vec3 vertex) {
 	}
 }
 
-void insertQuadVertexVectorTexture(vector<float>& allVertices, glm::vec3 quadVertices[4]) {
-	float textureVertexMatrix[6][2] = {
-		{ 0.0f, 0.0f },
-		{ 1.0f, 0.0f },
-		{ 1.0f, 1.0f },
-		{ 1.0f, 1.0f },
-		{ 0.0f, 1.0f },
-		{ 0.0f, 0.0f }
+void insertQuadVertexVectorTexture(std::vector<float>& allVertices, glm::vec3 quadVertices[4]) {
+	float uvCoordinates[6][2] = {
+		{ 0.0f, 0.0f }, // v1
+		{ 1.0f, 0.0f }, // v2
+		{ 0.0f, 1.0f }, // v3
+
+		{ 1.0f, 0.0f }, // v2
+		{ 1.0f, 1.0f }, // v4
+		{ 0.0f, 1.0f }  // v3
 	};
 
-	for (int i = 0; i < 3; i++) {
-		printf("%f, %f, %f - ", quadVertices[i].x, quadVertices[i].y, quadVertices[i].z);
-		insertVec3InVector(allVertices, quadVertices[i]);
-		for (int j = 0; j < 2; j++) allVertices.push_back(textureVertexMatrix[i][j]);
-		printf("%f, %f \n", allVertices[allVertices.size() - 1], allVertices[allVertices.size() - 2]);
+	int indices[6] = { 0, 1, 2, 1, 3, 2 };
+
+	for (int i = 0; i < 6; i++) {
+		int idx = indices[i];
+		insertVec3InVector(allVertices, quadVertices[idx]);
+		allVertices.push_back(uvCoordinates[i][0]);
+		allVertices.push_back(uvCoordinates[i][1]);
 	}
-
-	insertVec3InVector(allVertices, quadVertices[1]);
-	printf("%f, %f, %f - ", quadVertices[1].x, quadVertices[1].y, quadVertices[1].z);
-	for (int j = 0; j < 2; j++) allVertices.push_back(textureVertexMatrix[3][j]);
-	printf("%f, %f \n", allVertices[allVertices.size() - 1], allVertices[allVertices.size() - 2]);
-
-	insertVec3InVector(allVertices, quadVertices[3]);
-	printf("%f, %f, %f - ", quadVertices[3].x, quadVertices[3].y, quadVertices[3].z);
-	for (int j = 0; j < 2; j++) allVertices.push_back(textureVertexMatrix[4][j]);
-	printf("%f, %f \n", allVertices[allVertices.size() - 1], allVertices[allVertices.size() - 2]);
-
-	insertVec3InVector(allVertices, quadVertices[2]);
-	printf("%f, %f, %f - ", quadVertices[2].x, quadVertices[2].y, quadVertices[2].z);
-	for (int j = 0; j < 2; j++) allVertices.push_back(textureVertexMatrix[5][j]);
-	printf("%f, %f \n", allVertices[allVertices.size() - 1], allVertices[allVertices.size() - 2]);
 }
