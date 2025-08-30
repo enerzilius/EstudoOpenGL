@@ -156,7 +156,7 @@ int main() {
 		lastFrame = currentFrame;
 
 		//aqui vai os processos de renderização
-		glClearColor(0.5f, 0.6f, 1.0f, 1.0f);
+		glClearColor(0.05f, 0.05f, 0.13f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		texture.ActiveTexture(GL_TEXTURE0);
