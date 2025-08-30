@@ -25,7 +25,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 void resize(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-void renderScene(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model, int vertexCount);
+void renderScene(int numberOfObjects, Shader& program, glm::mat4 model, int vertexCount);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
@@ -33,65 +33,6 @@ glm::vec3 sphericalToCartesian(float r, float theta, float phi);
 void getSphereVertices(vector<float>& vertices, float radius, int resolution);
 void insertVec3InVector(vector<float>& vector, glm::vec3);
 void insertQuadVertexVectorTexture(vector<float>& vector, glm::vec3 vertices[4]);
-
-float cubeVertices[] = {
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-};
-
-
-vector<glm::vec3> cubePositions = {
-	glm::vec3(0.0f,  0.0f,  0.0f),
-	glm::vec3(2.0f,  5.0f, -15.0f),
-	glm::vec3(-1.5f, -2.2f, -2.5f),
-	glm::vec3(-3.8f, -2.0f, -12.3f),
-	glm::vec3(2.4f, -0.4f, -3.5f),
-	glm::vec3(-1.7f,  3.0f, -7.5f),
-	glm::vec3(1.3f, -2.0f, -2.5f),
-	glm::vec3(1.5f,  2.0f, -2.5f),
-	glm::vec3(1.5f,  0.2f, -1.5f),
-	glm::vec3(-1.3f,  1.0f, -1.5f)
-};
-//int vertexCount = 36;
 
 float CLIP_NEAR = 0.1f;
 float CLIP_FAR = 100.0f;
@@ -153,7 +94,9 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	vector<float> sphereVertices;
-	getSphereVertices(sphereVertices, 1, 10);
+	float radius = 0.5f;
+	int sphereResolution = 15;
+	getSphereVertices(sphereVertices, radius, sphereResolution);
 	int vertexCount = sphereVertices.size() / 5;
 	cout << sphereVertices.size() << endl;
 	cout << vertexCount << endl;
@@ -163,7 +106,6 @@ int main() {
 	VAO VAO1;
 	VAO1.Bind();
 
-	//VBO VBO1(cubeVertices, sizeof(cubeVertices));
 	VBO VBO1(sphereVertices.data(), (sphereVertices.size()*sizeof(float)));
 	//EBO EBO1(sqrIndices, sizeof(sqrIndices));
 
@@ -202,11 +144,6 @@ int main() {
 	shaderProgram.setInt("tex0", 0);
 	shaderProgram.setInt("tex1", 1);
 	shaderProgram.setFloat("mixParam", 0.5);
-
-	glm::vec3 vec = { 0.0, 1.0, 2.0 };
-	vector<float> vectorr;
-	insertVec3InVector(vectorr, vec);
-	cout << vectorr[1] << endl;
 
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
@@ -251,9 +188,7 @@ int main() {
 
 		VAO1.Bind();
 
-		renderScene(cubePositions, shaderProgram, model, vertexCount);
-
-		//glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+		renderScene(10, shaderProgram, model, vertexCount);
 
 		//checar por eventos e trocar os buffers
 		glfwPollEvents();
@@ -290,12 +225,14 @@ void resize(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void renderScene(vector<glm::vec3> cubePositions, Shader& program, glm::mat4 model, int vertexCount) {
+void renderScene(int numberOfObjects, Shader& program, glm::mat4 model, int vertexCount) {
 	srand(static_cast <unsigned> (time(0)));
 	int i = 0;
-	for (glm::vec3 cubePosition : cubePositions) {
+	for (int i = 0; i <= numberOfObjects; i++) {
+		float randomOffset = rand() % 100 * 0.0123;
+		glm::vec3 position = glm::vec3(rand()%3, rand() % 6, rand() % 3)+randomOffset;
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, cubePosition);
+		model = glm::translate(model, position);
 		model = glm::rotate(model, glm::radians(((float)glfwGetTime()) * 50), glm::vec3(1.0f, 0.3f, 0.5f));
 		program.setMat4("model", model);
 
