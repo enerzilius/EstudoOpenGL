@@ -137,24 +137,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="EBO.cpp" />
+    <ClCompile Include="Classes\glAbstractions\EBO.cpp" />
+    <ClCompile Include="Classes\glAbstractions\shaderClass.cpp" />
+    <ClCompile Include="Classes\glAbstractions\Texture.cpp" />
+    <ClCompile Include="Classes\glAbstractions\VAO.cpp" />
+    <ClCompile Include="Classes\glAbstractions\VBO.cpp" />
+    <ClCompile Include="Classes\ViewElements\Camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="shaderClass.cpp" />
     <ClCompile Include="stb.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="VAO.cpp" />
-    <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="EBO.h" />
+    <ClInclude Include="Classes\glAbstractions\EBO.h" />
+    <ClInclude Include="Classes\glAbstractions\shaderClass.h" />
+    <ClInclude Include="Classes\glAbstractions\Texture.h" />
+    <ClInclude Include="Classes\glAbstractions\VAO.h" />
+    <ClInclude Include="Classes\glAbstractions\VBO.h" />
+    <ClInclude Include="Classes\ViewElements\Camera.h" />
     <ClInclude Include="Transformer.h" />
-    <ClInclude Include="shaderClass.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="VAO.h" />
-    <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\OneDrive\Imagens\wall.jpg" />

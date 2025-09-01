@@ -11,12 +11,12 @@
 #include <vector>
 
 
-#include "shaderClass.h"
-#include "VBO.h"
-#include "EBO.h"
-#include "VAO.h"
-#include "Texture.h"
-#include "Camera.h"
+#include "Classes/glAbstractions/shaderClass.h"
+#include "Classes/glAbstractions/VBO.h"
+#include "Classes/glAbstractions/EBO.h"
+#include "Classes/glAbstractions/VAO.h"
+#include "Classes/glAbstractions/Texture.h"
+#include "Classes/ViewElements/Camera.h"
 
 using namespace std;
 
