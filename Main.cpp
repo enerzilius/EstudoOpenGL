@@ -25,7 +25,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 void resize(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-void renderScene(int numberOfObjects, Shader& program, glm::mat4 model, int vertexCount);
+void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, int vertexCount);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
@@ -33,6 +33,7 @@ glm::vec3 sphericalToCartesian(float r, float theta, float phi);
 void getSphereVertices(vector<float>& vertices, float radius, int resolution);
 void insertVec3InVector(vector<float>& vector, glm::vec3);
 void insertQuadVertexVectorTexture(vector<float>& vector, glm::vec3 vertices[4]);
+vector<glm::vec3> generateRandomPositions(int n);
 
 float CLIP_NEAR = 0.1f;
 float CLIP_FAR = 100.0f;
@@ -55,6 +56,8 @@ const float sensitivity = 0.5f;
 
 glm::vec3 worldUp = glm::vec3(0.0, 1.0, 0.0);
 Camera camera(cameraPosition, worldUp, yaw, pitch, fov, sensitivity, movementSpeed);
+
+vector<glm::vec3> positions = generateRandomPositions(10);
 
 int main() {
 	glfwInit();
@@ -196,7 +199,7 @@ int main() {
 
 		VAO1.Bind();
 
-		renderScene(10, shaderProgram, model, vertexCount);
+		renderScene(positions, shaderProgram, model, vertexCount);
 
 		//checar por eventos e trocar os buffers
 		glfwPollEvents();
@@ -233,19 +236,17 @@ void resize(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void renderScene(int numberOfObjects, Shader& program, glm::mat4 model, int vertexCount) {
+void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, int vertexCount) {
 	srand(static_cast <unsigned> (time(0)));
-	int i = 0;
-	for (int i = 0; i <= numberOfObjects; i++) {
-		float randomOffset = rand() % 100 * 0.0123;
-		glm::vec3 position = glm::vec3(rand()%3, rand() % 6, rand() % 3)+randomOffset;
+	
+	for (glm::vec3 pos : positions) {
+		glm::vec3 position = pos;
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, position);
 		model = glm::rotate(model, glm::radians(((float)glfwGetTime()) * 50), glm::vec3(1.0f, 0.3f, 0.5f));
 		program.setMat4("model", model);
 
 		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
-		i++;
 	}
 }
 
@@ -332,4 +333,15 @@ void insertQuadVertexVectorTexture(std::vector<float>& allVertices, glm::vec3 qu
 		allVertices.push_back(uvCoordinates[i][0]);
 		allVertices.push_back(uvCoordinates[i][1]);
 	}
+}
+
+vector<glm::vec3> generateRandomPositions(int n) {
+	vector<glm::vec3> positionVector;
+	for (int i = 0; i < n; i++)
+	{
+		float randomOffset = rand() % 100 * 0.123;
+		glm::vec3 randomPos = glm::vec3(rand() % 1, rand() % 3, rand() % 2) + randomOffset;
+		positionVector.push_back(randomPos);
+	}
+	return positionVector;
 }
