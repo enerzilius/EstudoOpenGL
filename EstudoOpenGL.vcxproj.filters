@@ -129,5 +129,13 @@
     <None Include="Shaderfiles\transform.vert">
       <Filter>Arquivos de Recurso\Shaders</Filter>
     </None>
+    <None Include="Shaderfiles\light.vert">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Shaderfiles\light.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </Text>
   </ItemGroup>
 </Project>

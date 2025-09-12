@@ -168,6 +168,7 @@
     <None Include="Shaderfiles\default.frag" />
     <None Include="Shaderfiles\default.vert" />
     <None Include="Shaderfiles\green.frag" />
+    <None Include="Shaderfiles\light.vert" />
     <None Include="Shaderfiles\offset.vert" />
     <None Include="Shaderfiles\pointColoring.frag" />
     <None Include="Shaderfiles\pointColoring.vert" />
@@ -177,6 +178,9 @@
     <None Include="Shaderfiles\text.vert" />
     <None Include="Shaderfiles\time.frag" />
     <None Include="Shaderfiles\transform.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Shaderfiles\light.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

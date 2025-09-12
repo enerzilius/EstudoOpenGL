@@ -57,7 +57,8 @@ const float sensitivity = 0.5f;
 glm::vec3 worldUp = glm::vec3(0.0, 1.0, 0.0);
 Camera camera(cameraPosition, worldUp, yaw, pitch, fov, sensitivity, movementSpeed);
 
-vector<glm::vec3> positions = generateRandomPositions(10);
+vector<glm::vec3> positions = generateRandomPositions(6);
+
 
 int main() {
 	glfwInit();
@@ -97,7 +98,7 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	vector<float> sphereVertices;
-	float radius = 0.5f;
+	float radius = 1.33f;
 	int sphereResolution = 15;
 	getSphereVertices(sphereVertices, radius, sphereResolution);
 	int vertexCount = sphereVertices.size() / 5;
@@ -105,11 +106,6 @@ int main() {
 	cout << vertexCount << endl;
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
-	Shader lightShaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
-
-	VAO vaoLight;
-	vaoLight.Bind();
-
 
 	VAO VAO1;
 	VAO1.Bind();
@@ -117,8 +113,6 @@ int main() {
 	VBO VBO1(sphereVertices.data(), (sphereVertices.size()*sizeof(float)));
 	//EBO EBO1(sqrIndices, sizeof(sqrIndices));
 
-	vaoLight.LinkVBO(VBO1, 0, 3, 5, 0);
-	vaoLight.LinkVBO(VBO1, 0, 2, 5, 0);
 
 	VAO1.LinkVBO(VBO1, 0, 3, 5, 0); // tirar esses magic numbers
 	VAO1.LinkVBO(VBO1, 1, 2, 5, 3);
@@ -126,6 +120,15 @@ int main() {
 	VAO1.Unbind();
 	VBO1.Unbind();
 	//EBO1.Unbind();
+
+	Shader lightShaderProgram("Shaderfiles/light.vert", "Shaderfiles/light.frag");
+	VAO lightVAO;
+
+	VAO vaoLight;
+	vaoLight.Bind();
+
+	vaoLight.LinkVBO(VBO1, 0, 3, 5, 0);
+	vaoLight.LinkVBO(VBO1, 0, 2, 5, 0);
 
 	Texture texture;
 	texture.ActiveTexture(GL_TEXTURE0);
@@ -237,8 +240,6 @@ void resize(GLFWwindow* window, int width, int height)
 }
 
 void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, int vertexCount) {
-	srand(static_cast <unsigned> (time(0)));
-	
 	for (glm::vec3 pos : positions) {
 		glm::vec3 position = pos;
 		model = glm::mat4(1.0f);
@@ -336,6 +337,7 @@ void insertQuadVertexVectorTexture(std::vector<float>& allVertices, glm::vec3 qu
 }
 
 vector<glm::vec3> generateRandomPositions(int n) {
+	srand(static_cast <unsigned> (time(0)));
 	vector<glm::vec3> positionVector;
 	for (int i = 0; i < n; i++)
 	{
