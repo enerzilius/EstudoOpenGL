@@ -156,13 +156,14 @@ int main() {
 	else cout << "Erro ao carregar a imagem " << path << endl;
 	stbi_image_free(data);
 
+	glm::vec3 lightColor = glm::vec3(1.0, 0.0, 0.0);
 	shaderProgram.Activate();
 	shaderProgram.setInt("tex0", 0);
 	shaderProgram.setInt("tex1", 1);
 	shaderProgram.setFloat("mixParam", 0.5);
+	shaderProgram.setVec3Float("lightColor", lightColor);
 
 	lightShaderProgram.Activate();
-	glm::vec3 lightColor = glm::vec3(1.0, 1.0, 1.0);
 	lightShaderProgram.setVec3Float("objectColor", lightColor);
 
 	//loop de renderização
