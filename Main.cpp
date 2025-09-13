@@ -57,7 +57,7 @@ const float sensitivity = 0.5f;
 glm::vec3 worldUp = glm::vec3(0.0, 1.0, 0.0);
 Camera camera(cameraPosition, worldUp, yaw, pitch, fov, sensitivity, movementSpeed);
 
-vector<glm::vec3> positions = generateRandomPositions(6);
+vector<glm::vec3> positions = generateRandomPositions(1);
 
 
 int main() {
@@ -127,7 +127,7 @@ int main() {
 	vaoLight.Bind();
 
 	vaoLight.LinkVBO(VBO1, 0, 3, 5, 0);
-	vaoLight.LinkVBO(VBO1, 0, 2, 5, 0);
+	vaoLight.LinkVBO(VBO1, 1, 2, 5, 3);
 
 	vaoLight.Unbind();
 	VBO1.Unbind();
@@ -162,8 +162,8 @@ int main() {
 	shaderProgram.setFloat("mixParam", 0.5);
 
 	lightShaderProgram.Activate();
-	glm::vec3 color = glm::vec3(1.0, 0.0, 0.0);
-	lightShaderProgram.setVec3Float("objectColor", color);
+	glm::vec3 lightColor = glm::vec3(1.0, 1.0, 1.0);
+	lightShaderProgram.setVec3Float("objectColor", lightColor);
 
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
@@ -191,9 +191,6 @@ int main() {
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
 
-		glm::vec3 lightPos = glm::vec3(0.0, 0.0, 0.0);
-		glm::mat4 lightModel = glm::mat4(1.0);
-		glm::translate(lightModel, lightPos);
 
 
 		glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -216,6 +213,10 @@ int main() {
 		renderScene(positions, shaderProgram, model, vertexCount);
 
 		VAO1.Unbind();
+
+		glm::vec3 lightPos = glm::vec3(5.0, -1.0, -4.0);
+		glm::mat4 lightModel = glm::mat4(1.0);
+		glm::translate(lightModel, lightPos);
 
 		lightShaderProgram.Activate();
 		vaoLight.Bind();
