@@ -118,7 +118,6 @@ int main() {
 	VAO1.LinkVBO(VBO1, 1, 2, 5, 3);
 
 	VAO1.Unbind();
-	VBO1.Unbind();
 	//EBO1.Unbind();
 
 	Shader lightShaderProgram("Shaderfiles/light.vert", "Shaderfiles/light.frag");
@@ -129,6 +128,9 @@ int main() {
 
 	vaoLight.LinkVBO(VBO1, 0, 3, 5, 0);
 	vaoLight.LinkVBO(VBO1, 0, 2, 5, 0);
+
+	vaoLight.Unbind();
+	VBO1.Unbind();
 
 	Texture texture;
 	texture.ActiveTexture(GL_TEXTURE0);
@@ -159,6 +161,10 @@ int main() {
 	shaderProgram.setInt("tex1", 1);
 	shaderProgram.setFloat("mixParam", 0.5);
 
+	lightShaderProgram.Activate();
+	glm::vec3 color = glm::vec3(1.0, 0.0, 0.0);
+	lightShaderProgram.setVec3Float("objectColor", color);
+
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
 	{
@@ -185,6 +191,11 @@ int main() {
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
 
+		glm::vec3 lightPos = glm::vec3(0.0, 0.0, 0.0);
+		glm::mat4 lightModel = glm::mat4(1.0);
+		glm::translate(lightModel, lightPos);
+
+
 		glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
 		glm::vec3 cameraDirection = glm::normalize(camera.position - cameraTarget);
 
@@ -203,6 +214,19 @@ int main() {
 		VAO1.Bind();
 
 		renderScene(positions, shaderProgram, model, vertexCount);
+
+		VAO1.Unbind();
+
+		lightShaderProgram.Activate();
+		vaoLight.Bind();
+
+		lightShaderProgram.setMat4("model", lightModel);
+		lightShaderProgram.setMat4("view", view);
+		lightShaderProgram.setMat4("proj", proj);
+
+		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+
+		vaoLight.Unbind();
 
 		//checar por eventos e trocar os buffers
 		glfwPollEvents();

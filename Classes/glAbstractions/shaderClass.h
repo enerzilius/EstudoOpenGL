@@ -28,6 +28,7 @@ public:
 	void setInt(const string& name, int value);
 	void setFloat(const string& name, float value);
 	void setMat4(const string& name, glm::mat4 value);
+	void setVec3Float(const string& name, glm::vec3 value);
 };
 
 #endif 
