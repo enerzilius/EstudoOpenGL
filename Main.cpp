@@ -33,6 +33,8 @@ glm::vec3 sphericalToCartesian(float r, float theta, float phi);
 void getSphereVertices(vector<float>& vertices, float radius, int resolution);
 void insertVec3InVector(vector<float>& vector, glm::vec3);
 void insertQuadVertexVectorTexture(vector<float>& vector, glm::vec3 vertices[4]);
+glm::vec3 calculateFaceNormalVector(glm::vec3 triangle[3]);
+glm::vec3 calculateVertexNormalVector(glm::vec3 triangle);
 vector<glm::vec3> generateRandomPositions(int n);
 
 float CLIP_NEAR = 0.1f;
@@ -113,9 +115,12 @@ int main() {
 	VBO VBO1(sphereVertices.data(), (sphereVertices.size()*sizeof(float)));
 	//EBO EBO1(sqrIndices, sizeof(sqrIndices));
 
-
-	VAO1.LinkVBO(VBO1, 0, 3, 5, 0); // tirar esses magic numbers
-	VAO1.LinkVBO(VBO1, 1, 2, 5, 3);
+	int layoutVertex = 0, layoutUV = 1, layoutNormal = 2;
+	int stepVertex = 3, stepUV = 2, stepNormal = 3;
+	int stride = stepVertex + stepUV + stepNormal;
+	VAO1.LinkVBO(VBO1, layoutVertex, stepVertex, stride, 0); 
+	VAO1.LinkVBO(VBO1, layoutUV, stepUV, stride, stepVertex);
+	VAO1.LinkVBO(VBO1, layoutNormal, stepNormal, stride, stepVertex+stepUV);
 
 	VAO1.Unbind();
 	//EBO1.Unbind();
@@ -126,8 +131,9 @@ int main() {
 	VAO vaoLight;
 	vaoLight.Bind();
 
-	vaoLight.LinkVBO(VBO1, 0, 3, 5, 0);
-	vaoLight.LinkVBO(VBO1, 1, 2, 5, 3);
+	vaoLight.LinkVBO(VBO1, layoutVertex, stepVertex, stride, 0);
+	vaoLight.LinkVBO(VBO1, layoutUV, stepUV, stride, stepVertex);
+	vaoLight.LinkVBO(VBO1, layoutNormal, stepNormal, stride, stepVertex + stepUV);
 
 	vaoLight.Unbind();
 	VBO1.Unbind();
@@ -354,13 +360,25 @@ void insertQuadVertexVectorTexture(std::vector<float>& allVertices, glm::vec3 qu
 
 	int indices[6] = { 0, 1, 2, 1, 3, 2 };
 
+	glm::vec3 triangle[3] = { quadVertices[0], quadVertices[1], quadVertices[2] };
+	glm::vec3 normalVector = calculateFaceNormalVector(triangle);
+
 	for (int i = 0; i < 6; i++) {
 		int idx = indices[i];
 		insertVec3InVector(allVertices, quadVertices[idx]);
-		allVertices.push_back(uvCoordinates[i][0]);
-		allVertices.push_back(uvCoordinates[i][1]);
+		for(int j = 0; j < 2; j++) allVertices.push_back(uvCoordinates[i][j]);
+		insertVec3InVector(allVertices, normalVector);
 	}
 }
+
+glm::vec3 calculateFaceNormalVector(glm::vec3 face[3]) {
+	return glm::cross((face[1] - face[0]), face[2] - face[0]);
+}
+
+glm::vec3 calculateVertexNormalVector(glm::vec3 vertex) {
+	return glm::vec3(1.0);
+}
+
 
 vector<glm::vec3> generateRandomPositions(int n) {
 	srand(static_cast <unsigned> (time(0)));
