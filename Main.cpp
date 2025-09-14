@@ -117,10 +117,10 @@ int main() {
 
 	int layoutVertex = 0, layoutUV = 1, layoutNormal = 2;
 	int stepVertex = 3, stepUV = 2, stepNormal = 3;
-	int stride = stepVertex + stepUV + stepNormal;
+	int stride = stepVertex + stepUV;
 	VAO1.LinkVBO(VBO1, layoutVertex, stepVertex, stride, 0); 
 	VAO1.LinkVBO(VBO1, layoutUV, stepUV, stride, stepVertex);
-	VAO1.LinkVBO(VBO1, layoutNormal, stepNormal, stride, stepVertex+stepUV);
+	//VAO1.LinkVBO(VBO1, layoutNormal, stepNormal, stride, stepVertex+stepUV);
 
 	VAO1.Unbind();
 	//EBO1.Unbind();
@@ -162,7 +162,7 @@ int main() {
 	else cout << "Erro ao carregar a imagem " << path << endl;
 	stbi_image_free(data);
 
-	glm::vec3 lightColor = glm::vec3(1.0, 1.0, 1.0);
+	glm::vec3 lightColor = glm::vec3(1.0, 0.0, 1.0);
 	shaderProgram.Activate();
 	shaderProgram.setInt("tex0", 0);
 	shaderProgram.setInt("tex1", 1);
@@ -191,6 +191,8 @@ int main() {
 		texture2.ActiveTexture(GL_TEXTURE1);
 		texture2.Bind();
 
+		glm::vec3 lightPos = glm::vec3(5.0, -1.0, -4.0);
+
 		shaderProgram.Activate();
 		VBO1.Bind();
 
@@ -198,11 +200,8 @@ int main() {
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
 
-
-
 		glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
 		glm::vec3 cameraDirection = glm::normalize(camera.position - cameraTarget);
-
 
 		camera.right = glm::normalize(glm::cross(camera.up, cameraDirection));
 		camera.up = glm::cross(cameraDirection, camera.right);
@@ -211,6 +210,7 @@ int main() {
 
 		proj = glm::perspective(glm::radians(camera.fov), (float)(SCR_WIDTH / SCR_HEIGHT), CLIP_NEAR, CLIP_FAR);
 
+		shaderProgram.setVec3Float("lightpos", lightPos);
 		shaderProgram.setMat4("model", model);
 		shaderProgram.setMat4("view", view);
 		shaderProgram.setMat4("proj", proj);
@@ -221,7 +221,6 @@ int main() {
 
 		VAO1.Unbind();
 
-		glm::vec3 lightPos = glm::vec3(5.0, -1.0, -4.0);
 		glm::mat4 lightModel = glm::mat4(1.0);
 		glm::translate(lightModel, lightPos);
 
@@ -276,7 +275,7 @@ void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, 
 		glm::vec3 position = pos;
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, position);
-		model = glm::rotate(model, glm::radians(((float)glfwGetTime()) * 50), glm::vec3(1.0f, 0.3f, 0.5f));
+		//model = glm::rotate(model, glm::radians(((float)glfwGetTime()) * 50), glm::vec3(1.0f, 0.0f, 0.0f));
 		program.setMat4("model", model);
 
 		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
@@ -367,7 +366,7 @@ void insertQuadVertexVectorTexture(std::vector<float>& allVertices, glm::vec3 qu
 		int idx = indices[i];
 		insertVec3InVector(allVertices, quadVertices[idx]);
 		for(int j = 0; j < 2; j++) allVertices.push_back(uvCoordinates[i][j]);
-		insertVec3InVector(allVertices, normalVector);
+		//insertVec3InVector(allVertices, normalVector);
 	}
 }
 

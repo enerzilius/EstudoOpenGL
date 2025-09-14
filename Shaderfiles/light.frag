@@ -4,7 +4,6 @@ out vec4 FragColor;
 in vec2 UV;
 
 uniform vec3 objectColor;
-uniform vec3 lightColor;
 
 void main()
 {
