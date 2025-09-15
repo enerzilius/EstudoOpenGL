@@ -117,6 +117,7 @@ int main() {
 
 	int layoutVertex = 0, layoutUV = 1, layoutNormal = 2;
 	int stepVertex = 3, stepUV = 2, stepNormal = 3;
+	//int stride = stepVertex + stepUV + stepNormal;
 	int stride = stepVertex + stepUV;
 	VAO1.LinkVBO(VBO1, layoutVertex, stepVertex, stride, 0); 
 	VAO1.LinkVBO(VBO1, layoutUV, stepUV, stride, stepVertex);
@@ -162,7 +163,7 @@ int main() {
 	else cout << "Erro ao carregar a imagem " << path << endl;
 	stbi_image_free(data);
 
-	glm::vec3 lightColor = glm::vec3(1.0, 0.0, 1.0);
+	glm::vec3 lightColor = glm::vec3(1.0, 1.0, 1.0);
 	shaderProgram.Activate();
 	shaderProgram.setInt("tex0", 0);
 	shaderProgram.setInt("tex1", 1);
