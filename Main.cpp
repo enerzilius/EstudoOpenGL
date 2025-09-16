@@ -145,7 +145,7 @@ int main() {
 	texture.SetTexParameters();
 
 	int width, height, ch;
-	stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(false);
 	const char* path = "Textures/wall.jpg";
 	unsigned char* data = stbi_load(path, &width, &height, &ch, 0);
 
