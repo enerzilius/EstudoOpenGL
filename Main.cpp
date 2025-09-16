@@ -59,7 +59,7 @@ const float sensitivity = 0.5f;
 glm::vec3 worldUp = glm::vec3(0.0, 1.0, 0.0);
 Camera camera(cameraPosition, worldUp, yaw, pitch, fov, sensitivity, movementSpeed);
 
-vector<glm::vec3> positions = generateRandomPositions(1);
+vector<glm::vec3> positions = generateRandomPositions(4);
 
 
 int main() {
@@ -396,7 +396,7 @@ vector<glm::vec3> generateRandomPositions(int n) {
 	for (int i = 0; i < n; i++)
 	{
 		float randomOffset = rand() % 100 * 0.123;
-		glm::vec3 randomPos = glm::vec3(rand() % 1 + 4, rand() % 3, rand() % 1) + randomOffset;
+		glm::vec3 randomPos = glm::vec3((rand() % 3 + 4) * (i+1), rand() % 10, rand() % 1) + randomOffset;
 		positionVector.push_back(randomPos);
 	}
 	return positionVector;
