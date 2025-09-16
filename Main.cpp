@@ -211,7 +211,10 @@ int main() {
 
 		proj = glm::perspective(glm::radians(camera.fov), (float)(SCR_WIDTH / SCR_HEIGHT), CLIP_NEAR, CLIP_FAR);
 
+		float shininess = 500;
+		shaderProgram.setFloat("shininess", shininess);
 		shaderProgram.setVec3Float("lightpos", lightPos);
+		shaderProgram.setVec3Float("camPos", camera.position);
 		shaderProgram.setMat4("model", model);
 		shaderProgram.setMat4("view", view);
 		shaderProgram.setMat4("proj", proj);
@@ -391,7 +394,7 @@ vector<glm::vec3> generateRandomPositions(int n) {
 	for (int i = 0; i < n; i++)
 	{
 		float randomOffset = rand() % 100 * 0.123;
-		glm::vec3 randomPos = glm::vec3(rand() % 1, rand() % 3, rand() % 2) + randomOffset;
+		glm::vec3 randomPos = glm::vec3(rand() % 1 + 4, rand() % 3, rand() % 1) + randomOffset;
 		positionVector.push_back(randomPos);
 	}
 	return positionVector;

@@ -7,10 +7,12 @@ in vec3 WorldPos;
 
 uniform vec3 lightPos;
 uniform vec3 lightColor;
+uniform vec3 camPos;
 
 uniform sampler2D tex0;
 uniform sampler2D tex1;
 uniform float mixParam; 
+uniform float shininess;
 
 void main()
 {
@@ -24,6 +26,11 @@ void main()
     vec3 lightDir = normalize(lightPos - WorldPos);
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 diffuseColor = diff * lightColor;
+
+    vec3 viewDir = normalize(camPos - WorldPos);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
+    vec3 specularHighlight = lightColor * spec;
     
-    FragColor = pixelColor * vec4(diffuseColor + ambientColor, 1.0);
+    FragColor = pixelColor * vec4(diffuseColor + ambientColor + specularHighlight, 1.0);
 }
