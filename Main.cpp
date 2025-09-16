@@ -272,10 +272,15 @@ void resize(GLFWwindow* window, int width, int height)
 }
 
 void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, int vertexCount) {
+	float angle = (float)glfwGetTime();
 	for (glm::vec3 pos : positions) {
-		glm::vec3 position = pos;
+		float rotationX = pos.x * cos(angle);
+		float rotationY = pos.x * sin(angle);
+
+		glm::vec3 position = glm::vec3(rotationX, 0.0, rotationY);
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, position);
+
 		//model = glm::rotate(model, glm::radians(((float)glfwGetTime()) * 50), glm::vec3(1.0f, 0.0f, 0.0f));
 		program.setMat4("model", model);
 
