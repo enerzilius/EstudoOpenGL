@@ -278,9 +278,11 @@ void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, 
 	float angle = (float)glfwGetTime();
 	for (glm::vec3 pos : positions) {
 		float rotationX = pos.x * cos(angle);
-		float rotationY = pos.x * sin(angle);
+		float amplitude = 5.0;
+		float rotationY = sin(angle) * amplitude;
+		float rotationZ = pos.x * sin(angle);
 
-		glm::vec3 position = glm::vec3(rotationX, 0.0, rotationY);
+		glm::vec3 position = glm::vec3(rotationX, rotationY, rotationZ);
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, position);
 
