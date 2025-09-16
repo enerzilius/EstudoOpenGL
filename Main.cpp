@@ -163,7 +163,7 @@ int main() {
 	else cout << "Erro ao carregar a imagem " << path << endl;
 	stbi_image_free(data);
 
-	glm::vec3 lightColor = glm::vec3(1.0, 1.0, 1.0);
+	glm::vec3 lightColor = glm::vec3(1.0, 0.0, 1.0);
 	shaderProgram.Activate();
 	shaderProgram.setInt("tex0", 0);
 	shaderProgram.setInt("tex1", 1);
@@ -396,7 +396,7 @@ vector<glm::vec3> generateRandomPositions(int n) {
 	for (int i = 0; i < n; i++)
 	{
 		float randomOffset = rand() % 100 * 0.123;
-		glm::vec3 randomPos = glm::vec3((rand() % 3 + 4) * (i+1), rand() % 10, rand() % 1) + randomOffset;
+		glm::vec3 randomPos = glm::vec3((i+1)*4, rand() % 10, rand() % 1) + randomOffset;
 		positionVector.push_back(randomPos);
 	}
 	return positionVector;
