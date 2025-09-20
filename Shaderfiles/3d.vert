@@ -15,8 +15,7 @@ void main()
 {
     mat4 MVP = proj * view * model;
     gl_Position =  MVP * vec4((aPos), 1.0);
-    vec3 worldPos = (model * vec4(aPos, 1.0)).xyz;
-    WorldPos = vec3(model * vec4(aPos, 1.0));
+    WorldPos = (model * vec4(aPos, 1.0)).xyz;
     UV = aTexCoord;
     //Normal = aNormal;
     Normal = normalize(aPos);

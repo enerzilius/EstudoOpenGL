@@ -276,17 +276,20 @@ void resize(GLFWwindow* window, int width, int height)
 
 void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, int vertexCount) {
 	float angle = (float)glfwGetTime();
+	int i = 0;
 	for (glm::vec3 pos : positions) {
+		i++;
+		angle /= i;
 		float rotationX = pos.x * cos(angle);
-		float amplitude = 10.0;
+		float amplitude = 7.0;
 		float rotationY = sin(angle) * amplitude;
 		float rotationZ = pos.x * sin(angle);
 
 		glm::vec3 position = glm::vec3(rotationX, rotationY, rotationZ);
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, position);
+		//model = glm::rotate(model, glm::radians(((float)glfwGetTime()) * 50), glm::vec3(0.0f, 0.0f, 1.0f));
 
-		//model = glm::rotate(model, glm::radians(((float)glfwGetTime()) * 50), glm::vec3(1.0f, 0.0f, 0.0f));
 		program.setMat4("model", model);
 
 		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
