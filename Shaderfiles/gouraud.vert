@@ -1,25 +1,34 @@
 #version 330 core
-out vec4 FragColor;
-  
-in vec2 UV;
-in vec3 Normal;
-in vec3 WorldPos;
+
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec2 aTexCoord;
+//layout (location = 2) in vec3 aNormal;
+out vec2 UV;
+out vec3 Normal;
+out vec3 WorldPos;
+out vec3 Light;
 
 uniform vec3 lightPos;
 uniform vec3 lightColor;
 uniform vec3 camPos;
-
-uniform sampler2D tex0;
-uniform sampler2D tex1;
-uniform float mixParam; 
 uniform float shininess;
+
+uniform mat4 model;   
+uniform mat4 view; 
+uniform mat4 proj; 
 
 void main()
 {
-    vec4 pixelColor = mix(texture(tex0, UV), texture(tex1, vec2(-UV.x, UV.y)), mixParam);
-    //vec4 pixelColor = vec4(0.0, 0.0, 0.5, 1.0);
+    mat4 MVP = proj * view * model;
+    gl_Position =  MVP * vec4((aPos), 1.0);
+    vec3 worldPos = (model * vec4(aPos, 1.0)).xyz;
+    WorldPos = vec3(model * vec4(aPos, 1.0));
+    UV = aTexCoord;
+    //Normal = aNormal;
+    Normal = normalize(aPos);
 
-    // Blinn-Phong model
+    // Gouraud Shading
+
     float ambientStrength = 0.1;
     vec3 ambientColor = lightColor * ambientStrength;
     
@@ -32,6 +41,6 @@ void main()
     vec3 halfwayDir = normalize(lightDir + viewDir);
     float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
     vec3 specularHighlight = lightColor * spec;
-    
-    FragColor = pixelColor * vec4(diffuseColor + ambientColor + specularHighlight, 1.0);
+
+    Light = diffuseColor + ambientColor + specularHighlight;
 }

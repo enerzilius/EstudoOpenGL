@@ -167,6 +167,7 @@
     <None Include="Shaderfiles\AL.vert" />
     <None Include="Shaderfiles\default.frag" />
     <None Include="Shaderfiles\default.vert" />
+    <None Include="Shaderfiles\gouraud.vert" />
     <None Include="Shaderfiles\green.frag" />
     <None Include="Shaderfiles\light.vert" />
     <None Include="Shaderfiles\offset.vert" />
