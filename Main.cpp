@@ -30,8 +30,10 @@ void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
+void getSphereVertices(vector<float>& vertices, float radius, int resolution);
+
 float CLIP_NEAR = 0.1f;
-float CLIP_FAR = 100.0f;
+float CLIP_FAR = 200.0f;
 
 const float radius = 10.0;
 float deltaTime = 0.0f;	// Time between current frame and last frame
@@ -96,6 +98,7 @@ int main() {
 	float radius = 1.33f;
 	int sphereResolution = 15;
 	getSphereVertices(sphereVertices, radius, sphereResolution);
+	cout << "aaa" << endl;
 	int vertexCount = sphereVertices.size() / 5;
 	cout << sphereVertices.size() << endl;
 	cout << vertexCount << endl;
@@ -314,4 +317,28 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(yoffset);
+}
+
+void getSphereVertices(vector<float>& vertices, float radius, int resolution) {
+	constexpr float pi = glm::pi<float>();
+	float calculationResolution = (float)resolution;
+	for (int i = 0; i <= resolution; ++i) {
+		cout << i << endl;
+		float theta = (i / calculationResolution) * pi;
+		float theta2 = (i + 1) / calculationResolution * pi;
+
+		for (float j = 0.0f; j < resolution; ++j) {
+			float phi = j / calculationResolution * 2 * pi;
+			float phi2 = (j + 1) / calculationResolution * 2 * pi;
+
+			glm::vec3 v1 = sphericalToCartesian(radius, theta, phi);
+			glm::vec3 v2 = sphericalToCartesian(radius, theta, phi2);
+			glm::vec3 v3 = sphericalToCartesian(radius, theta2, phi);
+			glm::vec3 v4 = sphericalToCartesian(radius, theta2, phi2);
+
+			glm::vec3 quadVertices[] = { v1, v2, v3, v4 };
+
+			insertQuadVertexVectorTexture(vertices, quadVertices);
+		}
+	}
 }

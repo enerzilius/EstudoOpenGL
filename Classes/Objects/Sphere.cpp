@@ -4,7 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
-
+#include "../Utils/GeneralUtilities.h"
 #include "../glAbstractions/VBO.h"
 
 Sphere::Sphere(float sphereRadius, int renderResolution, glm::vec3 objColor) {
