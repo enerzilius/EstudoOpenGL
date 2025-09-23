@@ -31,8 +31,6 @@ void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-void getSphereVertices(vector<float>& vertices, float radius, int resolution);
-
 float CLIP_NEAR = 0.1f;
 float CLIP_FAR = 200.0f;
 
@@ -168,14 +166,12 @@ int main() {
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
 	{
-		//inputs
 		processInput(window);
 
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		//aqui vai os processos de renderização
 		glClearColor(0.05f, 0.05f, 0.13f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -231,7 +227,6 @@ int main() {
 
 		vaoLight.Unbind();
 
-		//checar por eventos e trocar os buffers
 		glfwPollEvents();
 		glfwSwapBuffers(window);
 	}
@@ -289,7 +284,7 @@ void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, 
 }
 
 void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
-	if (camera.firstTouch) // initially set to true
+	if (camera.firstTouch)
 	{
 		lastX = xPos;
 		lastY = yPos;
