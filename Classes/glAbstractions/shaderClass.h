@@ -13,6 +13,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "../Objects/Material.h"
+
 using namespace std;
 string get_file_contents(const char* filename);
 
@@ -29,6 +31,7 @@ public:
 	void setFloat(const string& name, float value);
 	void setMat4(const string& name, glm::mat4 value);
 	void setVec3Float(const string& name, glm::vec3 value);
+	void setMaterial(Material material);
 };
 
 #endif 

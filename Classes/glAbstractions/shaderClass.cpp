@@ -1,5 +1,6 @@
 #include "shaderClass.h"
 
+#include "../Objects/Material.h"
 
 using namespace std;
 
@@ -97,4 +98,12 @@ void Shader::setMat4(const string& name, glm::mat4 value)
 void Shader::setVec3Float(const string& name, glm::vec3 value)
 {
 	glUniform3f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z);
+}
+
+void Shader::setMaterial(Material material)
+{
+	glUniform3f(glGetUniformLocation(ID, "ambient"), material.ambient.x, material.ambient.y, material.ambient.z);
+	glUniform3f(glGetUniformLocation(ID, "diffuse"), material.diffuse.x, material.diffuse.y, material.diffuse.z);
+	glUniform3f(glGetUniformLocation(ID, "specular"), material.specular.x, material.specular.y, material.specular.z);
+	glUniform1f(glGetUniformLocation(ID, "shininess"), material.shininess);
 }
