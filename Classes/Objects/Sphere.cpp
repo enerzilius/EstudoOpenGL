@@ -11,10 +11,11 @@ Sphere::Sphere(float sphereRadius, int renderResolution, glm::vec3 objColor) {
 	radius = sphereRadius;
 	resolution = renderResolution;
 	color = objColor;
-
+	generateVertices(vertices, radius, resolution);
+	verticesCount = vertices.size() / 5;
 }
 
-void generateVertices(std::vector<float>& vertices, float radius, int resolution) {
+void Sphere::generateVertices(std::vector<float>& vertices, float radius, int resolution) {
 	constexpr float pi = glm::pi<float>();
 	float calculationResolution = (float)resolution;
 	for (float i = 0.0f; i <= resolution; ++i) {
@@ -35,4 +36,9 @@ void generateVertices(std::vector<float>& vertices, float radius, int resolution
 			insertQuadVertexVectorTexture(vertices, quadVertices);
 		}
 	}
+}
+
+VBO Sphere::getVBO() {
+	VBO VBO(vertices.data(), (vertices.size() * sizeof(float)));
+	return VBO;
 }

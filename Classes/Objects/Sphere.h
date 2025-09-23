@@ -9,18 +9,11 @@
 
 #include "../glAbstractions/VBO.h"
 
-enum Sphere_Movement {
-	FORWARD,
-	BACKWARD,
-	LEFT,
-	RIGHT
-};
-
 class Sphere {
 public:
 	float radius;
 	int resolution;
-	int vertexCount;
+	int verticesCount;
 	glm::vec3 color;
 	std::vector<float> vertices;
 

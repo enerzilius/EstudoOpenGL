@@ -18,6 +18,7 @@
 #include "Classes/glAbstractions/Texture.h"
 #include "Classes/ViewElements/Camera.h"
 #include "Classes/Utils/GeneralUtilities.h"
+#include "Classes/Objects/Sphere.h"
 
 using namespace std;
 
@@ -93,22 +94,17 @@ int main() {
 	}
 
 	glEnable(GL_DEPTH_TEST);
-
-	vector<float> sphereVertices;
 	float radius = 1.33f;
 	int sphereResolution = 15;
-	getSphereVertices(sphereVertices, radius, sphereResolution);
-	cout << "aaa" << endl;
-	int vertexCount = sphereVertices.size() / 5;
-	cout << sphereVertices.size() << endl;
-	cout << vertexCount << endl;
+	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
+	Sphere sphere(radius, sphereResolution, objColor);
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 
 	VAO VAO1;
 	VAO1.Bind();
 
-	VBO VBO1(sphereVertices.data(), (sphereVertices.size()*sizeof(float)));
+	VBO VBO1 = sphere.getVBO();
 	//EBO EBO1(sqrIndices, sizeof(sqrIndices));
 
 	int layoutVertex = 0, layoutUV = 1, layoutNormal = 2;
@@ -217,7 +213,7 @@ int main() {
 
 		VAO1.Bind();
 
-		renderScene(positions, shaderProgram, model, vertexCount);
+		renderScene(positions, shaderProgram, model, sphere.verticesCount);
 
 		VAO1.Unbind();
 
@@ -231,7 +227,7 @@ int main() {
 		lightShaderProgram.setMat4("view", view);
 		lightShaderProgram.setMat4("proj", proj);
 
-		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+		glDrawArrays(GL_TRIANGLES, 0, sphere.verticesCount);
 
 		vaoLight.Unbind();
 
@@ -317,28 +313,4 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(yoffset);
-}
-
-void getSphereVertices(vector<float>& vertices, float radius, int resolution) {
-	constexpr float pi = glm::pi<float>();
-	float calculationResolution = (float)resolution;
-	for (int i = 0; i <= resolution; ++i) {
-		cout << i << endl;
-		float theta = (i / calculationResolution) * pi;
-		float theta2 = (i + 1) / calculationResolution * pi;
-
-		for (float j = 0.0f; j < resolution; ++j) {
-			float phi = j / calculationResolution * 2 * pi;
-			float phi2 = (j + 1) / calculationResolution * 2 * pi;
-
-			glm::vec3 v1 = sphericalToCartesian(radius, theta, phi);
-			glm::vec3 v2 = sphericalToCartesian(radius, theta, phi2);
-			glm::vec3 v3 = sphericalToCartesian(radius, theta2, phi);
-			glm::vec3 v4 = sphericalToCartesian(radius, theta2, phi2);
-
-			glm::vec3 quadVertices[] = { v1, v2, v3, v4 };
-
-			insertQuadVertexVectorTexture(vertices, quadVertices);
-		}
-	}
 }
