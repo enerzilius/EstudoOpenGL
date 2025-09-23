@@ -17,6 +17,7 @@
 #include "Classes/glAbstractions/VAO.h"
 #include "Classes/glAbstractions/Texture.h"
 #include "Classes/ViewElements/Camera.h"
+#include "Classes/Utils/GeneralUtilities.h"
 
 using namespace std;
 
@@ -28,14 +29,6 @@ void processInput(GLFWwindow* window);
 void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, int vertexCount);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-
-glm::vec3 sphericalToCartesian(float r, float theta, float phi);
-void getSphereVertices(vector<float>& vertices, float radius, int resolution);
-void insertVec3InVector(vector<float>& vector, glm::vec3);
-void insertQuadVertexVectorTexture(vector<float>& vector, glm::vec3 vertices[4]);
-glm::vec3 calculateFaceNormalVector(glm::vec3 triangle[3]);
-glm::vec3 calculateVertexNormalVector(glm::vec3 triangle);
-vector<glm::vec3> generateRandomPositions(int n);
 
 float CLIP_NEAR = 0.1f;
 float CLIP_FAR = 100.0f;
@@ -321,85 +314,4 @@ void mouse_callback(GLFWwindow* window, double xPos, double yPos) {
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(yoffset);
-}
-
-glm::vec3 sphericalToCartesian(float r, float theta, float phi) {
-	glm::vec3 pos = glm::vec3(0.0);
-	pos.x = r * sin(theta) * cos(phi);
-	pos.y = r * cos(theta);
-	pos.z = r * sin(theta) * sin(phi);
-	return pos;
-};
-
-void getSphereVertices(vector<float>& vertices, float radius, int resolution) {
-	constexpr float pi = glm::pi<float>();
-	float calculationResolution = (float)resolution;
-	for (float i = 0.0f; i <= resolution; ++i) {
-		float theta = (i / calculationResolution) * pi;
-		float theta2 = (i + 1) / calculationResolution * pi;
-
-		for (float j = 0.0f; j < resolution; ++j) {
-			float phi = j / calculationResolution * 2 * pi;
-			float phi2 = (j + 1) / calculationResolution * 2 * pi;
-
-			glm::vec3 v1 = sphericalToCartesian(radius, theta, phi);
-			glm::vec3 v2 = sphericalToCartesian(radius, theta, phi2);
-			glm::vec3 v3 = sphericalToCartesian(radius, theta2, phi);
-			glm::vec3 v4 = sphericalToCartesian(radius, theta2, phi2);
-
-			glm::vec3 quadVertices[] = { v1, v2, v3, v4 };
-
-			insertQuadVertexVectorTexture(vertices, quadVertices);
-		}
-	}
-}
-
-void insertVec3InVector(vector<float>& vector, glm::vec3 vertex) {
-	for (int i = 0; i < 3; i++) {
-		vector.push_back(vertex[i]);
-	}
-}
-
-void insertQuadVertexVectorTexture(std::vector<float>& allVertices, glm::vec3 quadVertices[4]) {
-	float uvCoordinates[6][2] = {
-		{ 0.0f, 0.0f }, // v1
-		{ 1.0f, 0.0f }, // v2
-		{ 0.0f, 1.0f }, // v3
-
-		{ 1.0f, 0.0f }, // v2
-		{ 1.0f, 1.0f }, // v4
-		{ 0.0f, 1.0f }  // v3
-	};
-
-	int indices[6] = { 0, 1, 2, 1, 3, 2 };
-
-	glm::vec3 triangle[3] = { quadVertices[0], quadVertices[1], quadVertices[2] };
-	glm::vec3 normalVector = calculateFaceNormalVector(triangle);
-
-	for (int i = 0; i < 6; i++) {
-		int idx = indices[i];
-		insertVec3InVector(allVertices, quadVertices[idx]);
-		for(int j = 0; j < 2; j++) allVertices.push_back(uvCoordinates[i][j]);
-		//insertVec3InVector(allVertices, normalVector);
-	}
-}
-
-glm::vec3 calculateFaceNormalVector(glm::vec3 face[3]) {
-	return glm::cross((face[1] - face[0]), face[2] - face[0]);
-}
-
-glm::vec3 calculateVertexNormalVector(glm::vec3 vertex) {
-	return glm::vec3(1.0);
-}
-
-
-vector<glm::vec3> generateRandomPositions(int n) {
-	srand(static_cast <unsigned> (time(0)));
-	vector<glm::vec3> positionVector;
-	for (int i = 1; i <= n; i++)
-	{
-		glm::vec3 randomPos = glm::vec3(i*(2*(i+1))+4, 0, 0);
-		positionVector.push_back(randomPos);
-	}
-	return positionVector;
 }

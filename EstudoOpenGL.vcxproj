@@ -142,6 +142,8 @@
     <ClCompile Include="Classes\glAbstractions\Texture.cpp" />
     <ClCompile Include="Classes\glAbstractions\VAO.cpp" />
     <ClCompile Include="Classes\glAbstractions\VBO.cpp" />
+    <ClCompile Include="Classes\Objects\Sphere.cpp" />
+    <ClCompile Include="Classes\Utils\GeneralUtilities.cpp" />
     <ClCompile Include="Classes\ViewElements\Camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Main.cpp" />
@@ -153,6 +155,8 @@
     <ClInclude Include="Classes\glAbstractions\Texture.h" />
     <ClInclude Include="Classes\glAbstractions\VAO.h" />
     <ClInclude Include="Classes\glAbstractions\VBO.h" />
+    <ClInclude Include="Classes\Objects\Sphere.h" />
+    <ClInclude Include="Classes\Utils\GeneralUtilities.h" />
     <ClInclude Include="Classes\ViewElements\Camera.h" />
     <ClInclude Include="Transformer.h" />
   </ItemGroup>
