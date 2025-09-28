@@ -106,4 +106,5 @@ void Shader::setMaterial(Material material)
 	glUniform3f(glGetUniformLocation(ID, "diffuse"), material.diffuse.x, material.diffuse.y, material.diffuse.z);
 	glUniform3f(glGetUniformLocation(ID, "specular"), material.specular.x, material.specular.y, material.specular.z);
 	glUniform1f(glGetUniformLocation(ID, "shininess"), material.shininess);
+	// Find a way to link texture later
 }
