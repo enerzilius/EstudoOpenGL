@@ -170,7 +170,15 @@ int main() {
 	bloom.Bind();
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	bloom.SetTexParameters();
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, bloom.ID, 0);
+	int mipmapLevels = 4;
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, bloom.ID, mipmapLevels);
+
+	// FAZER COM O DOWNSCALE DEPOIS
+	//Texture downscaledBloom(1);
+	//downscaledBloom.Bind();
+	//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, SCR_WIDTH/32, SCR_HEIGHT/32, 0);
+
+
 	
 	unsigned int attachments[2]{ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
 	glDrawBuffers(2, attachments);
