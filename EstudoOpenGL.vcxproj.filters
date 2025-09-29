@@ -158,5 +158,8 @@
     <Text Include="Shaderfiles\light.frag">
       <Filter>Arquivos de Recurso\Shaders</Filter>
     </Text>
+    <Text Include="Shaderfiles\sobel.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -188,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shaderfiles\light.frag" />
+    <Text Include="Shaderfiles\sobel.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
