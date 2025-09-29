@@ -55,6 +55,9 @@ Camera camera(cameraPosition, worldUp, yaw, pitch, fov, sensitivity, movementSpe
 
 vector<glm::vec3> positions = generateRandomPositions(4);
 
+bool paused = false;
+float paused_time = 0;
+
 
 int main() {
 	glfwInit();
@@ -254,6 +257,11 @@ void processInput(GLFWwindow* window) {
 		camera.ProcessKeyboardInput(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboardInput(RIGHT, deltaTime);
+	//if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && (float)glfwGetTime() - paused_time > 0.5) {
+	//	paused = !paused;
+	//	cout << (paused ? "true" : "false") << "\n";
+	//	if (paused) paused_time = (float)glfwGetTime();
+	//}
 }
 
 void resize(GLFWwindow* window, int width, int height)
@@ -262,7 +270,8 @@ void resize(GLFWwindow* window, int width, int height)
 }
 
 void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, int vertexCount) {
-	float angle = (float)glfwGetTime();
+	float angle = (float)glfwGetTime() - paused_time;
+	if(paused) angle = paused_time;
 	int i = 0;
 	for (glm::vec3 pos : positions) {
 		i++;
