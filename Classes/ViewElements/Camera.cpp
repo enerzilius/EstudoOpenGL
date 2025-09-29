@@ -62,8 +62,8 @@ void Camera::ProcessMouseScroll(float deltaY)
 	fov -= (float)deltaY;
 	if (fov < 1.0f)
 		fov = 1.0f;
-	if (fov > 45.0f)
-		fov = 45.0f;
+	if (fov > 70.0f)
+		fov = 70.0f;
 }
 
 void Camera::UpdateCameraVectors() {
