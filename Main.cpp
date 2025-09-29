@@ -19,6 +19,7 @@
 #include "Classes/ViewElements/Camera.h"
 #include "Classes/Utils/GeneralUtilities.h"
 #include "Classes/Objects/Sphere.h"
+#include "Classes/Objects/Material.h"
 
 using namespace std;
 
@@ -57,6 +58,12 @@ vector<glm::vec3> positions = generateRandomPositions(4);
 
 bool paused = false;
 float paused_time = 0;
+
+const char* filepath = "Textures/wall.jpg";
+vector<Material> materialList = {
+	//Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 500, filepath),
+	//Material(glm::vec3(0.0215, 0.1745, 0.0215),	glm::vec3(0.07568, 0.61424, 0.07568),glm::vec3(0.633, 0.727811, 0.633), 0.6, "")
+};
 
 
 int main() {
