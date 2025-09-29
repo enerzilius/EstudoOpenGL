@@ -1,7 +1,9 @@
 #include "Texture.h"
 
-Texture::Texture() {
-	glGenTextures(1, &ID);
+Texture::Texture() {}
+
+Texture::Texture(int generatedTextures) {
+	glGenTextures(generatedTextures, &ID);
 }
 
 void Texture::ActiveTexture(GLuint unit) {

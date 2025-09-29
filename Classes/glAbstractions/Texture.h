@@ -9,6 +9,7 @@ class Texture {
 public:
 	GLuint ID;
 	Texture();
+	Texture(int generatedTextures);
 
 	void LinkTexJPG(int width, int height, unsigned char* data);
 	void LinkTexPNG(int width, int height, unsigned char* data);

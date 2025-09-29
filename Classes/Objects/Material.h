@@ -15,7 +15,7 @@ public:
 	float shininess;
 	Texture texture;
 
-	Material(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float shininess, const char* texturePath);
+	Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 specularColor, float shininessValue, const char* texturePath);
 	void applyTexture(const char* texturePath);
 };
 

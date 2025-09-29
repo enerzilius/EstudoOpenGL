@@ -60,8 +60,10 @@ bool paused = false;
 float paused_time = 0;
 
 const char* filepath = "Textures/wall.jpg";
+
+//Material custom = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 500, filepath);
 vector<Material> materialList = {
-	//Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 500, filepath),
+	//custom
 	//Material(glm::vec3(0.0215, 0.1745, 0.0215),	glm::vec3(0.07568, 0.61424, 0.07568),glm::vec3(0.633, 0.727811, 0.633), 0.6, "")
 };
 
