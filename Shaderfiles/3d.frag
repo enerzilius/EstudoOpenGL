@@ -1,5 +1,6 @@
 #version 330 core
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 BloomColor;
   
 in vec2 UV;
 in vec3 Normal;
@@ -34,4 +35,8 @@ void main()
     vec3 specularHighlight = lightColor * spec;
     
     FragColor = pixelColor * vec4(diffuseColor + ambientColor + specularHighlight, 1.0);
+
+    float brightness = dot(FragColor.rgb, vec3(0.2126f, 0.7152f, 0.0722f));
+    if(brightness > 0.15f) BloomColor = FragColor;
+    else BloomColor = vec4(0.0);
 }

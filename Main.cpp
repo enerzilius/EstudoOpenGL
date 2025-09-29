@@ -23,8 +23,8 @@
 
 using namespace std;
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1920;
+const unsigned int SCR_HEIGHT = 1080;
 
 void resize(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -164,6 +164,17 @@ int main() {
 	if (data) texture2.LinkTexPNG(width, height, data);
 	else cout << "Erro ao carregar a imagem " << path << endl;
 	stbi_image_free(data);
+
+	// BLOOM TEXTURE
+	Texture bloom(1);
+	bloom.Bind();
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	bloom.SetTexParameters();
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, bloom.ID, 0);
+	
+	unsigned int attachments[2]{ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, attachments);
+	
 
 	glm::vec3 lightColor = glm::vec3(0.8, 0.9, 1.0);
 	shaderProgram.Activate();
