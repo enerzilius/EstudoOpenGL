@@ -104,12 +104,15 @@ int main() {
 	}
 
 	glEnable(GL_DEPTH_TEST);
+
 	float radius = 1.33f;
 	int sphereResolution = 15;
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
 	Sphere sphere(radius, sphereResolution, objColor);
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
+
+	//Shader bloomProgram("Shaderfiles/3d.vert", "Shaderfiles/blur.frag");
 
 	VAO VAO1;
 	VAO1.Bind();
@@ -156,6 +159,7 @@ int main() {
 	stbi_image_free(data);
 
 	Texture texture2;
+	texture2.ActiveTexture(GL_TEXTURE1);
 	texture2.Bind();
 	texture2.SetTexParameters();
 
@@ -166,22 +170,18 @@ int main() {
 	stbi_image_free(data);
 
 	// BLOOM TEXTURE
-	Texture bloom(1);
-	bloom.Bind();
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	bloom.SetTexParameters();
-	int mipmapLevels = 4;
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, bloom.ID, mipmapLevels);
+	//Texture bloom(1);
+	//bloom.Bind();
+	//bloom.LinkTexBuffer(SCR_WIDTH, SCR_HEIGHT);
+	//bloom.SetTexParameters();
+	//int mipmapLevels = 0; // 4
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, bloom.ID, mipmapLevels);
 
 	// FAZER COM O DOWNSCALE DEPOIS
 	//Texture downscaledBloom(1);
 	//downscaledBloom.Bind();
 	//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, SCR_WIDTH/32, SCR_HEIGHT/32, 0);
 
-
-	
-	unsigned int attachments[2]{ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-	glDrawBuffers(2, attachments);
 	
 
 	glm::vec3 lightColor = glm::vec3(0.8, 0.9, 1.0);
