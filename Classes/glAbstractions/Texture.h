@@ -13,6 +13,7 @@ public:
 
 	void LinkTexJPG(int width, int height, unsigned char* data);
 	void LinkTexPNG(int width, int height, unsigned char* data);
+	void LinkTexBuffer(int width, int height);
 	void ActiveTexture(GLuint unit);
 	void SetTexParameters();
 	void Bind();

@@ -36,7 +36,12 @@ void Texture::LinkTexPNG(int width, int height, unsigned char* data) {
 	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
+void Texture::LinkTexBuffer(int width, int height) {
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+}
+
 void Texture::Delete() {
 	glDeleteTextures(1, &ID);
 }
+
 
