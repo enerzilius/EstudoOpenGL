@@ -4,6 +4,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 #include <vector>
+#include <string>
+#include <iostream>
 
 std::vector<glm::vec3> generateRandomPositions(int n) {
 	srand(static_cast <unsigned> (0));
@@ -56,4 +58,21 @@ void insertQuadVertexVectorTexture(std::vector<float>& allVertices, glm::vec3 qu
 
 glm::vec3 calculateFaceNormalVector(glm::vec3 face[3]) {
 	return glm::cross((face[1] - face[0]), face[2] - face[0]);
+}
+
+std::vector<std::string> split(std::string& string, std::string& delimiter) {
+	std::vector<std::string> res;
+	int i = 0;
+	while ((i = string.find(delimiter)) != std::string::npos) {
+		std::string word = string.substr(0, i);
+		res.push_back(word);
+		string.erase(0, i + delimiter.length());
+	}
+	res.push_back(string);
+	return res;
+}
+
+bool isPNG(std::string path) {
+	std::string delimiter = ".";
+	return split(path, delimiter)[1] == "png";
 }

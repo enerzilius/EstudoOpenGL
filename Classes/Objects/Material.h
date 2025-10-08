@@ -4,8 +4,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <string>
 #include <iostream>
 #include "../glAbstractions/Texture.h"
+#include "../Utils/GeneralUtilities.h"
 
 class Material {
 public:
