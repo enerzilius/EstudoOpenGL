@@ -59,9 +59,9 @@ vector<glm::vec3> positions = generateRandomPositions(4);
 bool paused = false;
 float paused_time = 0;
 
-const char* filepath = "Textures/wall.jpg";
+const char* filepath = "Textures/awesomeface.png";
 
-//Material custom = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 500, filepath);
+//Material custom = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 500.0, filepath);
 vector<Material> materialList = {
 	//custom
 	//Material(glm::vec3(0.0215, 0.1745, 0.0215),	glm::vec3(0.07568, 0.61424, 0.07568),glm::vec3(0.633, 0.727811, 0.633), 0.6, "")
@@ -104,7 +104,6 @@ int main() {
 	}
 
 	glEnable(GL_DEPTH_TEST);
-
 	float radius = 1.33f;
 	int sphereResolution = 15;
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
@@ -159,7 +158,6 @@ int main() {
 	stbi_image_free(data);
 
 	Texture texture2;
-	texture2.ActiveTexture(GL_TEXTURE1);
 	texture2.Bind();
 	texture2.SetTexParameters();
 

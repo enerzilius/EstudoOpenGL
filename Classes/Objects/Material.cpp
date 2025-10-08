@@ -1,8 +1,7 @@
 #include "Material.h"
 
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <stb/stb_image.h>
 #include <string>
 #include <iostream>
 #include "../glAbstractions/Texture.h"
@@ -16,21 +15,19 @@ Material::Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 spe
 	diffuse = diffuseColor;
 	specular = specularColor;
 	shininess = shininessValue;
-	if (texturePath != "") applyTexture(texturePath);
+	cout << texturePath << endl;
+	if (texturePath && std::strlen(texturePath) > 0) applyTexture(texturePath);
 }
 
 void Material::applyTexture(const char* texturePath) {
-	cout << "aaaa\n";
-	isPNG(texturePath);
-	texture = Texture(1);
+	texture.Delete();
 	texture.ActiveTexture(GL_TEXTURE0);
 	texture.Bind();
 	texture.SetTexParameters();
-	cout << "aaaaaaaa\n";
+	std::cout << "aaaa";
 	int width, height, ch;
 	stbi_set_flip_vertically_on_load(false);
 	unsigned char* data = stbi_load(texturePath, &width, &height, &ch, 0);
-	cout << "aaaaaaaaaaaaaaaaaaaaaaa\n";
 	if (data) {
 		if(isPNG(texturePath)) texture.LinkTexPNG(width, height, data);
 		else texture.LinkTexJPG(width, height, data);
