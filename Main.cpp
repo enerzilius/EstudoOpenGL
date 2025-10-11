@@ -59,9 +59,8 @@ vector<glm::vec3> positions = generateRandomPositions(4);
 bool paused = false;
 float paused_time = 0;
 
-const char* filepath = "Textures/wall.jpg";
-
-
+const char* wallPath = "Textures/wall.jpg";
+const char* awesomePath = "Textures/awesomeface.png";
 
 int main() {
 	glfwInit();
@@ -100,16 +99,16 @@ int main() {
 
 	glEnable(GL_DEPTH_TEST);
 
-	Material custom = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 500.0, filepath);
+	Material custom = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 500.0, awesomePath);
 	vector<Material> materialList = {
 		custom,
-		Material(glm::vec3(0.0215, 0.1745, 0.0215),	glm::vec3(0.07568, 0.61424, 0.07568),glm::vec3(0.633, 0.727811, 0.633), 0.6, "")
+		Material(glm::vec3(0.0215, 0.1745, 0.0215),	glm::vec3(0.07568, 0.61424, 0.07568),glm::vec3(0.633, 0.727811, 0.633), 00.6, "")
 	};
 
 	float radius = 1.33f;
-	int sphereResolution = 15;
+	int sphereResolution = 30;
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
-	Sphere sphere(radius, sphereResolution, objColor, materialList[1]);
+	Sphere sphere(radius, sphereResolution, materialList[1]);
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 
@@ -182,11 +181,6 @@ int main() {
 		glClearColor(0.05f, 0.05f, 0.13f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//texture.ActiveTexture(GL_TEXTURE0);
-		//texture.Bind();
-		//texture2.ActiveTexture(GL_TEXTURE1);
-		//texture2.Bind();
-
 		//sphere.material.texture.ActiveTexture(GL_TEXTURE0);
 
 		glm::vec3 lightPos = glm::vec3(5.0, -1.0, -4.0);
@@ -208,8 +202,10 @@ int main() {
 
 		proj = glm::perspective(glm::radians(camera.fov), (float)(SCR_WIDTH / SCR_HEIGHT), CLIP_NEAR, CLIP_FAR);
 
-		float shininess = 500;
-		shaderProgram.setFloat("shininess", shininess);
+		shaderProgram.setVec3Float("diffuseColor", sphere.material.diffuse);
+		shaderProgram.setVec3Float("ambientColor", sphere.material.ambient);
+		shaderProgram.setVec3Float("specularColor", sphere.material.specular);
+		shaderProgram.setFloat("shininess", sphere.material.shininess);
 		shaderProgram.setVec3Float("lightpos", lightPos);
 		shaderProgram.setVec3Float("camPos", camera.position);
 		shaderProgram.setMat4("model", model);
