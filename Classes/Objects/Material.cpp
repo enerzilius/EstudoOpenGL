@@ -16,7 +16,6 @@ Material::Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 spe
 }
 
 void Material::applyTexture(const char* texturePath) {
-	texture.Delete();
 	texture.ActiveTexture(GL_TEXTURE0);
 	texture.Bind();
 	texture.SetTexParameters();

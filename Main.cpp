@@ -99,9 +99,11 @@ int main() {
 
 	glEnable(GL_DEPTH_TEST);
 
-	Material custom = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 500.0, awesomePath);
+	Material awesome = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 500.0, awesomePath);
+	Material wall = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 1000.0, wallPath);
 	vector<Material> materialList = {
-		custom,
+		awesome,
+		wall,
 		Material(glm::vec3(0.0215, 0.1745, 0.0215),	glm::vec3(0.07568, 0.61424, 0.07568),glm::vec3(0.633, 0.727811, 0.633), 00.6, "")
 	};
 
@@ -162,8 +164,6 @@ int main() {
 	glm::vec3 lightColor = glm::vec3(0.8, 0.9, 1.0);
 	shaderProgram.Activate();
 	shaderProgram.setInt("tex0", 0);
-	shaderProgram.setInt("tex1", 1);
-	shaderProgram.setFloat("mixParam", 0.5);
 	shaderProgram.setVec3Float("lightColor", lightColor);
 
 	lightShaderProgram.Activate();
@@ -180,8 +180,6 @@ int main() {
 
 		glClearColor(0.05f, 0.05f, 0.13f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		//sphere.material.texture.ActiveTexture(GL_TEXTURE0);
 
 		glm::vec3 lightPos = glm::vec3(5.0, -1.0, -4.0);
 
@@ -202,6 +200,9 @@ int main() {
 
 		proj = glm::perspective(glm::radians(camera.fov), (float)(SCR_WIDTH / SCR_HEIGHT), CLIP_NEAR, CLIP_FAR);
 
+		//sphere.material.applyTexture(awesomePath);
+		sphere.material.texture.ActiveTexture(GL_TEXTURE0);
+		sphere.material.texture.Bind();
 		shaderProgram.setVec3Float("diffuseColor", sphere.material.diffuse);
 		shaderProgram.setVec3Float("ambientColor", sphere.material.ambient);
 		shaderProgram.setVec3Float("specularColor", sphere.material.specular);

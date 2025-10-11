@@ -13,13 +13,12 @@ uniform vec3 specularColor;
 uniform vec3 camPos;
 
 uniform sampler2D tex0;
-uniform sampler2D tex1;
 uniform float mixParam; 
 uniform float shininess;
 
 void main()
 {
-    vec4 textureColor = mix(texture(tex0, UV), texture(tex1, vec2(-UV.x, UV.y)), mixParam);
+    vec4 textureColor = texture(tex0, UV);
     //vec4 pixelColor = vec4(0.0, 0.0, 0.5, 1.0);
 
     // Blinn-Phong model
@@ -36,7 +35,7 @@ void main()
     float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
     vec3 specularHighlight = specularColor * spec;
     
-    FragColor = vec4(diffuse + ambient + specularHighlight, 1.0);
+    FragColor = textureColor * vec4(diffuse + ambient + specularHighlight, 1.0);
 
     float brightness = dot(FragColor.rgb, vec3(0.2126f, 0.7152f, 0.0722f));
     if(brightness > 0.15f) BloomColor = FragColor;
