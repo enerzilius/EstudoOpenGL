@@ -7,6 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../glAbstractions/VBO.h"
+#include "../Objects/Material.h"
 
 class Sphere {
 public:
@@ -15,8 +16,9 @@ public:
 	int verticesCount;
 	glm::vec3 color;
 	std::vector<float> vertices;
+	Material material;
 
-	Sphere(float radius, int resolution, glm::vec3 color);
+	Sphere(float radius, int resolution, glm::vec3 color, Material objMaterial);
 	void generateVertices(std::vector<float>& vertices, float radius, int resolution);
 	VBO getVBO();
 };

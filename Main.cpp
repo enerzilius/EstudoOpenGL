@@ -59,7 +59,7 @@ vector<glm::vec3> positions = generateRandomPositions(4);
 bool paused = false;
 float paused_time = 0;
 
-const char* filepath = "Textures/awesomeface.png";
+const char* filepath = "Textures/wall.jpg";
 
 
 
@@ -99,17 +99,17 @@ int main() {
 	}
 
 	glEnable(GL_DEPTH_TEST);
-	float radius = 1.33f;
-	int sphereResolution = 15;
-	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
-	Sphere sphere(radius, sphereResolution, objColor);
 
 	Material custom = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 500.0, filepath);
 	vector<Material> materialList = {
-		//custom
-		//Material(glm::vec3(0.0215, 0.1745, 0.0215),	glm::vec3(0.07568, 0.61424, 0.07568),glm::vec3(0.633, 0.727811, 0.633), 0.6, "")
+		custom,
+		Material(glm::vec3(0.0215, 0.1745, 0.0215),	glm::vec3(0.07568, 0.61424, 0.07568),glm::vec3(0.633, 0.727811, 0.633), 0.6, "")
 	};
 
+	float radius = 1.33f;
+	int sphereResolution = 15;
+	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
+	Sphere sphere(radius, sphereResolution, objColor, materialList[1]);
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 
@@ -144,30 +144,6 @@ int main() {
 
 	vaoLight.Unbind();
 	VBO1.Unbind();
-
-	Texture texture;
-	texture.ActiveTexture(GL_TEXTURE0);
-	texture.Bind();
-	texture.SetTexParameters();
-
-	int width, height, ch;
-	stbi_set_flip_vertically_on_load(false);
-	const char* path = "Textures/wall.jpg";
-	unsigned char* data = stbi_load(path, &width, &height, &ch, 0);
-
-	if (data) texture.LinkTexJPG(width, height, data);
-	else cout << "Erro ao carregar a imagem " << path << endl;
-	stbi_image_free(data);
-
-	Texture texture2;
-	texture2.Bind();
-	texture2.SetTexParameters();
-
-	path = "Textures/awesomeface.png";
-	data = stbi_load(path, &width, &height, &ch, 0);
-	if (data) texture2.LinkTexPNG(width, height, data);
-	else cout << "Erro ao carregar a imagem " << path << endl;
-	stbi_image_free(data);
 
 	// BLOOM TEXTURE
 	//Texture bloom(1);
@@ -206,10 +182,12 @@ int main() {
 		glClearColor(0.05f, 0.05f, 0.13f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		texture.ActiveTexture(GL_TEXTURE0);
-		texture.Bind();
-		texture2.ActiveTexture(GL_TEXTURE1);
-		texture2.Bind();
+		//texture.ActiveTexture(GL_TEXTURE0);
+		//texture.Bind();
+		//texture2.ActiveTexture(GL_TEXTURE1);
+		//texture2.Bind();
+
+		//sphere.material.texture.ActiveTexture(GL_TEXTURE0);
 
 		glm::vec3 lightPos = glm::vec3(5.0, -1.0, -4.0);
 
@@ -264,7 +242,6 @@ int main() {
 	VAO1.Delete();
 	VBO1.Delete();
 	//EBO1.Delete();
-	texture.Delete();
 	shaderProgram.Delete();
 
 	glfwDestroyWindow(window);

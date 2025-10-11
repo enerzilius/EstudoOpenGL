@@ -7,12 +7,13 @@
 #include "../Utils/GeneralUtilities.h"
 #include "../glAbstractions/VBO.h"
 
-Sphere::Sphere(float sphereRadius, int renderResolution, glm::vec3 objColor) {
+Sphere::Sphere(float sphereRadius, int renderResolution, glm::vec3 objColor, Material objMaterial) {
 	radius = sphereRadius;
 	resolution = renderResolution;
 	color = objColor;
 	generateVertices(vertices, radius, resolution);
 	verticesCount = vertices.size() / 5;
+	material = objMaterial;
 }
 
 void Sphere::generateVertices(std::vector<float>& vertices, float radius, int resolution) {
