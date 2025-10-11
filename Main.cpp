@@ -61,11 +61,6 @@ float paused_time = 0;
 
 const char* filepath = "Textures/awesomeface.png";
 
-//Material custom = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 500.0, filepath);
-vector<Material> materialList = {
-	//custom
-	//Material(glm::vec3(0.0215, 0.1745, 0.0215),	glm::vec3(0.07568, 0.61424, 0.07568),glm::vec3(0.633, 0.727811, 0.633), 0.6, "")
-};
 
 
 int main() {
@@ -108,6 +103,13 @@ int main() {
 	int sphereResolution = 15;
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
 	Sphere sphere(radius, sphereResolution, objColor);
+
+	Material custom = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 500.0, filepath);
+	vector<Material> materialList = {
+		//custom
+		//Material(glm::vec3(0.0215, 0.1745, 0.0215),	glm::vec3(0.07568, 0.61424, 0.07568),glm::vec3(0.633, 0.727811, 0.633), 0.6, "")
+	};
+
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 

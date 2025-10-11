@@ -68,9 +68,6 @@
     <ClInclude Include="Classes\glAbstractions\shaderClass.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\glAbstractions\Texture.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
-    </ClInclude>
     <ClInclude Include="Classes\glAbstractions\VAO.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
@@ -84,6 +81,9 @@
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="Classes\Utils\GeneralUtilities.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\glAbstractions\Texture.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="Classes\Objects\Material.h">
