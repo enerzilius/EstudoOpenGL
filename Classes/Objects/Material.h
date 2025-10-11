@@ -11,6 +11,7 @@ public:
 	glm::vec3 specular;
 	float shininess;
 	Texture texture;
+	bool usesTexture = false;
 
 	Material() = default;
 	Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 specularColor, float shininessValue, const char* texturePath);

@@ -28,4 +28,5 @@ void Material::applyTexture(const char* texturePath) {
 	}
 	else std::cout << "Erro ao carregar a imagem " << texturePath << std::endl;
 	stbi_image_free(data);
+	usesTexture = true;
 }

@@ -6,6 +6,7 @@ in vec2 UV;
 in vec3 Normal;
 in vec3 WorldPos;
 
+uniform bool usesTexture;
 uniform vec3 lightPos;
 uniform vec3 ambientColor;
 uniform vec3 diffuseColor;
@@ -18,7 +19,8 @@ uniform float shininess;
 
 void main()
 {
-    vec4 textureColor = texture(tex0, UV);
+    vec4 textureColor = vec4(1.0);
+    if(usesTexture) textureColor = texture(tex0, UV);
     //vec4 pixelColor = vec4(0.0, 0.0, 0.5, 1.0);
 
     // Blinn-Phong model
