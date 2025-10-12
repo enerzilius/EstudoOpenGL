@@ -166,6 +166,7 @@
     <Image Include="..\..\..\OneDrive\Imagens\wall.jpg" />
     <Image Include="awesomeface.png" />
     <Image Include="Textures\container2.png" />
+    <Image Include="Textures\container2_specular.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaderfiles\3d.frag" />

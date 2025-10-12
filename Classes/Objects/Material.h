@@ -10,12 +10,13 @@ public:
 	glm::vec3 diffuse;
 	glm::vec3 specular;
 	float shininess;
-	Texture texture;
+	Texture diffuseMap;
+	Texture specularMap;
 	bool usesTexture = false;
 
 	Material() = default;
-	Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 specularColor, float shininessValue, const char* texturePath);
-	void applyTexture(const char* texturePath);
+	Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 specularColor, float shininessValue, const char* texturePath, const char* specularPath);
+	void applyTexture(Texture& texture, const char* texturePath);
 };
 
 #endif

@@ -99,16 +99,16 @@ int main() {
 
 	glEnable(GL_DEPTH_TEST);
 
-	Material awesome = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 20.0, awesomePath);
-	Material wall = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 50.0, wallPath);
-	Material jade = Material(glm::vec3(0.135, 0.2225, 0.1575), glm::vec3(0.54, 0.89, 0.63), glm::vec3(0.316228, 0.316228, 0.316228), 0.1, "");
-	Material obsidian = Material(glm::vec3(0.05375, 0.05, 0.06625), glm::vec3(0.18275, 0.17, 0.22525), glm::vec3(0.332741, 0.328634, 0.346435), 0.3, "");
-	Material silver = Material(glm::vec3(0.19225, 0.19225, 0.19225), glm::vec3(0.50754, 0.50754, 0.50754), glm::vec3(0.508273, 0.508273, 0.508273), 0.4, "");
-	Material caixa = Material(glm::vec3(0.19225, 0.19225, 0.19225), glm::vec3(0.50754, 0.50754, 0.50754), glm::vec3(0.508273, 0.508273, 0.508273), 0.4, "Textures/container2.png");
+	Material awesome = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 20.0, awesomePath, "");
+	Material wall = Material(glm::vec3(1.0), glm::vec3(1.0), glm::vec3(1.0), 50.0, wallPath, "");
+	Material jade = Material(glm::vec3(0.135, 0.2225, 0.1575), glm::vec3(0.54, 0.89, 0.63), glm::vec3(0.316228, 0.316228, 0.316228), 0.1, "", "");
+	Material obsidian = Material(glm::vec3(0.05375, 0.05, 0.06625), glm::vec3(0.18275, 0.17, 0.22525), glm::vec3(0.332741, 0.328634, 0.346435), 0.3, "", "");
+	Material silver = Material(glm::vec3(0.19225, 0.19225, 0.19225), glm::vec3(0.50754, 0.50754, 0.50754), glm::vec3(0.508273, 0.508273, 0.508273), 0.4, "", "");
+	Material caixa = Material(glm::vec3(0.19225, 0.19225, 0.19225), glm::vec3(0.50754, 0.50754, 0.50754), glm::vec3(0.508273, 0.508273, 0.508273), 0.4, "Textures/container2.png", "Textures/container2_specular.png");
 	vector<Material> materialList = {
 		awesome,
 		wall,
-		Material(glm::vec3(0.0215, 0.1745, 0.0215),	glm::vec3(0.07568, 0.61424, 0.07568),glm::vec3(0.633, 0.727811, 0.633), 0.6, ""),
+		Material(glm::vec3(0.0215, 0.1745, 0.0215),	glm::vec3(0.07568, 0.61424, 0.07568),glm::vec3(0.633, 0.727811, 0.633), 0.6, "", ""),
 		jade,
 		obsidian,
 		silver,
@@ -155,6 +155,7 @@ int main() {
 	VBO1.Unbind();
 
 	// BLOOM TEXTURE
+	//Texture bloom(1);
 	//Texture bloom(1);
 	//bloom.Bind();
 	//bloom.LinkTexBuffer(SCR_WIDTH, SCR_HEIGHT);
@@ -210,8 +211,10 @@ int main() {
 		shaderProgram.setBool("usesTexture", sphere.material.usesTexture);
 		if (sphere.material.usesTexture) {
 			shaderProgram.setInt("tex0", 0);
-			sphere.material.texture.ActiveTexture(GL_TEXTURE0);
-			sphere.material.texture.Bind();
+			sphere.material.diffuseMap.ActiveTexture(GL_TEXTURE0);
+			sphere.material.diffuseMap.Bind();
+			sphere.material.specularMap.ActiveTexture(GL_TEXTURE1);
+			sphere.material.specularMap.Bind();
 		}
 		shaderProgram.setVec3Float("diffuseColor", sphere.material.diffuse);
 		shaderProgram.setVec3Float("ambientColor", sphere.material.ambient);

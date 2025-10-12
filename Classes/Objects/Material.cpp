@@ -7,15 +7,17 @@
 
 using namespace std;
 
-Material::Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 specularColor, float shininessValue, const char* texturePath) {
+Material::Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 specularColor, float shininessValue, const char* texturePath, const char* specularPath) {
 	ambient = ambientColor;
 	diffuse = diffuseColor;
 	specular = specularColor;
 	shininess = shininessValue;
-	if (texturePath && std::strlen(texturePath) > 0) applyTexture(texturePath);
+	if (texturePath && std::strlen(texturePath) > 0) applyTexture(diffuseMap, texturePath);
+	if (texturePath && std::strlen(specularPath) > 0) applyTexture(specularMap, specularPath);
+	else if (usesTexture) applyTexture(specularMap, texturePath);
 }
 
-void Material::applyTexture(const char* texturePath) {
+void Material::applyTexture(Texture& texture, const char* texturePath) {
 	texture.ActiveTexture(GL_TEXTURE0);
 	texture.Bind();
 	texture.SetTexParameters();
