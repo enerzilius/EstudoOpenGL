@@ -104,19 +104,21 @@ int main() {
 	Material jade = Material(glm::vec3(0.135, 0.2225, 0.1575), glm::vec3(0.54, 0.89, 0.63), glm::vec3(0.316228, 0.316228, 0.316228), 0.1, "");
 	Material obsidian = Material(glm::vec3(0.05375, 0.05, 0.06625), glm::vec3(0.18275, 0.17, 0.22525), glm::vec3(0.332741, 0.328634, 0.346435), 0.3, "");
 	Material silver = Material(glm::vec3(0.19225, 0.19225, 0.19225), glm::vec3(0.50754, 0.50754, 0.50754), glm::vec3(0.508273, 0.508273, 0.508273), 0.4, "");
+	Material caixa = Material(glm::vec3(0.19225, 0.19225, 0.19225), glm::vec3(0.50754, 0.50754, 0.50754), glm::vec3(0.508273, 0.508273, 0.508273), 0.4, "Textures/container2.png");
 	vector<Material> materialList = {
 		awesome,
 		wall,
 		Material(glm::vec3(0.0215, 0.1745, 0.0215),	glm::vec3(0.07568, 0.61424, 0.07568),glm::vec3(0.633, 0.727811, 0.633), 0.6, ""),
 		jade,
 		obsidian,
-		silver
+		silver,
+		caixa
 	};
 
 	float radius = 1.33f;
-	int sphereResolution = 30;
+	int sphereResolution = 7;
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
-	Sphere sphere(radius, sphereResolution, materialList[1]);
+	Sphere sphere(radius, sphereResolution, materialList[6]);
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 

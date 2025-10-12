@@ -165,6 +165,7 @@
   <ItemGroup>
     <Image Include="..\..\..\OneDrive\Imagens\wall.jpg" />
     <Image Include="awesomeface.png" />
+    <Image Include="Textures\container2.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaderfiles\3d.frag" />
