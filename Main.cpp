@@ -170,7 +170,7 @@ int main() {
 
 	
 
-	glm::vec3 lightColor = glm::vec3(1.0, 1.0, 1.0);
+	glm::vec3 lightColor = glm::vec3(1.0, 0.0, 1.0);
 	shaderProgram.Activate();
 	shaderProgram.setVec3Float("lightColor", lightColor);
 
@@ -210,9 +210,10 @@ int main() {
 
 		shaderProgram.setBool("usesTexture", sphere.material.usesTexture);
 		if (sphere.material.usesTexture) {
-			shaderProgram.setInt("tex0", 0);
+			shaderProgram.setInt("diffuseMap", 0);
 			sphere.material.diffuseMap.ActiveTexture(GL_TEXTURE0);
 			sphere.material.diffuseMap.Bind();
+			shaderProgram.setInt("specularMap", 1);
 			sphere.material.specularMap.ActiveTexture(GL_TEXTURE1);
 			sphere.material.specularMap.Bind();
 		}
@@ -272,11 +273,11 @@ void processInput(GLFWwindow* window) {
 		camera.ProcessKeyboardInput(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboardInput(RIGHT, deltaTime);
-	//if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && (float)glfwGetTime() - paused_time > 0.5) {
-	//	paused = !paused;
-	//	cout << (paused ? "true" : "false") << "\n";
-	//	if (paused) paused_time = (float)glfwGetTime();
-	//}
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && (float)glfwGetTime() - paused_time > 0.5) {
+		paused = !paused;
+		cout << (paused ? "true" : "false") << "\n";
+		if (paused) paused_time = (float)glfwGetTime();
+	}
 }
 
 void resize(GLFWwindow* window, int width, int height)

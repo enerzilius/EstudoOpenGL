@@ -12,32 +12,48 @@ uniform vec3 ambientColor;
 uniform vec3 diffuseColor;
 uniform vec3 specularColor;
 uniform vec3 camPos;
+uniform vec3 lightColor;
 
-uniform sampler2D tex0;
+uniform sampler2D diffuseMap;
+uniform sampler2D specularMap;
 uniform float mixParam; 
 uniform float shininess;
 
 void main()
 {
-    vec4 textureColor = vec4(1.0);
-    if(usesTexture) textureColor = texture(tex0, UV);
+    vec3 _ambientColor = ambientColor;
+    vec3 _diffuseColor = diffuseColor;
+    vec3 _specularColor = specularColor;
+    if(usesTexture) {
+        _ambientColor = texture(diffuseMap, UV).xyz;
+        _diffuseColor = texture(diffuseMap, UV).xyz;
+        _specularColor = texture(specularMap, UV).xyz;
+    }
     //vec4 pixelColor = vec4(0.0, 0.0, 0.5, 1.0);
 
     // Blinn-Phong model
     float ambientStrength = 0.1;
-    vec3 ambient = ambientColor * ambientStrength;
+    vec3 ambient = _ambientColor * ambientStrength;
     
     vec3 normal = normalize(Normal);
     vec3 lightDir = normalize(lightPos - WorldPos);
     float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuse = diffuseColor * diff;
+    vec3 diffuse = _diffuseColor * diff;
 
+    //Blinn-Phong highlights
     vec3 viewDir = normalize(camPos - WorldPos);
-    vec3 halfwayDir = normalize(lightDir + viewDir);
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
-    vec3 specularHighlight = specularColor * spec;
+    //vec3 halfwayDir = normalize(lightDir + viewDir);
+    //float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
+    //vec3 specularHighlight = _specularColor * spec;
+
+    //Phong
+    // viewDir
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+    float specularStrength = 1.0;
+    vec3 specularHighlight = _specularColor * spec * specularStrength;
     
-    FragColor = textureColor * vec4(diffuse + ambient + specularHighlight, 1.0);
+    FragColor = vec4(lightColor,1.0) * vec4(diffuse + ambient + specularHighlight, 1.0);
 
     float brightness = dot(FragColor.rgb, vec3(0.2126f, 0.7152f, 0.0722f));
     if(brightness > 0.15f) BloomColor = FragColor;
