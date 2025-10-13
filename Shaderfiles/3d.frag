@@ -6,7 +6,9 @@ in vec2 UV;
 in vec3 Normal;
 in vec3 WorldPos;
 
-uniform bool usesTexture;
+uniform bool usesDiffuseMap;
+uniform bool usesSpecularMap;
+uniform bool usesGlowMap;
 uniform vec3 lightPos;
 uniform vec3 ambientColor;
 uniform vec3 diffuseColor;
@@ -16,6 +18,7 @@ uniform vec3 lightColor;
 
 uniform sampler2D diffuseMap;
 uniform sampler2D specularMap;
+uniform sampler2D glowMap;
 uniform float mixParam; 
 uniform float shininess;
 
@@ -24,11 +27,13 @@ void main()
     vec3 _ambientColor = ambientColor;
     vec3 _diffuseColor = diffuseColor;
     vec3 _specularColor = specularColor;
-    if(usesTexture) {
+    vec3 _glowColor = vec3(0.0);
+    if(usesDiffuseMap) {
         _ambientColor = texture(diffuseMap, UV).xyz;
         _diffuseColor = texture(diffuseMap, UV).xyz;
-        _specularColor = texture(specularMap, UV).xyz;
     }
+    if(usesSpecularMap) _specularColor = texture(specularMap, UV).xyz;
+    if(usesGlowMap) _glowColor = texture(glowMap, UV).xyz;
     //vec4 pixelColor = vec4(0.0, 0.0, 0.5, 1.0);
 
     // Blinn-Phong model
@@ -53,7 +58,7 @@ void main()
     float specularStrength = 1.0;
     vec3 specularHighlight = _specularColor * spec * specularStrength;
     
-    FragColor = vec4(lightColor,1.0) * vec4(diffuse + ambient + specularHighlight, 1.0);
+    FragColor = vec4(lightColor,1.0) * vec4(diffuse + ambient + specularHighlight + _glowColor, 1.0);
 
     float brightness = dot(FragColor.rgb, vec3(0.2126f, 0.7152f, 0.0722f));
     if(brightness > 0.15f) BloomColor = FragColor;

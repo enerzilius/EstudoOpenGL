@@ -167,6 +167,7 @@
     <Image Include="awesomeface.png" />
     <Image Include="Textures\container2.png" />
     <Image Include="Textures\container2_specular.png" />
+    <Image Include="Textures\matrix.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaderfiles\3d.frag" />

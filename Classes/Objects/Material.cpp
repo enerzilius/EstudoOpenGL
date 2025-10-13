@@ -7,18 +7,18 @@
 
 using namespace std;
 
-Material::Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 specularColor, float shininessValue, const char* texturePath, const char* specularPath) {
+Material::Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 specularColor, float shininessValue, const char* texturePath, const char* specularPath, const char* glowPath) {
 	ambient = ambientColor;
 	diffuse = diffuseColor;
 	specular = specularColor;
 	shininess = shininessValue;
-	if (texturePath && std::strlen(texturePath) > 0) applyTexture(diffuseMap, texturePath);
-	if (texturePath && std::strlen(specularPath) > 0) applyTexture(specularMap, specularPath);
-	else if (usesTexture) applyTexture(specularMap, texturePath);
+	if (texturePath && std::strlen(texturePath) > 0) applyTexture(GL_TEXTURE0, diffuseMap, usesDiffuseMap, texturePath);
+	if (texturePath && std::strlen(specularPath) > 0) applyTexture(GL_TEXTURE1, specularMap, usesSpecularMap, specularPath);
+	if (texturePath && std::strlen(glowPath) > 0) applyTexture(GL_TEXTURE2, glowMap, usesGlowMap, glowPath);
 }
 
-void Material::applyTexture(Texture& texture, const char* texturePath) {
-	texture.ActiveTexture(GL_TEXTURE0);
+void Material::applyTexture(GLuint textureBuffer, Texture& texture, bool& flag, const char* texturePath) {
+	texture.ActiveTexture(textureBuffer);
 	texture.Bind();
 	texture.SetTexParameters();
 	int width, height, ch;
@@ -30,5 +30,5 @@ void Material::applyTexture(Texture& texture, const char* texturePath) {
 	}
 	else std::cout << "Erro ao carregar a imagem " << texturePath << std::endl;
 	stbi_image_free(data);
-	usesTexture = true;
+	flag = true;
 }

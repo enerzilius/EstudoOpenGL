@@ -103,6 +103,9 @@
     <Image Include="Textures\container2_specular.png">
       <Filter>Arquivos de Recurso\Assets</Filter>
     </Image>
+    <Image Include="Textures\matrix.jpg">
+      <Filter>Arquivos de Recurso\Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaderfiles\3d.frag">

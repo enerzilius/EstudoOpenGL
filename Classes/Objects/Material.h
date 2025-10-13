@@ -12,11 +12,15 @@ public:
 	float shininess;
 	Texture diffuseMap;
 	Texture specularMap;
-	bool usesTexture = false;
+	Texture glowMap;
+	bool usesDiffuseMap = false;
+	bool usesSpecularMap = false;
+	bool usesGlowMap = false;
+
 
 	Material() = default;
-	Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 specularColor, float shininessValue, const char* texturePath, const char* specularPath);
-	void applyTexture(Texture& texture, const char* texturePath);
+	Material(glm::vec3 ambientColor, glm::vec3 diffuseColor, glm::vec3 specularColor, float shininessValue, const char* texturePath, const char* specularPath, const char* glowPath);
+	void applyTexture(GLuint textureBuffer, Texture& texture, bool& flag, const char* texturePath);
 };
 
 #endif
