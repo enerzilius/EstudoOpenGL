@@ -118,11 +118,11 @@ int main() {
 	};
 
 	float radius = 1.33f;
-	int sphereResolution = 7;
+	int sphereResolution = 30;
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
 	Sphere sphere(radius, sphereResolution, materialList[6]);
 
-	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
+	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/flashlight.frag");
 
 	//Shader bloomProgram("Shaderfiles/3d.vert", "Shaderfiles/blur.frag");
 
@@ -173,6 +173,7 @@ int main() {
 	
 
 	glm::vec3 lightColor = glm::vec3(1.0, 1.0, 1.0);
+	float cutoffAngle = glm::cos(glm::radians(9.0f));
 	shaderProgram.Activate();
 	shaderProgram.setVec3Float("lightColor", lightColor);
 
@@ -231,7 +232,11 @@ int main() {
 		shaderProgram.setVec3Float("ambientColor", sphere.material.ambient);
 		shaderProgram.setVec3Float("specularColor", sphere.material.specular);
 		shaderProgram.setFloat("shininess", sphere.material.shininess);
-		shaderProgram.setVec3Float("lightpos", lightPos);
+
+		//shaderProgram.setVec3Float("lightpos", lightPos);
+		shaderProgram.setVec3Float("lightpos", camera.position);
+		shaderProgram.setVec3Float("lightDirection", camera.front);
+		shaderProgram.setFloat("cutoffAngle", cutoffAngle);
 		shaderProgram.setVec3Float("camPos", camera.position);
 		shaderProgram.setMat4("model", model);
 		shaderProgram.setMat4("view", view);
@@ -253,7 +258,7 @@ int main() {
 		lightShaderProgram.setMat4("view", view);
 		lightShaderProgram.setMat4("proj", proj);
 
-		glDrawArrays(GL_TRIANGLES, 0, sphere.verticesCount);
+		//glDrawArrays(GL_TRIANGLES, 0, sphere.verticesCount);
 
 		vaoLight.Unbind();
 

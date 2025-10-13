@@ -165,6 +165,9 @@
     <None Include="Shaderfiles\blur.frag">
       <Filter>Arquivos de Recurso\Shaders</Filter>
     </None>
+    <None Include="Shaderfiles\flashlight.frag">
+      <Filter>Arquivos de Recurso\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shaderfiles\light.frag">

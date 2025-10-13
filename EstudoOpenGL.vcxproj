@@ -177,6 +177,7 @@
     <None Include="Shaderfiles\blur.frag" />
     <None Include="Shaderfiles\default.frag" />
     <None Include="Shaderfiles\default.vert" />
+    <None Include="Shaderfiles\flashlight.frag" />
     <None Include="Shaderfiles\gouraud.vert" />
     <None Include="Shaderfiles\green.frag" />
     <None Include="Shaderfiles\light.vert" />
