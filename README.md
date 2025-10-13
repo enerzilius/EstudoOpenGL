@@ -4,6 +4,9 @@ Most of this repository is based on the book <i>Learn OpenGL</i> by Joey de Vrie
 <img width="1905" height="1038" alt="image" src="https://github.com/user-attachments/assets/db8222df-7a29-4cee-8da5-ccc319fdc713" />
 - Diffuse, specular and glow mapped low res sphere.
 
+- <img width="1909" height="1033" alt="image" src="https://github.com/user-attachments/assets/0095e48f-24f5-4e68-8bff-9975f360701c" />
+- Light attenuation
+
 
 ### Resources available at:
 [https://www.youtube.com/watch?v=XpBGwZNyUh0&list=PLPaoO-vpZnumdcb4tZc4x5Q-v7CkrQ6M-&index=1](https://www.youtube.com/watch?v=XpBGwZNyUh0&list=PLPaoO-vpZnumdcb4tZc4x5Q-v7CkrQ6M-&index=1)
