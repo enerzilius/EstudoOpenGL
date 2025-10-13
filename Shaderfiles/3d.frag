@@ -57,6 +57,13 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
     float specularStrength = 1.0;
     vec3 specularHighlight = _specularColor * spec * specularStrength;
+
+    float distan = length(lightPos - WorldPos);
+    float attenuation = (1.0 / (1.0+distan*distan))*100;
+
+    ambient  *= attenuation; 
+    diffuse  *= attenuation;
+    specularHighlight *= attenuation; 
     
     FragColor = vec4(lightColor,1.0) * vec4(diffuse + ambient + specularHighlight + _glowColor, 1.0);
 

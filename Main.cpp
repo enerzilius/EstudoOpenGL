@@ -129,7 +129,7 @@ int main() {
 
 	VBO VBO1 = sphere.getVBO();
 	//EBO EBO1(sqrIndices, sizeof(sqrIndices));
-
+ 
 	int layoutVertex = 0, layoutUV = 1, layoutNormal = 2;
 	int stepVertex = 3, stepUV = 2, stepNormal = 3;
 	//int stride = stepVertex + stepUV + stepNormal;
