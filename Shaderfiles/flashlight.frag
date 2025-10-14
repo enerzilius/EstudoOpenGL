@@ -28,6 +28,10 @@ void main()
 {
     vec3 lightDir = normalize(lightPos - WorldPos);
     float theta = dot(lightDir, normalize(-lightDirection));
+    float outerCutoff = cos(degrees(acos(cutoffAngle))+10);
+    float epsilon   = outerCutoff - cutoffAngle;
+    float intensity = clamp((theta - outerCutoff) / epsilon, 0.0, 1.0);   
+
     vec3 _ambientColor = ambientColor;
     vec3 _diffuseColor = diffuseColor;
     vec3 _specularColor = specularColor;
@@ -67,8 +71,8 @@ void main()
         float attenuation = (1.0 / (1.0+distan*distan))*100;
 
         ambient  *= attenuation; 
-        diffuse  *= attenuation;
-        specularHighlight *= attenuation; 
+        diffuse  *= attenuation * intensity;
+        specularHighlight *= attenuation * intensity; 
     
         FragColor = vec4(lightColor,1.0) * vec4(diffuse + ambient + specularHighlight + _glowColor, 1.0);
 
