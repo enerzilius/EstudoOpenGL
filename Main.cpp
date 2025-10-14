@@ -122,7 +122,7 @@ int main() {
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
 	Sphere sphere(radius, sphereResolution, materialList[6]);
 
-	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/flashlight.frag");
+	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 
 	//Shader bloomProgram("Shaderfiles/3d.vert", "Shaderfiles/blur.frag");
 
@@ -258,7 +258,7 @@ int main() {
 		lightShaderProgram.setMat4("view", view);
 		lightShaderProgram.setMat4("proj", proj);
 
-		//glDrawArrays(GL_TRIANGLES, 0, sphere.verticesCount);
+		glDrawArrays(GL_TRIANGLES, 0, sphere.verticesCount);
 
 		vaoLight.Unbind();
 
