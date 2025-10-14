@@ -28,17 +28,18 @@ void main()
 {
     vec3 lightDir = normalize(lightPos - WorldPos);
     float theta = dot(lightDir, normalize(-lightDirection));
+    vec3 _ambientColor = ambientColor;
+    vec3 _diffuseColor = diffuseColor;
+    vec3 _specularColor = specularColor;
+    vec3 _glowColor = vec3(0.0);
+    if(usesDiffuseMap) {
+        _ambientColor = texture(diffuseMap, UV).xyz;
+        _diffuseColor = texture(diffuseMap, UV).xyz;
+    }
+    if(usesSpecularMap) _specularColor = texture(specularMap, UV).xyz;
+    if(usesGlowMap) _glowColor = texture(glowMap, UV).xyz;
     if(theta > cutoffAngle) {
-        vec3 _ambientColor = ambientColor;
-        vec3 _diffuseColor = diffuseColor;
-        vec3 _specularColor = specularColor;
-        vec3 _glowColor = vec3(0.0);
-        if(usesDiffuseMap) {
-            _ambientColor = texture(diffuseMap, UV).xyz;
-            _diffuseColor = texture(diffuseMap, UV).xyz;
-        }
-        if(usesSpecularMap) _specularColor = texture(specularMap, UV).xyz;
-        if(usesGlowMap) _glowColor = texture(glowMap, UV).xyz;
+        
         //vec4 pixelColor = vec4(0.0, 0.0, 0.5, 1.0);
 
         // Blinn-Phong model
@@ -74,5 +75,5 @@ void main()
         float brightness = dot(FragColor.rgb, vec3(0.2126f, 0.7152f, 0.0722f));
         if(brightness > 0.15f) BloomColor = FragColor;
         else BloomColor = vec4(0.0);
-    } 
+    }  else FragColor = vec4(_diffuseColor*0.1 + _glowColor, 1.0) ;
 }

@@ -45,7 +45,7 @@ float pitch = 0.0f;
 float fov = 70.0f;
 float movementSpeed = 2.5f;
 
-glm::vec3 cameraPosition = glm::vec3(sin(glfwGetTime()) * radius, 0.0, cos(glfwGetTime()) * radius);
+glm::vec3 cameraPosition = glm::vec3(-10.0, 0.0, 0.0);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 
