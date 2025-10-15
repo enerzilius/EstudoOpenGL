@@ -21,13 +21,12 @@ uniform sampler2D specularMap;
 uniform sampler2D glowMap;
 uniform float mixParam; 
 uniform float shininess;
+uniform float ambientStrength;
 
 struct DirLight {
     vec3 direction;
   
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    vec3 lightColor;
 };  
 //uniform DirLight dirLight;
 
@@ -39,14 +38,12 @@ struct PointLight {
     float linear;
     float quadratic;  
 
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    vec3 lightColor;
 }; 
 uniform PointLight pointLights[];
 
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);  
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir); 
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 ambientColor, vec3 diffuseColor, vec3 specularColor, vec3 glowColor);  
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 ambColor, vec3 diffColor, vec3 specColor, vec3 glowColor); 
 
 void main()
 {
@@ -61,39 +58,51 @@ void main()
     if(usesSpecularMap) _specularColor = texture(specularMap, UV).xyz;
     if(usesGlowMap) _glowColor = texture(glowMap, UV).xyz;
     //vec4 pixelColor = vec4(0.0, 0.0, 0.5, 1.0);
-
-    // Blinn-Phong model
-    float ambientStrength = 0.1;
-    vec3 ambient = _ambientColor * ambientStrength;
     
     vec3 normal = normalize(Normal);
     vec3 lightDir = normalize(lightPos - WorldPos);
-    float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuse = _diffuseColor * diff;
-
     //Blinn-Phong highlights
     vec3 viewDir = normalize(camPos - WorldPos);
-    //vec3 halfwayDir = normalize(lightDir + viewDir);
-    //float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
-    //vec3 specularHighlight = _specularColor * spec;
-
-    //Phong
-    // viewDir
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-    float specularStrength = 1.0;
-    vec3 specularHighlight = _specularColor * spec * specularStrength;
-
-    float distan = length(lightPos - WorldPos);
-    float attenuation = (1.0 / (1.0+distan*distan))*100;
-
-    ambient  *= attenuation; 
-    diffuse  *= attenuation;
-    specularHighlight *= attenuation; 
     
-    FragColor = vec4(lightColor,1.0) * vec4(diffuse + ambient + specularHighlight + _glowColor, 1.0);
+    //FragColor = vec4(lightColor,1.0) * vec4(diffuse + ambient + specularHighlight + _glowColor, 1.0);
 
     float brightness = dot(FragColor.rgb, vec3(0.2126f, 0.7152f, 0.0722f));
     if(brightness > 0.15f) BloomColor = FragColor;
     else BloomColor = vec4(0.0);
+}
+
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 ambColor, vec3 diffColor, vec3 specColor, vec3 glowColor) {
+    vec3 lightDir = normalize(-light.direction);
+    float diff = max(dot(normal, lightDir), 0.0);
+
+    // specular shading
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
+
+    vec3 ambient  = ambientStrength * ambColor;
+    vec3 diffuse  = diff * diffColor;
+    vec3 specular = spec * specColor;
+    return lightColor*(ambient + diffuse + specular + glowColor);
+}
+
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 ambColor, vec3 diffColor, vec3 specColor, vec3 glowColor)
+{
+    vec3 lightDir = normalize(light.position - fragPos);
+    float diff = max(dot(normal, lightDir), 0.0);
+
+    // specular shading
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), shininess);
+
+    //float attenuation = 1.0 / (light.constant + light.linear * distance + 
+  	//		     light.quadratic * (distance * distance));    
+    float distanceFromLight = length(lightPos - WorldPos);
+    float attenuation = (1.0 / (1.0+distanceFromLight*distanceFromLight))*100;
+
+    // combine results
+    vec3 ambient  = attenuation*(ambientStrength * ambColor);
+    vec3 diffuse  = attenuation*(diff * diffColor);
+    vec3 specular = attenuation*(spec * specColor);
+
+    return lightColor*(ambient + diffuse + specular);
 }

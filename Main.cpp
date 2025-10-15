@@ -35,6 +35,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 float CLIP_NEAR = 0.1f;
 float CLIP_FAR = 200.0f;
 
+const float ambientStrength = 0.1;
 const float radius = 10.0;
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
@@ -45,7 +46,7 @@ float pitch = 0.0f;
 float fov = 70.0f;
 float movementSpeed = 2.5f;
 
-glm::vec3 cameraPosition = glm::vec3(-10.0, 0.0, 0.0);
+glm::vec3 cameraPosition = glm::vec3(0.0, 0.0, 10.0);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 
@@ -118,7 +119,7 @@ int main() {
 	};
 
 	float radius = 1.33f;
-	int sphereResolution = 30;
+	int sphereResolution = 5;
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
 	Sphere sphere(radius, sphereResolution, materialList[6]);
 
@@ -176,6 +177,7 @@ int main() {
 	float cutoffAngle = glm::cos(glm::radians(9.0f));
 	shaderProgram.Activate();
 	shaderProgram.setVec3Float("lightColor", lightColor);
+	shaderProgram.setFloat("ambientStrength", ambientStrength);
 
 	lightShaderProgram.Activate();
 	lightShaderProgram.setVec3Float("objectColor", lightColor);
