@@ -9,12 +9,10 @@ in vec3 WorldPos;
 uniform bool usesDiffuseMap;
 uniform bool usesSpecularMap;
 uniform bool usesGlowMap;
-uniform vec3 lightPos;
 uniform vec3 ambientColor;
 uniform vec3 diffuseColor;
 uniform vec3 specularColor;
 uniform vec3 camPos;
-uniform vec3 lightColor;
 
 uniform sampler2D diffuseMap;
 uniform sampler2D specularMap;
@@ -28,48 +26,21 @@ struct DirLight {
   
     vec3 lightColor;
 };  
-//uniform DirLight dirLight;
+uniform DirLight dirLight;
 
 
 struct PointLight {    
     vec3 position;
     
-    float constant;
-    float linear;
-    float quadratic;  
+    //float constant;
+    //float linear;
+    //float quadratic;  
 
     vec3 lightColor;
 }; 
-uniform PointLight pointLights[];
-
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 ambientColor, vec3 diffuseColor, vec3 specularColor, vec3 glowColor);  
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 ambColor, vec3 diffColor, vec3 specColor, vec3 glowColor); 
-
-void main()
-{
-    vec3 _ambientColor = ambientColor;
-    vec3 _diffuseColor = diffuseColor;
-    vec3 _specularColor = specularColor;
-    vec3 _glowColor = vec3(0.0);
-    if(usesDiffuseMap) {
-        _ambientColor = texture(diffuseMap, UV).xyz;
-        _diffuseColor = texture(diffuseMap, UV).xyz;
-    }
-    if(usesSpecularMap) _specularColor = texture(specularMap, UV).xyz;
-    if(usesGlowMap) _glowColor = texture(glowMap, UV).xyz;
-    //vec4 pixelColor = vec4(0.0, 0.0, 0.5, 1.0);
-    
-    vec3 normal = normalize(Normal);
-    vec3 lightDir = normalize(lightPos - WorldPos);
-    //Blinn-Phong highlights
-    vec3 viewDir = normalize(camPos - WorldPos);
-    
-    //FragColor = vec4(lightColor,1.0) * vec4(diffuse + ambient + specularHighlight + _glowColor, 1.0);
-
-    float brightness = dot(FragColor.rgb, vec3(0.2126f, 0.7152f, 0.0722f));
-    if(brightness > 0.15f) BloomColor = FragColor;
-    else BloomColor = vec4(0.0);
-}
+// passar o array inteiro ao invés disso aqui tavez?
+#define NR_POINT_LIGHTS 1 
+uniform PointLight pointLights[NR_POINT_LIGHTS];
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 ambColor, vec3 diffColor, vec3 specColor, vec3 glowColor) {
     vec3 lightDir = normalize(-light.direction);
@@ -82,7 +53,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 ambColor, vec3
     vec3 ambient  = ambientStrength * ambColor;
     vec3 diffuse  = diff * diffColor;
     vec3 specular = spec * specColor;
-    return lightColor*(ambient + diffuse + specular + glowColor);
+    return light.lightColor*(ambient + diffuse + specular + glowColor);
 }
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 ambColor, vec3 diffColor, vec3 specColor, vec3 glowColor)
@@ -96,13 +67,42 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, v
 
     //float attenuation = 1.0 / (light.constant + light.linear * distance + 
   	//		     light.quadratic * (distance * distance));    
-    float distanceFromLight = length(lightPos - WorldPos);
-    float attenuation = (1.0 / (1.0+distanceFromLight*distanceFromLight))*100;
+    float distanceFromLight = length(light.position - WorldPos);
+    float attenuation = (1.0 / (0.1+distanceFromLight*distanceFromLight))*100;
 
     // combine results
     vec3 ambient  = attenuation*(ambientStrength * ambColor);
     vec3 diffuse  = attenuation*(diff * diffColor);
     vec3 specular = attenuation*(spec * specColor);
 
-    return lightColor*(ambient + diffuse + specular);
+    return light.lightColor*(ambient + diffuse + specular+glowColor);
 }
+void main()
+{
+    vec3 _ambientColor = ambientColor;
+    vec3 _diffuseColor = diffuseColor;
+    vec3 _specularColor = specularColor;
+    vec3 _glowColor = vec3(0.0);
+    if(usesDiffuseMap) {
+        _ambientColor = texture(diffuseMap, UV).xyz;
+        _diffuseColor = texture(diffuseMap, UV).xyz;
+    }
+    if(usesSpecularMap) _specularColor = texture(specularMap, UV).xyz;
+    if(usesGlowMap) _glowColor = texture(glowMap, UV).xyz;
+    
+    vec3 normal = normalize(Normal);
+    //vec3 lightDir = normalize(lightPos - WorldPos);
+    vec3 viewDir = normalize(camPos - WorldPos);
+
+    vec3 result = CalcDirLight(dirLight, normal, viewDir, _ambientColor, _diffuseColor, _specularColor, _glowColor);
+    //vec3 result = vec3(dirLight.direction*-1);
+    for(int i = 0; i < NR_POINT_LIGHTS; i++) result += CalcPointLight(pointLights[i], normal, WorldPos, viewDir, _ambientColor, _diffuseColor, _specularColor, _glowColor);
+
+    FragColor = vec4(result, 1.0);
+
+    float brightness = dot(FragColor.rgb, vec3(0.2126f, 0.7152f, 0.0722f));
+    if(brightness > 0.15f) BloomColor = FragColor;
+    else BloomColor = vec4(0.0);
+}
+
+

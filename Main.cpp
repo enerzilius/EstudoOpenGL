@@ -173,14 +173,17 @@ int main() {
 
 	
 
-	glm::vec3 lightColor = glm::vec3(1.0, 1.0, 1.0);
-	float cutoffAngle = glm::cos(glm::radians(9.0f));
+	glm::vec3 dirLightColor = glm::vec3(0.0, 0.0, 1.0);
 	shaderProgram.Activate();
-	shaderProgram.setVec3Float("lightColor", lightColor);
+	shaderProgram.setVec3Float("dirLight.lightColor", dirLightColor);
+	shaderProgram.setVec3Float("dirLight.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
+
+	glm::vec3 pointLightColor = glm::vec3(1.0, 0.0, 0.0);
 	shaderProgram.setFloat("ambientStrength", ambientStrength);
+	shaderProgram.setVec3Float("pointLights[0].lightColor", pointLightColor);
 
 	lightShaderProgram.Activate();
-	lightShaderProgram.setVec3Float("objectColor", lightColor);
+	lightShaderProgram.setVec3Float("objectColor", pointLightColor);
 
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
@@ -235,10 +238,8 @@ int main() {
 		shaderProgram.setVec3Float("specularColor", sphere.material.specular);
 		shaderProgram.setFloat("shininess", sphere.material.shininess);
 
-		//shaderProgram.setVec3Float("lightpos", lightPos);
-		shaderProgram.setVec3Float("lightpos", camera.position);
+		shaderProgram.setVec3Float("pointLights[0].position", lightPos);
 		shaderProgram.setVec3Float("lightDirection", camera.front);
-		shaderProgram.setFloat("cutoffAngle", cutoffAngle);
 		shaderProgram.setVec3Float("camPos", camera.position);
 		shaderProgram.setMat4("model", model);
 		shaderProgram.setMat4("view", view);
