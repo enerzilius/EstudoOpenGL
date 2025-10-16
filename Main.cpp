@@ -119,7 +119,7 @@ int main() {
 	};
 
 	float radius = 1.33f;
-	int sphereResolution = 5;
+	int sphereResolution = 30;
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
 	Sphere sphere(radius, sphereResolution, materialList[6]);
 
@@ -173,12 +173,12 @@ int main() {
 
 	
 
-	glm::vec3 dirLightColor = glm::vec3(0.0, 0.0, 1.0);
+	glm::vec3 dirLightColor = glm::vec3(0.3, 0.3, 0.8);
 	shaderProgram.Activate();
 	shaderProgram.setVec3Float("dirLight.lightColor", dirLightColor);
 	shaderProgram.setVec3Float("dirLight.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
 
-	glm::vec3 pointLightColor = glm::vec3(1.0, 0.0, 0.0);
+	glm::vec3 pointLightColor = glm::vec3(1.0, 1.0, 1.0);
 	shaderProgram.setFloat("ambientStrength", ambientStrength);
 	shaderProgram.setVec3Float("pointLights[0].lightColor", pointLightColor);
 
@@ -194,10 +194,10 @@ int main() {
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		glClearColor(0.05f, 0.05f, 0.13f, 1.0f);
+		glClearColor(0.13f, 0.13f, 0.13f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glm::vec3 lightPos = glm::vec3(5.0, -1.0, -4.0);
+		glm::vec3 lightPos = glm::vec3(0.0, 0.0, 0.0);
 
 		shaderProgram.Activate();
 		VBO1.Bind();
