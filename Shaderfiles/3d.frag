@@ -39,7 +39,7 @@ struct PointLight {
     vec3 lightColor;
 }; 
 // passar o array inteiro ao invés disso aqui tavez?
-#define NR_POINT_LIGHTS 1 
+#define NR_POINT_LIGHTS 3 
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 ambColor, vec3 diffColor, vec3 specColor, vec3 glowColor) {

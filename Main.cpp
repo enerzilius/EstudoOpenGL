@@ -25,8 +25,8 @@ using namespace std;
 
 
 struct PointLight {
-	glm::vec3 lightColor;
 	glm::vec3 lightPos;
+	glm::vec3 lightColor;
 };
 
 const unsigned int SCR_WIDTH = 1920;
@@ -38,7 +38,7 @@ void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void setPointLightUniforms(vector<PointLight>& pointLights, Shader& shaderProgram);
-void renderLights(vector<PointLight>& pointLights, glm::mat4 model, int vertexCount);
+void renderLights(vector<PointLight>& pointLights, Shader& lightShaderProgram, glm::mat4& view, glm::mat4& proj, VAO& vaoLight, Sphere sphere);
 
 float CLIP_NEAR = 0.1f;
 float CLIP_FAR = 200.0f;
@@ -70,6 +70,12 @@ float paused_time = 0;
 
 const char* wallPath = "Textures/wall.jpg";
 const char* awesomePath = "Textures/awesomeface.png";
+
+vector<PointLight> pointLights = {
+	{glm::vec3(0.0), glm::vec3(1.0)},
+	{glm::vec3(0.0, -4.0, 0.0), glm::vec3(1.0, 0.0, 0.0)},
+	{glm::vec3(1.0, 4.0, 3.0), glm::vec3(0.0, 1.0, 1.0)},
+};
 
 int main() {
 	glfwInit();
@@ -189,9 +195,6 @@ int main() {
 	glm::vec3 pointLightColor = glm::vec3(1.0, 1.0, 1.0);
 	shaderProgram.setFloat("ambientStrength", ambientStrength);
 
-	lightShaderProgram.Activate();
-	lightShaderProgram.setVec3Float("objectColor", pointLightColor);
-
 	//loop de renderização
 	while (!glfwWindowShouldClose(window))
 	{
@@ -203,8 +206,6 @@ int main() {
 
 		glClearColor(0.13f, 0.13f, 0.13f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		glm::vec3 lightPos = glm::vec3(0.0, 0.0, 0.0);
 
 		shaderProgram.Activate();
 		VBO1.Bind();
@@ -244,6 +245,7 @@ int main() {
 		shaderProgram.setVec3Float("ambientColor", sphere.material.ambient);
 		shaderProgram.setVec3Float("specularColor", sphere.material.specular);
 		shaderProgram.setFloat("shininess", sphere.material.shininess);
+		setPointLightUniforms(pointLights, shaderProgram);
 
 		
 		
@@ -258,19 +260,8 @@ int main() {
 
 		VAO1.Unbind();
 
-		glm::mat4 lightModel = glm::mat4(1.0);
-		glm::translate(lightModel, lightPos);
 
-		lightShaderProgram.Activate();
-		vaoLight.Bind();
-
-		lightShaderProgram.setMat4("model", lightModel);
-		lightShaderProgram.setMat4("view", view);
-		lightShaderProgram.setMat4("proj", proj);
-
-		glDrawArrays(GL_TRIANGLES, 0, sphere.verticesCount);
-
-		vaoLight.Unbind();
+		renderLights(pointLights, lightShaderProgram, view, proj, vaoLight, sphere);
 
 		glfwPollEvents();
 		glfwSwapBuffers(window);
@@ -364,11 +355,29 @@ void setPointLightUniforms(vector<PointLight>& pointLights, Shader& shaderProgra
 	for (int i = 0; i < pointLights.size(); i++)
 	{
 		char buffer[64];
-		sprintf(buffer, "pointLights[%i].position", i);
+		sprintf_s(buffer, "pointLights[%i].position", i);
 		shaderProgram.setVec3Float(buffer, pointLights[i].lightPos);
-		sprintf(buffer, "pointLights[%i].lightColor", i);
+		sprintf_s(buffer, "pointLights[%i].lightColor", i);
 		shaderProgram.setVec3Float(buffer, pointLights[i].lightColor);
 	}
 }
 
-void renderLights(vector<PointLight>& pointLights, glm::mat4 model, int vertexCount);
+void renderLights(vector<PointLight>& pointLights, Shader& lightShaderProgram, glm::mat4& view, glm::mat4& proj, VAO& vaoLight, Sphere sphere) {
+	glm::mat4 lightModel = glm::mat4(1.0);
+	lightShaderProgram.Activate();
+	vaoLight.Bind();
+	for (auto& pointLight : pointLights)
+	{
+		glm::translate(lightModel, pointLight.lightPos);
+
+		lightShaderProgram.setMat4("model", lightModel);
+		lightShaderProgram.setMat4("view", view);
+		lightShaderProgram.setMat4("proj", proj);
+
+		lightShaderProgram.setVec3Float("objectColor", pointLight.lightColor);
+
+		glDrawArrays(GL_TRIANGLES, 0, sphere.verticesCount);
+	}
+
+	vaoLight.Unbind();
+}
