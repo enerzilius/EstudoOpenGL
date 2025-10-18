@@ -23,6 +23,12 @@
 
 using namespace std;
 
+
+struct PointLight {
+	glm::vec3 lightColor;
+	glm::vec3 lightPos;
+};
+
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
@@ -31,6 +37,8 @@ void processInput(GLFWwindow* window);
 void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, int vertexCount);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void setPointLightUniforms(vector<PointLight>& pointLights, Shader& shaderProgram);
+void renderLights(vector<PointLight>& pointLights, glm::mat4 model, int vertexCount);
 
 float CLIP_NEAR = 0.1f;
 float CLIP_FAR = 200.0f;
@@ -180,7 +188,6 @@ int main() {
 
 	glm::vec3 pointLightColor = glm::vec3(1.0, 1.0, 1.0);
 	shaderProgram.setFloat("ambientStrength", ambientStrength);
-	shaderProgram.setVec3Float("pointLights[0].lightColor", pointLightColor);
 
 	lightShaderProgram.Activate();
 	lightShaderProgram.setVec3Float("objectColor", pointLightColor);
@@ -238,8 +245,8 @@ int main() {
 		shaderProgram.setVec3Float("specularColor", sphere.material.specular);
 		shaderProgram.setFloat("shininess", sphere.material.shininess);
 
-		shaderProgram.setVec3Float("pointLights[0].position", lightPos);
-		shaderProgram.setVec3Float("lightDirection", camera.front);
+		
+		
 		shaderProgram.setVec3Float("camPos", camera.position);
 		shaderProgram.setMat4("model", model);
 		shaderProgram.setMat4("view", view);
@@ -352,3 +359,16 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(yoffset);
 }
+
+void setPointLightUniforms(vector<PointLight>& pointLights, Shader& shaderProgram) {
+	for (int i = 0; i < pointLights.size(); i++)
+	{
+		char buffer[64];
+		sprintf(buffer, "pointLights[%i].position", i);
+		shaderProgram.setVec3Float(buffer, pointLights[i].lightPos);
+		sprintf(buffer, "pointLights[%i].lightColor", i);
+		shaderProgram.setVec3Float(buffer, pointLights[i].lightColor);
+	}
+}
+
+void renderLights(vector<PointLight>& pointLights, glm::mat4 model, int vertexCount);
