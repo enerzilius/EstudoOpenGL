@@ -76,3 +76,8 @@ bool isPNG(std::string path) {
 	std::string delimiter = ".";
 	return split(path, delimiter)[1] == "png";
 }
+
+void printVec3(glm::vec3 vector) {
+	for (int i = 0; i < 3; i++) std::cout << vector[i] << " ";
+	std::cout << "\n";
+}
