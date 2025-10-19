@@ -73,8 +73,8 @@ const char* awesomePath = "Textures/awesomeface.png";
 
 vector<PointLight> pointLights = {
 	{glm::vec3(0.0), glm::vec3(1.0)},
-	{glm::vec3(0.0, -4.0, 0.0), glm::vec3(1.0, 0.0, 0.0)},
-	{glm::vec3(1.0, 4.0, 3.0), glm::vec3(0.0, 1.0, 1.0)},
+	{glm::vec3(-5.0, -5.0, -5.0), glm::vec3(1.0, 0.0, 0.0)},
+	{glm::vec3(5.0, 5.0, 5.0), glm::vec3(0.0, 1.0, 1.0)},
 };
 
 int main() {
@@ -368,13 +368,14 @@ void renderLights(vector<PointLight>& pointLights, Shader& lightShaderProgram, g
 	vaoLight.Bind();
 	for (auto& pointLight : pointLights)
 	{
-		glm::translate(lightModel, pointLight.lightPos);
-
-		lightShaderProgram.setMat4("model", lightModel);
+		lightModel = glm::mat4(1.0);
 		lightShaderProgram.setMat4("view", view);
 		lightShaderProgram.setMat4("proj", proj);
 
 		lightShaderProgram.setVec3Float("objectColor", pointLight.lightColor);
+		
+		lightModel = glm::translate(lightModel, pointLight.lightPos);
+		lightShaderProgram.setMat4("model", lightModel);
 
 		glDrawArrays(GL_TRIANGLES, 0, sphere.verticesCount);
 	}
