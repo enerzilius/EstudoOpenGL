@@ -4,10 +4,12 @@
 #include <glad/glad.h>
 #include <stb/stb_image.h>
 #include <iostream>
+#include <string>
 
 class Texture {
 public:
 	GLuint ID;
+	std::string type;
 	Texture();
 
 	void LinkTexJPG(int width, int height, unsigned char* data);
