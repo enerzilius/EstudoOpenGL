@@ -6,6 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 #include <string>
+#include "../Objects/Mesh.h"
 
 std::vector<glm::vec3> generateRandomPositions(int n);
 glm::vec3 sphericalToCartesian(float r, float theta, float phi);
@@ -15,5 +16,6 @@ glm::vec3 calculateFaceNormalVector(glm::vec3 face[3]);
 std::vector<std::string> split(std::string& string, std::string& delimiter);
 bool isPNG(std::string path);
 void printVec3(glm::vec3 vector);
+float* getFloatArrayFromVertexArray(Vertex* vertices);
 
 #endif

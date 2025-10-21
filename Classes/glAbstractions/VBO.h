@@ -6,6 +6,7 @@
 class VBO {
 public:
 	GLuint ID;  
+	VBO() = default;
 	VBO(GLfloat* vertices, GLsizeiptr size);
 
 	void Bind();

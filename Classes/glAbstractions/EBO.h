@@ -6,6 +6,7 @@
 class EBO {
 public:
 	GLuint ID;
+	EBO() = default;
 	EBO(GLuint* indices, GLsizeiptr size);
 
 	void Bind();

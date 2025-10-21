@@ -81,3 +81,14 @@ void printVec3(glm::vec3 vector) {
 	for (int i = 0; i < 3; i++) std::cout << vector[i] << " ";
 	std::cout << "\n";
 }
+
+float* getFloatArrayFromVertexArray(Vertex* vertices) {
+	std::vector<float> verticesData;
+	int n = sizeof(vertices) / sizeof(Vertex);
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < 3; j++) verticesData.push_back(vertices[i].Normal[j]);
+		for (int j = 0; j < 3; j++) verticesData.push_back(vertices[i].Position[j]);
+		for (int j = 0; j < 2; j++) verticesData.push_back(vertices[i].TexCoords[j]);
+	}
+	return verticesData.data();
+}
