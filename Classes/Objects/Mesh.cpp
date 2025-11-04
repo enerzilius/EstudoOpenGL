@@ -19,7 +19,7 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture
 }
 
 void Mesh::setupMesh() {
-    this->vao = VAO();
-    this->vbo = VBO(getFloatArrayFromVertexArray(vertices.data()), sizeof(vertices.data()));
-    this->ebo = EBO(indices.data(), sizeof(indices));
+    this->vao = new VAO();
+    this->vbo = new VBO(getFloatArrayFromVertexArray(vertices.data()), sizeof(vertices.data()));
+    this->ebo = new EBO(indices.data(), sizeof(indices));
 }

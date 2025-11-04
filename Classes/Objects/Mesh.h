@@ -27,9 +27,9 @@ public:
 
 private:
     //  render data
-    VBO vbo;
-    VAO vao;
-    EBO ebo;
+    VBO* vbo;
+    VAO* vao;
+    EBO* ebo;
 
     void setupMesh();
 };
