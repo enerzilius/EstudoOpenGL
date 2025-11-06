@@ -34,3 +34,28 @@ void Mesh::setupMesh() {
 
     vao->Unbind();
 }
+
+void Mesh::Draw(Shader &shader) {
+    GLuint diffuseNr = 1;
+    GLuint specularNr = 1;
+
+    for (unsigned int i = 0; i < textures.size(); i++)
+    {
+        glActiveTexture(GL_TEXTURE0 + i);
+        string number;
+        string name = textures[i].type;
+
+        if (name == "texture_diffuse") number = to_string(diffuseNr++);
+        else if(name == "texture_specular") number = to_string(specularNr++);
+
+        //shader.setInt(("material." + name + number).c_str(), i);
+        glBindTexture(GL_TEXTURE_2D, textures[i].ID);
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+
+    // draw mesh
+    glBindVertexArray(vao->ID);
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}

@@ -15,7 +15,10 @@ uniform vec3 specularColor;
 uniform vec3 camPos;
 
 uniform sampler2D diffuseMap;
+uniform sampler2D diffuseMap1;
+uniform sampler2D diffuseMap2;
 uniform sampler2D specularMap;
+uniform sampler2D specularMap2;
 uniform sampler2D glowMap;
 uniform float mixParam; 
 uniform float shininess;
