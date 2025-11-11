@@ -144,6 +144,7 @@
     <ClCompile Include="Classes\glAbstractions\VBO.cpp" />
     <ClCompile Include="Classes\Objects\Material.cpp" />
     <ClCompile Include="Classes\Objects\Mesh.cpp" />
+    <ClCompile Include="Classes\Objects\Model.cpp" />
     <ClCompile Include="Classes\Objects\Sphere.cpp" />
     <ClCompile Include="Classes\Utils\GeneralUtilities.cpp" />
     <ClCompile Include="Classes\ViewElements\Camera.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Classes\glAbstractions\VBO.h" />
     <ClInclude Include="Classes\Objects\Material.h" />
     <ClInclude Include="Classes\Objects\Mesh.h" />
+    <ClInclude Include="Classes\Objects\Model.h" />
     <ClInclude Include="Classes\Objects\Sphere.h" />
     <ClInclude Include="Classes\Utils\GeneralUtilities.h" />
     <ClInclude Include="Classes\ViewElements\Camera.h" />
