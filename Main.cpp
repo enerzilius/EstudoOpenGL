@@ -34,11 +34,12 @@ const unsigned int SCR_HEIGHT = 1080;
 
 void resize(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-void renderSpheres(vector<glm::vec3> positions, Shader& program, glm::mat4 model, int vertexCount);
+void renderSpheres(vector<Sphere> spheres, Shader& program, glm::mat4 model, VAO& vao, VBO& vbo);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void setPointLightUniforms(vector<PointLight>& pointLights, Shader& shaderProgram);
 void renderLights(vector<PointLight>& pointLights, Shader& lightShaderProgram, glm::mat4& view, glm::mat4& proj, VAO& vaoLight, Sphere sphere);
+void configUniforms(Shader& shaderProgram, Sphere& sphere);
 
 float CLIP_NEAR = 0.1f;
 float CLIP_FAR = 200.0f;
@@ -138,8 +139,9 @@ int main() {
 	int sphereResolution = 30;
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
 	vector<Sphere> sphereVector;
+	Sphere lightSphere(10.0, 10, materialList[0], glm::vec3(0.0));
 	
-	for (int i = 0; i < radius.size(); i++) sphereVector.push_back(Sphere(radius[i], sphereResolution, materialList[6], generateRandomSpacedPositions(i)));
+	for (int i = 0; i < radius.size(); i++) sphereVector.push_back(Sphere(radius[i], sphereResolution, materialList[6], generateRandomSpacedPositions(4+i)));
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 
@@ -214,28 +216,7 @@ int main() {
 
 		proj = glm::perspective(glm::radians(camera.fov), (float)(SCR_WIDTH / SCR_HEIGHT), CLIP_NEAR, CLIP_FAR);
 
-		shaderProgram.setBool("usesDiffuseMap", sphere.material.usesDiffuseMap);
-		shaderProgram.setBool("usesSpecularMap", sphere.material.usesSpecularMap);
-		shaderProgram.setBool("usesGlowMap", sphere.material.usesGlowMap);
-		if (sphere.material.usesDiffuseMap) {
-			shaderProgram.setInt("diffuseMap", 0);
-			sphere.material.diffuseMap.ActiveTexture(GL_TEXTURE0);
-			sphere.material.diffuseMap.Bind();
-		}if (sphere.material.usesSpecularMap) {
-			shaderProgram.setInt("specularMap", 1);
-			sphere.material.specularMap.ActiveTexture(GL_TEXTURE1);
-			sphere.material.specularMap.Bind();
-		}if (sphere.material.usesGlowMap) {
-			shaderProgram.setInt("glowMap", 2);
-			sphere.material.glowMap.ActiveTexture(GL_TEXTURE2);
-			sphere.material.glowMap.Bind();
-		}
-
-		shaderProgram.setVec3Float("diffuseColor", sphere.material.diffuse);
-		shaderProgram.setVec3Float("ambientColor", sphere.material.ambient);
-		shaderProgram.setVec3Float("specularColor", sphere.material.specular);
-		shaderProgram.setFloat("shininess", sphere.material.shininess);
-		setPointLightUniforms(pointLights, shaderProgram);
+		
 
 		
 		
@@ -246,12 +227,12 @@ int main() {
 
 		VAO1.Bind();
 
-		renderScene(positions, shaderProgram, model, sphere.verticesCount);
+		renderSpheres(sphereVector, shaderProgram, model, VAO1, VBO1);
 
 		VAO1.Unbind();
 
 
-		renderLights(pointLights, lightShaderProgram, view, proj, vaoLight, sphere);
+		renderLights(pointLights, lightShaderProgram, view, proj, vaoLight, lightSphere);
 
 		glfwPollEvents();
 		glfwSwapBuffers(window);
@@ -292,17 +273,14 @@ void resize(GLFWwindow* window, int width, int height)
 }
 
 void renderSpheres(vector<Sphere> spheres, Shader& program, glm::mat4 model, VAO& vao, VBO& vbo) {
-	
-
-	
-
-	VAO1.LinkVBO(VBO1, layoutVertex, stepVertex, stride, 0);
-	VAO1.LinkVBO(VBO1, layoutUV, stepUV, stride, stepVertex);
-
 	float angle = (float)glfwGetTime() - paused_time;
 	if(paused) angle = paused_time;
 	int i = 0;
 	for (Sphere sphere : spheres) {
+		vbo = sphere.getVBO();
+		vao.LinkVBO(vbo, layoutVertex, stepVertex, stride, 0);
+		vao.LinkVBO(vbo, layoutUV, stepUV, stride, stepVertex);
+
 		i++;
 		angle /= i;
 		glm::vec3 pos = sphere.pos;
@@ -318,7 +296,9 @@ void renderSpheres(vector<Sphere> spheres, Shader& program, glm::mat4 model, VAO
 
 		program.setMat4("model", model);
 
-		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+		configUniforms(program, sphere);
+
+		glDrawArrays(GL_TRIANGLES, 0, sphere.verticesCount);
 	}
 }
 
@@ -379,4 +359,29 @@ void renderLights(vector<PointLight>& pointLights, Shader& lightShaderProgram, g
 	}
 
 	vaoLight.Unbind();
+}
+
+void configUniforms(Shader& shaderProgram, Sphere& sphere) {
+	shaderProgram.setBool("usesDiffuseMap", sphere.material.usesDiffuseMap);
+	shaderProgram.setBool("usesSpecularMap", sphere.material.usesSpecularMap);
+	shaderProgram.setBool("usesGlowMap", sphere.material.usesGlowMap);
+	if (sphere.material.usesDiffuseMap) {
+		shaderProgram.setInt("diffuseMap", 0);
+		sphere.material.diffuseMap.ActiveTexture(GL_TEXTURE0);
+		sphere.material.diffuseMap.Bind();
+	}if (sphere.material.usesSpecularMap) {
+		shaderProgram.setInt("specularMap", 1);
+		sphere.material.specularMap.ActiveTexture(GL_TEXTURE1);
+		sphere.material.specularMap.Bind();
+	}if (sphere.material.usesGlowMap) {
+		shaderProgram.setInt("glowMap", 2);
+		sphere.material.glowMap.ActiveTexture(GL_TEXTURE2);
+		sphere.material.glowMap.Bind();
+	}
+
+	shaderProgram.setVec3Float("diffuseColor", sphere.material.diffuse);
+	shaderProgram.setVec3Float("ambientColor", sphere.material.ambient);
+	shaderProgram.setVec3Float("specularColor", sphere.material.specular);
+	shaderProgram.setFloat("shininess", sphere.material.shininess);
+	setPointLightUniforms(pointLights, shaderProgram);
 }

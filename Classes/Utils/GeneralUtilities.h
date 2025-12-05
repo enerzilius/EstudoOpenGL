@@ -8,7 +8,7 @@
 #include <string>
 #include "../Objects/Mesh.h"
 
-glm::vec3 generateRandomSpacedPositions(int n);
+glm::vec3 generateRandomSpacedPositions(int i);
 glm::vec3 sphericalToCartesian(float r, float theta, float phi);
 void insertVec3InVector(std::vector<float>& vector, glm::vec3 vertex);
 void insertQuadVertexVectorTexture(std::vector<float>& allVertices, glm::vec3 quadVertices[4]);

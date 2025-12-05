@@ -7,7 +7,7 @@
 #include <string>
 #include <iostream>
 
-glm::vec3 generateRandomSpacedPositions(int n) {
+glm::vec3 generateRandomSpacedPositions(int i) {
 	srand(static_cast <unsigned> (0));
 	glm::vec3 randomPos = glm::vec3(i * (2 * (i + 1)) + 4, 0, 0);
 	return randomPos;
