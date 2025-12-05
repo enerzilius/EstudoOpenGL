@@ -14,10 +14,11 @@ public:
 	float radius;
 	int resolution;
 	int verticesCount;
+	glm::vec3 pos;
 	std::vector<float> vertices;
 	Material material;
 
-	Sphere(float radius, int resolution, Material objMaterial);
+	Sphere(float radius, int resolution, Material objMaterial, glm::vec3 pos);
 	void generateVertices(std::vector<float>& vertices, float radius, int resolution);
 	VBO getVBO();
 };

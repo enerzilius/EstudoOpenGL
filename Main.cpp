@@ -34,7 +34,7 @@ const unsigned int SCR_HEIGHT = 1080;
 
 void resize(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, int vertexCount);
+void renderSpheres(vector<glm::vec3> positions, Shader& program, glm::mat4 model, int vertexCount);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void setPointLightUniforms(vector<PointLight>& pointLights, Shader& shaderProgram);
@@ -63,8 +63,6 @@ const float sensitivity = 0.5f;
 glm::vec3 worldUp = glm::vec3(0.0, 1.0, 0.0);
 Camera camera(cameraPosition, worldUp, yaw, pitch, fov, sensitivity, movementSpeed);
 
-vector<glm::vec3> positions = generateRandomPositions(4);
-
 bool paused = false;
 float paused_time = 0;
 
@@ -72,10 +70,14 @@ const char* wallPath = "Textures/wall.jpg";
 const char* awesomePath = "Textures/awesomeface.png";
 
 vector<PointLight> pointLights = {
-	{glm::vec3(0.0), glm::vec3(1.0)},
+	{glm::vec3(0.0), glm::vec3(1.0)},/*
 	{glm::vec3(-5.0, -5.0, -5.0), glm::vec3(1.0, 0.0, 0.0)},
-	{glm::vec3(5.0, 5.0, 5.0), glm::vec3(0.0, 1.0, 1.0)},
+	{glm::vec3(5.0, 5.0, 5.0), glm::vec3(0.0, 1.0, 1.0)},*/
 };
+
+int layoutVertex = 0, layoutUV = 1, layoutNormal = 2;
+int stepVertex = 3, stepUV = 2, stepNormal = 3;
+int stride = stepVertex + stepUV;
 
 int main() {
 	glfwInit();
@@ -132,31 +134,19 @@ int main() {
 		caixaGlow
 	};
 
-	float radius = 1.33f;
+	vector<float> radius = { 1.33f,  2.5f, 6.0f, 4.2f };
 	int sphereResolution = 30;
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
-	Sphere sphere(radius, sphereResolution, materialList[6]);
+	vector<Sphere> sphereVector;
+	
+	for (int i = 0; i < radius.size(); i++) sphereVector.push_back(Sphere(radius[i], sphereResolution, materialList[6], generateRandomSpacedPositions(i)));
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 
 	//Shader bloomProgram("Shaderfiles/3d.vert", "Shaderfiles/blur.frag");
 
 	VAO VAO1;
-	VAO1.Bind();
-
-	VBO VBO1 = sphere.getVBO();
-	//EBO EBO1(sqrIndices, sizeof(sqrIndices));
- 
-	int layoutVertex = 0, layoutUV = 1, layoutNormal = 2;
-	int stepVertex = 3, stepUV = 2, stepNormal = 3;
-	//int stride = stepVertex + stepUV + stepNormal;
-	int stride = stepVertex + stepUV;
-	VAO1.LinkVBO(VBO1, layoutVertex, stepVertex, stride, 0); 
-	VAO1.LinkVBO(VBO1, layoutUV, stepUV, stride, stepVertex);
-	//VAO1.LinkVBO(VBO1, layoutNormal, stepNormal, stride, stepVertex+stepUV);
-
-	VAO1.Unbind();
-	//EBO1.Unbind();
+	VBO VBO1;
 
 	Shader lightShaderProgram("Shaderfiles/light.vert", "Shaderfiles/light.frag");
 	VAO lightVAO;
@@ -301,13 +291,21 @@ void resize(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void renderScene(vector<glm::vec3> positions, Shader& program, glm::mat4 model, int vertexCount) {
+void renderSpheres(vector<Sphere> spheres, Shader& program, glm::mat4 model, VAO& vao, VBO& vbo) {
+	
+
+	
+
+	VAO1.LinkVBO(VBO1, layoutVertex, stepVertex, stride, 0);
+	VAO1.LinkVBO(VBO1, layoutUV, stepUV, stride, stepVertex);
+
 	float angle = (float)glfwGetTime() - paused_time;
 	if(paused) angle = paused_time;
 	int i = 0;
-	for (glm::vec3 pos : positions) {
+	for (Sphere sphere : spheres) {
 		i++;
 		angle /= i;
+		glm::vec3 pos = sphere.pos;
 		float rotationX = pos.x * cos(angle);
 		float amplitude = 3.0;
 		float rotationY = sin(angle) * amplitude;

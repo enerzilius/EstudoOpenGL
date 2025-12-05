@@ -7,15 +7,10 @@
 #include <string>
 #include <iostream>
 
-std::vector<glm::vec3> generateRandomPositions(int n) {
+glm::vec3 generateRandomSpacedPositions(int n) {
 	srand(static_cast <unsigned> (0));
-	std::vector<glm::vec3> positionVector;
-	for (int i = 1; i <= n; i++)
-	{
-		glm::vec3 randomPos = glm::vec3(i * (2 * (i + 1)) + 4, 0, 0);
-		positionVector.push_back(randomPos);
-	}
-	return positionVector;
+	glm::vec3 randomPos = glm::vec3(i * (2 * (i + 1)) + 4, 0, 0);
+	return randomPos;
 }
 
 glm::vec3 sphericalToCartesian(float r, float theta, float phi) {
