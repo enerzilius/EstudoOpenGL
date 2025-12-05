@@ -135,13 +135,13 @@ int main() {
 		caixaGlow
 	};
 
-	vector<float> radius = { 1.33f,  2.5f, 6.0f, 4.2f };
+	vector<float> radius = { 1.33f,  7.5f, 14.0f, 10.2f };
 	int sphereResolution = 30;
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
 	vector<Sphere> sphereVector;
 	Sphere lightSphere(10.0, 10, materialList[0], glm::vec3(0.0));
 	
-	for (int i = 0; i < radius.size(); i++) sphereVector.push_back(Sphere(radius[i], sphereResolution, materialList[6], generateRandomSpacedPositions(4+i)));
+	for (int i = 0; i < radius.size(); i++) sphereVector.push_back(Sphere(radius[i], sphereResolution, materialList[i], generateRandomSpacedPositions(4+i)));
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 
@@ -216,10 +216,6 @@ int main() {
 
 		proj = glm::perspective(glm::radians(camera.fov), (float)(SCR_WIDTH / SCR_HEIGHT), CLIP_NEAR, CLIP_FAR);
 
-		
-
-		
-		
 		shaderProgram.setVec3Float("camPos", camera.position);
 		shaderProgram.setMat4("model", model);
 		shaderProgram.setMat4("view", view);
