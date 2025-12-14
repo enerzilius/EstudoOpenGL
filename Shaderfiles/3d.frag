@@ -39,6 +39,7 @@ struct PointLight {
     //float linear;
     //float quadratic;  
 
+    float intensity;
     vec3 lightColor;
 }; 
 // passar o array inteiro ao invés disso aqui tavez?
@@ -71,7 +72,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, v
     //float attenuation = 1.0 / (light.constant + light.linear * distance + 
   	//		     light.quadratic * (distance * distance));    
     float distanceFromLight = length(light.position - WorldPos);
-    float attenuation = (1.0 / (1.0+distanceFromLight*distanceFromLight))*100;
+    float attenuation = (1.0 / (1.0+distanceFromLight*distanceFromLight))*100 * light.intensity;
 
     // combine results
     vec3 ambient  = attenuation*(ambientStrength * ambColor);

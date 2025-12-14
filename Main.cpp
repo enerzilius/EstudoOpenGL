@@ -27,6 +27,7 @@ using namespace std;
 struct PointLight {
 	glm::vec3 lightPos;
 	glm::vec3 lightColor;
+	float intensity;
 };
 
 const unsigned int SCR_WIDTH = 1920;
@@ -71,9 +72,9 @@ const char* wallPath = "Textures/wall.jpg";
 const char* awesomePath = "Textures/awesomeface.png";
 
 vector<PointLight> pointLights = {
-	{glm::vec3(0.0), glm::vec3(1.0)},
-	{glm::vec3(-5.0, -5.0, -5.0), glm::vec3(1.0, 0.0, 0.0)},
-	{glm::vec3(5.0, 5.0, 5.0), glm::vec3(0.0, 1.0, 1.0)},
+	{glm::vec3(0.0), glm::vec3(1.0), 300},
+	/*{glm::vec3(-5.0, -5.0, -5.0), glm::vec3(1.0, 0.0, 0.0)},
+	{glm::vec3(5.0, 5.0, 5.0), glm::vec3(0.0, 1.0, 1.0)},*/
 };
 
 int layoutVertex = 0, layoutUV = 1, layoutNormal = 2;
@@ -139,9 +140,9 @@ int main() {
 	int sphereResolution = 30;
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
 	vector<Sphere> sphereVector;
-	Sphere lightSphere(1.0, 10, materialList[0], glm::vec3(0.0));
+	Sphere lightSphere(10.0, 15, materialList[0], glm::vec3(0.0));
 	
-	for (int i = 0; i < radius.size(); i++) sphereVector.push_back(Sphere(radius[i], sphereResolution, materialList[i+3], generateRandomSpacedPositions(i+1)));
+	for (int i = 0; i < radius.size(); i++) sphereVector.push_back(Sphere(radius[i], sphereResolution, materialList[i+3], generateRandomSpacedPositions(i+10)));
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 
@@ -336,6 +337,8 @@ void setPointLightUniforms(vector<PointLight>& pointLights, Shader& shaderProgra
 		shaderProgram.setVec3Float(buffer, pointLights[i].lightPos);
 		sprintf_s(buffer, "pointLights[%i].lightColor", i);
 		shaderProgram.setVec3Float(buffer, pointLights[i].lightColor);
+		sprintf_s(buffer, "pointLights[%i].intensity", i);
+		shaderProgram.setFloat(buffer, pointLights[i].intensity);
 	}
 }
 
