@@ -38,11 +38,11 @@ void renderSpheres(vector<Sphere> spheres, Shader& program, glm::mat4 model, VAO
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void setPointLightUniforms(vector<PointLight>& pointLights, Shader& shaderProgram);
-void renderLights(vector<PointLight>& pointLights, Shader& lightShaderProgram, glm::mat4& view, glm::mat4& proj, VAO& vaoLight, Sphere sphere);
+void renderLights(vector<PointLight>& pointLights, Shader& lightShaderProgram, glm::mat4& view, glm::mat4& proj, VAO& vaoLight, VBO& vbo, Sphere& sphere);
 void configUniforms(Shader& shaderProgram, Sphere& sphere);
 
 float CLIP_NEAR = 0.1f;
-float CLIP_FAR = 200.0f;
+float CLIP_FAR = 500.0f;
 
 const float ambientStrength = 0.1;
 const float radius = 10.0;
@@ -71,9 +71,9 @@ const char* wallPath = "Textures/wall.jpg";
 const char* awesomePath = "Textures/awesomeface.png";
 
 vector<PointLight> pointLights = {
-	{glm::vec3(0.0), glm::vec3(1.0)},/*
+	{glm::vec3(0.0), glm::vec3(1.0)},
 	{glm::vec3(-5.0, -5.0, -5.0), glm::vec3(1.0, 0.0, 0.0)},
-	{glm::vec3(5.0, 5.0, 5.0), glm::vec3(0.0, 1.0, 1.0)},*/
+	{glm::vec3(5.0, 5.0, 5.0), glm::vec3(0.0, 1.0, 1.0)},
 };
 
 int layoutVertex = 0, layoutUV = 1, layoutNormal = 2;
@@ -135,13 +135,13 @@ int main() {
 		caixaGlow
 	};
 
-	vector<float> radius = { 1.33f,  7.5f, 14.0f, 10.2f };
+	vector<float> radius = { 5.33f,  7.5f, 14.0f, 10.2f };
 	int sphereResolution = 30;
 	glm::vec3 objColor = glm::vec3(1.0, 0.0, 0.0);
 	vector<Sphere> sphereVector;
-	Sphere lightSphere(10.0, 10, materialList[0], glm::vec3(0.0));
+	Sphere lightSphere(1.0, 10, materialList[0], glm::vec3(0.0));
 	
-	for (int i = 0; i < radius.size(); i++) sphereVector.push_back(Sphere(radius[i], sphereResolution, materialList[i], generateRandomSpacedPositions(4+i)));
+	for (int i = 0; i < radius.size(); i++) sphereVector.push_back(Sphere(radius[i], sphereResolution, materialList[i+3], generateRandomSpacedPositions(i+1)));
 
 	Shader shaderProgram("Shaderfiles/3d.vert", "Shaderfiles/3d.frag");
 
@@ -179,7 +179,7 @@ int main() {
 
 	
 
-	glm::vec3 dirLightColor = glm::vec3(0.3, 0.3, 0.8);
+	glm::vec3 dirLightColor = glm::vec3(0.3, 0.2, 0.8);
 	shaderProgram.Activate();
 	shaderProgram.setVec3Float("dirLight.lightColor", dirLightColor);
 	shaderProgram.setVec3Float("dirLight.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
@@ -227,8 +227,11 @@ int main() {
 
 		VAO1.Unbind();
 
+		vaoLight.Bind();
 
-		renderLights(pointLights, lightShaderProgram, view, proj, vaoLight, lightSphere);
+		renderLights(pointLights, lightShaderProgram, view, proj, vaoLight, VBO1, lightSphere);
+
+		vaoLight.Unbind();
 
 		glfwPollEvents();
 		glfwSwapBuffers(window);
@@ -336,12 +339,15 @@ void setPointLightUniforms(vector<PointLight>& pointLights, Shader& shaderProgra
 	}
 }
 
-void renderLights(vector<PointLight>& pointLights, Shader& lightShaderProgram, glm::mat4& view, glm::mat4& proj, VAO& vaoLight, Sphere sphere) {
+void renderLights(vector<PointLight>& pointLights, Shader& lightShaderProgram, glm::mat4& view, glm::mat4& proj, VAO& vaoLight, VBO& vbo, Sphere& sphere) {
 	glm::mat4 lightModel = glm::mat4(1.0);
 	lightShaderProgram.Activate();
-	vaoLight.Bind();
+	
 	for (auto& pointLight : pointLights)
 	{
+		vbo = sphere.getVBO();
+		vaoLight.LinkVBO(vbo, layoutVertex, stepVertex, stride, 0);
+
 		lightModel = glm::mat4(1.0);
 		lightShaderProgram.setMat4("view", view);
 		lightShaderProgram.setMat4("proj", proj);
@@ -351,10 +357,9 @@ void renderLights(vector<PointLight>& pointLights, Shader& lightShaderProgram, g
 		lightModel = glm::translate(lightModel, pointLight.lightPos);
 		lightShaderProgram.setMat4("model", lightModel);
 
+		//configUniforms(lightShaderProgram, sphere);
 		glDrawArrays(GL_TRIANGLES, 0, sphere.verticesCount);
 	}
-
-	vaoLight.Unbind();
 }
 
 void configUniforms(Shader& shaderProgram, Sphere& sphere) {
